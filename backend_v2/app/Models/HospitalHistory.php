@@ -30,6 +30,38 @@ class HospitalHistory extends Model implements Auditable
         'publish_note',
     ];
 
+       public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+
+    public function lga()
+    {
+        return $this->belongsTo(Lga::class, 'lga_id');
+    }
+
+    public function ward(){
+        return $this->belongsTo(Ward::class, 'ward_id');
+    }
+
+    public function ownership(){
+        return $this->belongsTo(Ownership::class, 'ownership_id');
+    }
+
+    public function facilitylevelofcare(){
+        return $this->belongsTo(FacilityLevelOfCare::class, 'facility_level_id');
+    }
+
+    public function facilitylevelofcareoption(){
+        return $this->belongsTo(FacilityLevelOfCareOption::class, 'facility_level_option_id');
+    }
+
+    public function publishedby(){
+        return $this->belongsTo(User::class, 'published_by');
+    }
+
+    
+
     public function arrayValuesTostring($val)
     {
         if (is_array($val)) {

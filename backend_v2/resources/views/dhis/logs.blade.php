@@ -44,6 +44,7 @@ Exchange Logs
           <th>UID</th>
           <th>Facility Name</th>
           <th>Facility </th>
+          <th>Date Published</th>
           <th>Ownership</th>
           <th>Level of Care </th>
           <th>Level of Care Option</th>
@@ -57,16 +58,16 @@ Exchange Logs
           <td>{{ $log->id }}</td>
           <td>
             @if($log->facility_status =='Failed' or $log->ownership_status == 'Failed' or $log->level_status == 'Failed' or $log->level_option_status == 'Failed' )
-                <font color="red">  {{$log->facility_id}}</font>
+                <font color="red">  {{$log->dhis_uid}}</font>
             @else
-                {{$log->facility_id}}
+                {{$log->dhis_uid}}
             @endif
           </td>
           <td>
             @if($log->facility_status =='Failed' or $log->ownership_status == 'Failed' or $log->level_status == 'Failed' or $log->level_option_status == 'Failed' )
-                <font color="red">  {{$log->facility_name}}</font>
+                <font color="red">  {{$log->hospital->facility_name}}</font>
             @else
-                {{$log->facility_name}}
+                {{$log->hospital->facility_name}}
             @endif
           </td>
           <td>
@@ -74,6 +75,14 @@ Exchange Logs
               <font color="red">  {{$log->facility_status}}</font>
               @else
                 {{$log->facility_status}}
+              @endif
+            
+          </td>
+            <td>
+              @if ($log->facility_status == 'Failed')
+              <font color="red">{{$log->hospital->published_at}}</font>
+              @else
+                {{$log->hospital->published_at}}
               @endif
             
           </td>
@@ -107,13 +116,13 @@ Exchange Logs
 
                     <a href="#">
                         <button class="btn btn-success btn-sm"  type="button" data-toggle="modal" data-target="#view_details"
-                            data-id="{{$log->id}}" data-facility_code="{{$log->facility_code}}"  data-start_date="{{$log->start_date}}" data-close_date="{{$log->close_date}}"
-                            data-facility_name="{{$log->facility_name}}" data-alt_facility_name="{{$log->alt_facility_name}}" data-state="{{$log->state}}"
-                            data-lga="{{$log->lga}}" data-ward="{{$log->ward}}" data-ownership="{{$log->ownership}}" 
-                            data-facility_level="{{$log->facility_level}}" data-facility_level_option="{{$log->facility_level_option}}"
-                            data-longitude="{{$log->longitude}}" data-latitude="{{$log->latitude}}"
-                            data-postal_address="{{$log->postal_address}}" data-phone_number="{{$log->phone_number}}" data-email_address="{{$log->email_address}}"
-                            data-website="{{$log->website}}"   data-by="{{ $log->firstname.' '.$log->lastname }}"  data-date="{{Carbon\Carbon::parse($log->created_at)->toFormattedDateString()}}"  >
+                            data-id="{{$log->id}}" data-facility_code="{{$log->hfr_id}}"  data-start_date="{{$log->hospital->start_date}}" data-close_date="{{$log->hospital->close_date}}"
+                            data-facility_name="{{$log->hospital->facility_name}}" data-alt_facility_name="{{$log->hospital->alt_facility_name}}" data-state="{{$log->hospital->state->name}}"
+                            data-lga="{{$log->hospital?->lga?->name}}" data-ward="{{$log->hospital?->ward?->name}}" data-ownership="{{$log->hospital?->ownership?->name}}" 
+                            data-facility_level="{{$log->hospital?->facilitylevelofcare?->name}}" data-facility_level_option="{{$log->hospital?->facilitylevelofcareoption?->name}}"
+                            data-longitude="{{$log->hospital->longitude}}" data-latitude="{{$log->hospital->latitude}}"
+                            data-postal_address="{{$log->hospital->postal_address}}" data-phone_number="{{$log->hospital->phone_number}}" data-email_address="{{$log->hospital->email_address}}"
+                            data-website="{{$log->hospital->website}}"   data-by="{{ $log->hospital?->publishedby?->firstname}} {{ $log->hospital?->publishedby?->lastname}}"  data-date="{{Carbon\Carbon::parse($log->created_at)->toFormattedDateString()}}"  >
                             More
                         </button>  
                     </a> 
@@ -132,7 +141,7 @@ Exchange Logs
                             <input type="hidden" name="ownership_status" value={{$log->ownership_status}}>
                             <input type="hidden" name="level_status" value={{$log->level_status}}>
                             <input type="hidden" name="level_option_status" value={{$log->level_option_status}}>
-                            <input type="hidden" name="facility_id" value={{$log->facility_id}}>
+                            <input type="hidden" name="facility_id" value={{$log->hfr_id}}>
                             <input type="hidden" name="log_id" value={{$log->id}}>
                             <input type="hidden" name="request_type" value={{$log->request_type}}>
                             <input type="hidden" name="dhis_uid" value={{$log->dhis_uid}}>

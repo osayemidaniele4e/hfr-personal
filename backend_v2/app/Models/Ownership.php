@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ownership extends Model
 {
-    protected $table = "ma_ownerships";
+    protected $table = "lst_ownerships";
 }
