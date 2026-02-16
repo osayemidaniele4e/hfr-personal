@@ -19,7 +19,7 @@ class AuditTrail extends Controller
                 'users.lastname as lastname',
                 'hs_hospitals_history.facility_name as facility_name',
             )
-            ->orderByRaw('created_at')
+            ->orderByDesc('created_at')
             ->get();
 
         return view('masters.audit.index', compact('audits'));

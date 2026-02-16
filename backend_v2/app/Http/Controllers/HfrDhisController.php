@@ -995,9 +995,35 @@ class HfrDhisController extends Controller
     {
        // $logs = DB::table('dhis_log_details')->paginate(100);
 
-        $logs = DhisLog::all(); 
+        /* $logs = DhisLog::all(); 
 
-        return view('dhis.logs', compact("logs"));
+        return view('dhis.logs', compact("logs")); */
+
+         $logs = DhisLog::with([
+        'hospital.state',
+        'hospital.lga',
+        'hospital.ward',
+        'hospital.ownership',
+        'hospital.facilitylevelofcare',
+        'hospital.facilitylevelofcareoption',
+        'hospital.publishedby'
+    ])
+    ->orderByDesc('id')
+    ->get();
+
+    return view('dhis.logs', compact("logs"));
+
+        /*   $logs = DB::table('dhis_log as l')
+        ->leftJoin('hs_hospitals_history as h', 'h.id', '=', 'l.hfr_id')
+        ->select(
+            'l.*',
+            'h.facility_name',
+            'h.published_at'
+        )
+        ->orderByDesc('l.id')
+        ->get();
+
+        return view('dhis.logs', compact("logs")); */
     }
 
 

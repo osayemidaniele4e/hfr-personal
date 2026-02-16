@@ -1922,6 +1922,7 @@ class FrontendController extends Controller
             ->leftJoin('lst_oparational_status', 'hs_hospitals_history.operational_status_id', '=', 'lst_oparational_status.id')
             ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
             ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
+            ->whereNotNull('hs_hospitals_history.published_by')
             ->select(
                 'hs_hospitals_history.*',
                 'ou_states.name as state_name',
