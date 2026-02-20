@@ -582,6 +582,13 @@ class FrontendController extends Controller
             ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
             ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
 
+              // User joins for workflow fields
+        ->leftJoin('users as requested_by_user', 'hs_hospitals_history.requested_by', '=', 'requested_by_user.id')
+        ->leftJoin('users as verified_by_user', 'hs_hospitals_history.verified_by', '=', 'verified_by_user.id')
+        ->leftJoin('users as validated_by_user', 'hs_hospitals_history.validated_by', '=', 'validated_by_user.id')
+        ->leftJoin('users as published_by_user', 'hs_hospitals_history.published_by', '=', 'published_by_user.id')
+
+
             ->select(
                 'hs_hospitals_history.*',
                 'ou_states.name as state_name',
@@ -593,6 +600,13 @@ class FrontendController extends Controller
                 'lst_oparational_status.status as operational_status_name',
                 'lst_registration_status.status as registration_status_name',
                 'lst_license_status.status as license_status_name',
+
+
+            // Workflow user names
+            DB::raw("CONCAT(requested_by_user.firstname, ' ', requested_by_user.lastname) as requested_by_name"),
+            DB::raw("CONCAT(verified_by_user.firstname, ' ', verified_by_user.lastname) as verified_by_name"),
+            DB::raw("CONCAT(validated_by_user.firstname, ' ', validated_by_user.lastname) as validated_by_name"),
+            DB::raw("CONCAT(published_by_user.firstname, ' ', published_by_user.lastname) as published_by_name"),
 
             )
 
