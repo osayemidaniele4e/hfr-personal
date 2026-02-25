@@ -252,6 +252,34 @@
              </li>
 
              <hr>
+
+             <li class="treeview {{ request()->is('admin/api-clients*') ? 'active' : '' }}">
+                 <a href="#">
+                     <i class="fa fa-key"></i>
+                     <span>API Keys</span>
+                     <span class="pull-right-container">
+                         @php $pendingApiCount = \App\Models\ApiClient::where('status', 'pending')->count(); @endphp
+                         @if($pendingApiCount > 0)
+                             <span class="label label-warning pull-right">{{ $pendingApiCount }}</span>
+                         @else
+                             <span class="label label-success pull-right">+</span>
+                         @endif
+                     </span>
+                 </a>
+                 <ul class="treeview-menu">
+                     <li><a href="{{ route('api-clients.index') }}"><i class="fa fa-circle-o"></i> Active Keys</a></li>
+                     <li>
+                         <a href="{{ route('api-clients.pending') }}">
+                             <i class="fa fa-clock-o"></i> Pending Requests
+                             @if($pendingApiCount > 0)
+                                 <span class="label label-warning pull-right">{{ $pendingApiCount }}</span>
+                             @endif
+                         </a>
+                     </li>
+                     <li><a href="{{ route('api-clients.create') }}"><i class="fa fa-plus"></i> Create Key</a></li>
+                 </ul>
+             </li>
+
              <li class="treeview">
                  <a href="#">
                      <i class="fa fa-gears"></i>
