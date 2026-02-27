@@ -1,0 +1,422 @@
+{
+	"info": {
+		"_postman_id": "hfr-fhir-r4-collection",
+		"name": "HFR FHIR R4 API",
+		"description": "Nigeria Health Facility Registry — FHIR R4 API\n\nThis collection covers all FHIR R4 endpoints of the HFR API.\n\n**FHIR Version:** R4 (4.0.1)\n**Content-Type:** application/fhir+json\n**Authentication:** Include your API key in the `X-API-Key` header (same key as v1 API).\n\n**Base URL:** `{{base_url}}/api/fhir`\n\n**Resources:** Organization, Location, HealthcareService\n\n**Reference:**\n- [FHIR R4 Specification](https://hl7.org/fhir/R4/)\n- [FHIR Search](https://hl7.org/fhir/R4/search.html)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "X-API-Key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{api_key}}",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "api_key",
+			"value": "hfr_your_api_key_here",
+			"type": "string"
+		},
+		{
+			"key": "hospital_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "laboratory_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "pharmacy_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "imaging_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "service_id",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Capability Statement",
+			"item": [
+				{
+					"name": "Get CapabilityStatement (metadata)",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/metadata",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "metadata"]
+						},
+						"description": "Returns the FHIR CapabilityStatement describing server capabilities, supported resources, search parameters, and security. **No authentication required.**\n\nThis is the standard FHIR discovery endpoint. Clients should call this first to understand what the server supports."
+					}
+				}
+			]
+		},
+		{
+			"name": "Organization",
+			"item": [
+				{
+					"name": "Search Organizations (All Registries)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization?_count=20&_offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization"],
+							"query": [
+								{ "key": "name", "value": "", "description": "Search by facility name (supports :exact, :contains modifiers)", "disabled": true },
+								{ "key": "name:exact", "value": "", "description": "Exact name match", "disabled": true },
+								{ "key": "name:contains", "value": "", "description": "Contains substring match", "disabled": true },
+								{ "key": "identifier", "value": "", "description": "Search by facility code or registration number", "disabled": true },
+								{ "key": "type", "value": "", "description": "Filter by registry type: hospital, laboratory, pharmacy, imaging", "disabled": true },
+								{ "key": "address", "value": "", "description": "Search by address text", "disabled": true },
+								{ "key": "address-state", "value": "", "description": "Filter by state name (e.g., Lagos)", "disabled": true },
+								{ "key": "active", "value": "true", "description": "Filter by active status (true/false)", "disabled": true },
+								{ "key": "_id", "value": "", "description": "Filter by resource ID (e.g., hosp-123)", "disabled": true },
+								{ "key": "_count", "value": "20", "description": "Results per page (max 100, default 20)" },
+								{ "key": "_offset", "value": "0", "description": "Starting offset for pagination" },
+								{ "key": "_sort", "value": "name", "description": "Sort field. Prefix with - for descending (e.g., -name)", "disabled": true }
+							]
+						},
+						"description": "Search facilities across all four registries (hospitals, laboratories, pharmacies, imaging centres).\n\nReturns a FHIR Bundle of type `searchset` with pagination links.\n\n**Resource ID prefixes:** hosp-{id}, lab-{id}, pharm-{id}, img-{id}\n\n**String modifiers:**\n- `name=General` → contains match (default)\n- `name:exact=Lagos General Hospital` → exact match\n- `name:contains=General` → explicit contains\n\n**Token search:**\n- `type=hospital` → filter by registry type\n- `type=system|code` → system-qualified code"
+					}
+				},
+				{
+					"name": "Search Organizations by State",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization?address-state=Lagos&_count=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization"],
+							"query": [
+								{ "key": "address-state", "value": "Lagos", "description": "Filter by state name" },
+								{ "key": "_count", "value": "10", "description": "Results per page" }
+							]
+						},
+						"description": "Example: Search for all facilities in Lagos state."
+					}
+				},
+				{
+					"name": "Search Hospitals Only",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization?type=hospital&_count=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization"],
+							"query": [
+								{ "key": "type", "value": "hospital", "description": "Filter to hospital registry only" },
+								{ "key": "_count", "value": "10", "description": "Results per page" }
+							]
+						},
+						"description": "Example: Retrieve only hospital-type Organizations. Use type=laboratory, type=pharmacy, or type=imaging for other registries."
+					}
+				},
+				{
+					"name": "Read Hospital Organization",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization/hosp-{{hospital_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization", "hosp-{{hospital_id}}"]
+						},
+						"description": "Read a single hospital Organization resource by its prefixed ID.\n\nID formats:\n- Hospitals: `hosp-{id}`\n- Laboratories: `lab-{id}`\n- Pharmacies: `pharm-{id}`\n- Imaging: `img-{id}`"
+					}
+				},
+				{
+					"name": "Read Laboratory Organization",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization/lab-{{laboratory_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization", "lab-{{laboratory_id}}"]
+						},
+						"description": "Read a single laboratory Organization resource."
+					}
+				},
+				{
+					"name": "Read Pharmacy Organization",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization/pharm-{{pharmacy_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization", "pharm-{{pharmacy_id}}"]
+						},
+						"description": "Read a single pharmacy Organization resource."
+					}
+				},
+				{
+					"name": "Read Imaging Organization",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Organization/img-{{imaging_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Organization", "img-{{imaging_id}}"]
+						},
+						"description": "Read a single imaging centre Organization resource."
+					}
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Search Locations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Location?_count=20&_offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Location"],
+							"query": [
+								{ "key": "name", "value": "", "description": "Search by facility name", "disabled": true },
+								{ "key": "identifier", "value": "", "description": "Search by facility code", "disabled": true },
+								{ "key": "type", "value": "", "description": "Filter by facility type", "disabled": true },
+								{ "key": "address", "value": "", "description": "Search by address text", "disabled": true },
+								{ "key": "address-state", "value": "", "description": "Filter by state name", "disabled": true },
+								{ "key": "status", "value": "", "description": "Filter by status: active, suspended, inactive", "disabled": true },
+								{ "key": "near", "value": "", "description": "Geo search: latitude|longitude|distance_km (e.g., 6.5244|3.3792|10)", "disabled": true },
+								{ "key": "organization", "value": "", "description": "Filter by managing Organization (e.g., Organization/hosp-123)", "disabled": true },
+								{ "key": "_id", "value": "", "description": "Filter by resource ID (e.g., loc-hosp-123)", "disabled": true },
+								{ "key": "_count", "value": "20", "description": "Results per page (max 100, default 20)" },
+								{ "key": "_offset", "value": "0", "description": "Starting offset" },
+								{ "key": "_sort", "value": "", "description": "Sort field", "disabled": true }
+							]
+						},
+						"description": "Search facility locations across all registries.\n\nReturns a FHIR Bundle of Location resources with coordinates, status, hours, and address.\n\n**Location ID prefixes:** loc-hosp-{id}, loc-lab-{id}, loc-pharm-{id}, loc-img-{id}"
+					}
+				},
+				{
+					"name": "Geo Search (Find Nearby)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Location?near=6.5244|3.3792|5&_count=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Location"],
+							"query": [
+								{ "key": "near", "value": "6.5244|3.3792|5", "description": "Find facilities within 5km of Lagos (lat|lng|km)" },
+								{ "key": "_count", "value": "10", "description": "Results per page" }
+							]
+						},
+						"description": "Find facilities near a geographic point using the FHIR `near` search parameter.\n\nFormat: `latitude|longitude|distance_in_km`\n\nUses the Haversine formula to calculate distance. Default distance if omitted: 10km."
+					}
+				},
+				{
+					"name": "Search Active Locations by State",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Location?address-state=Lagos&status=active&_count=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Location"],
+							"query": [
+								{ "key": "address-state", "value": "Lagos", "description": "Filter by state" },
+								{ "key": "status", "value": "active", "description": "Only active (operational) locations" },
+								{ "key": "_count", "value": "10", "description": "Results per page" }
+							]
+						},
+						"description": "Example: Find all active (operational) facility locations in Lagos."
+					}
+				},
+				{
+					"name": "Read Hospital Location",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Location/loc-hosp-{{hospital_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Location", "loc-hosp-{{hospital_id}}"]
+						},
+						"description": "Read a single hospital Location resource.\n\nIncludes coordinates, operational status, hours of operation, and managing Organization reference."
+					}
+				},
+				{
+					"name": "Read Laboratory Location",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/Location/loc-lab-{{laboratory_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "Location", "loc-lab-{{laboratory_id}}"]
+						},
+						"description": "Read a single laboratory Location resource. Includes accreditation status extension."
+					}
+				}
+			]
+		},
+		{
+			"name": "HealthcareService",
+			"item": [
+				{
+					"name": "Search HealthcareServices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/HealthcareService?_count=20&_offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "HealthcareService"],
+							"query": [
+								{ "key": "name", "value": "", "description": "Search by service name", "disabled": true },
+								{ "key": "organization", "value": "", "description": "Filter by providing Organization (e.g., Organization/hosp-123)", "disabled": true },
+								{ "key": "location", "value": "", "description": "Filter by Location (e.g., Location/loc-hosp-123)", "disabled": true },
+								{ "key": "service-category", "value": "", "description": "Filter by service category ID", "disabled": true },
+								{ "key": "service-type", "value": "", "description": "Filter by service type ID", "disabled": true },
+								{ "key": "_id", "value": "", "description": "Filter by resource ID (e.g., svc-456)", "disabled": true },
+								{ "key": "_count", "value": "20", "description": "Results per page (max 100, default 20)" },
+								{ "key": "_offset", "value": "0", "description": "Starting offset" }
+							]
+						},
+						"description": "Search services offered by health facilities.\n\nReturns a FHIR Bundle of HealthcareService resources.\n\n**Service ID prefix:** svc-{id}"
+					}
+				},
+				{
+					"name": "Search Services by Organization",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/HealthcareService?organization=Organization/hosp-{{hospital_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "HealthcareService"],
+							"query": [
+								{ "key": "organization", "value": "Organization/hosp-{{hospital_id}}", "description": "Filter by Organization reference" }
+							]
+						},
+						"description": "Example: Get all services offered by a specific hospital."
+					}
+				},
+				{
+					"name": "Read HealthcareService",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/fhir+json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/fhir/HealthcareService/svc-{{service_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "fhir", "HealthcareService", "svc-{{service_id}}"]
+						},
+						"description": "Read a single HealthcareService resource by ID."
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set Accept header for FHIR JSON on all requests",
+					"if (!pm.request.headers.has('Accept')) {",
+					"    pm.request.headers.add({key: 'Accept', value: 'application/fhir+json'});",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Basic FHIR response validation",
+					"pm.test('Response has FHIR content type', function () {",
+					"    const ct = pm.response.headers.get('Content-Type') || '';",
+					"    pm.expect(ct).to.include('fhir+json');",
+					"});",
+					"",
+					"pm.test('Response is valid JSON', function () {",
+					"    pm.response.json();",
+					"});",
+					"",
+					"pm.test('Response has resourceType', function () {",
+					"    const json = pm.response.json();",
+					"    pm.expect(json).to.have.property('resourceType');",
+					"});"
+				]
+			}
+		}
+	]
+}

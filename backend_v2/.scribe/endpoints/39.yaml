@@ -1,0 +1,54 @@
+name: 'Public API (Frontend) - Slider'
+description: |-
+
+  Some endpoints for slider
+
+  These endpoints powers crud for slider component
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'slider-delete/{id}'
+    metadata:
+      custom: []
+      groupName: 'Public API (Frontend) - Slider'
+      groupDescription: |-
+
+        Some endpoints for slider
+
+        These endpoints powers crud for slider component
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Remove the specified resource from storage.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the slider delete.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

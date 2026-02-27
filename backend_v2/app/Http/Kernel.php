@@ -74,5 +74,6 @@ class Kernel extends HttpKernel
         'verify.api.key' => \App\Http\Middleware\VerifyApiKey::class,
         'log.api.request' => \App\Http\Middleware\LogApiRequest::class,
         'api.version' => \App\Http\Middleware\ApiVersionHeader::class,
+        'fhir.response' => \App\Http\Middleware\FhirResponseMiddleware::class,
     ];
 }

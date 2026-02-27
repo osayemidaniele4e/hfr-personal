@@ -15,6 +15,8 @@ import {
   FiAlertTriangle,
   FiSend,
   FiMail,
+  FiHeart,
+  FiDownload,
 } from "react-icons/fi";
 
 // ─── Data ───────────────────────────────────────────────────────────
@@ -215,6 +217,147 @@ const endpointGroups: EndpointGroup[] = [
   },
 ];
 
+// ─── FHIR R4 Endpoint Data ──────────────────────────────────────────
+
+const fhirEndpointGroups: EndpointGroup[] = [
+  {
+    title: "Capability Statement",
+    icon: <FiShield />,
+    endpoints: [
+      {
+        method: "GET",
+        path: "/api/fhir/metadata",
+        description: "Returns a FHIR CapabilityStatement describing server capabilities, supported resources, and search parameters. No authentication required.",
+        sampleResponse: `{
+  "resourceType": "CapabilityStatement",
+  "status": "active",
+  "kind": "instance",
+  "fhirVersion": "4.0.1",
+  "format": ["json"],
+  "rest": [{
+    "mode": "server",
+    "resource": [
+      { "type": "Organization", "interaction": [{"code": "read"}, {"code": "search-type"}] },
+      { "type": "Location", "interaction": [{"code": "read"}, {"code": "search-type"}] },
+      { "type": "HealthcareService", "interaction": [{"code": "read"}, {"code": "search-type"}] }
+    ]
+  }]
+}`,
+      },
+    ],
+  },
+  {
+    title: "Organization (Facilities)",
+    icon: <FiList />,
+    endpoints: [
+      {
+        method: "GET",
+        path: "/api/fhir/Organization",
+        description: "Search facilities across all registries (hospitals, labs, pharmacies, imaging). Returns a FHIR Bundle.",
+        params: [
+          { name: "name", type: "string", required: false, description: "Search by facility name. Supports :exact and :contains modifiers" },
+          { name: "identifier", type: "token", required: false, description: "Search by facility code or registration number" },
+          { name: "type", type: "token", required: false, description: "Filter by registry type (hospital, laboratory, pharmacy, imaging)" },
+          { name: "address", type: "string", required: false, description: "Search by address text" },
+          { name: "address-state", type: "string", required: false, description: "Filter by state name" },
+          { name: "active", type: "token", required: false, description: "Filter by active status (true/false)" },
+          { name: "_count", type: "integer", required: false, description: "Results per page (max 100, default 20)" },
+          { name: "_offset", type: "integer", required: false, description: "Starting offset for pagination" },
+          { name: "_sort", type: "string", required: false, description: "Sort field. Prefix with - for descending" },
+        ],
+        sampleResponse: `{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "total": 42567,
+  "link": [
+    {"relation": "self", "url": ".../Organization?_count=10&_offset=0"},
+    {"relation": "next", "url": ".../Organization?_count=10&_offset=10"}
+  ],
+  "entry": [{
+    "fullUrl": ".../Organization/hosp-101",
+    "resource": {
+      "resourceType": "Organization",
+      "id": "hosp-101",
+      "active": true,
+      "name": "Lagos General Hospital",
+      "identifier": [{"system": "https://hfr.health.gov.ng/fhir/facility-code", "value": "RC/1234/2020"}],
+      "type": [{"coding": [{"system": ".../registry-type", "code": "hospital"}]}],
+      "address": [{"state": "Lagos", "district": "Ikeja", "country": "NG"}]
+    },
+    "search": {"mode": "match"}
+  }]
+}`,
+      },
+      {
+        method: "GET",
+        path: "/api/fhir/Organization/{id}",
+        description: "Read a specific facility. IDs are prefixed: hosp-{id}, lab-{id}, pharm-{id}, img-{id}",
+        params: [
+          { name: "id", type: "string", required: true, description: "Prefixed resource ID (e.g., hosp-123, lab-45)" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Location (Facility Locations)",
+    icon: <FiSearch />,
+    endpoints: [
+      {
+        method: "GET",
+        path: "/api/fhir/Location",
+        description: "Search facility locations with geographic and status filtering.",
+        params: [
+          { name: "name", type: "string", required: false, description: "Search by facility name" },
+          { name: "address", type: "string", required: false, description: "Search by address text" },
+          { name: "address-state", type: "string", required: false, description: "Filter by state name" },
+          { name: "status", type: "token", required: false, description: "Filter by status (active, suspended, inactive)" },
+          { name: "type", type: "token", required: false, description: "Filter by facility type" },
+          { name: "near", type: "special", required: false, description: "Geo search: latitude|longitude|distance_km (e.g., 6.52|3.37|10)" },
+          { name: "organization", type: "reference", required: false, description: "Filter by managing Organization (e.g., Organization/hosp-123)" },
+          { name: "_count", type: "integer", required: false, description: "Results per page (max 100, default 20)" },
+          { name: "_offset", type: "integer", required: false, description: "Starting offset" },
+        ],
+      },
+      {
+        method: "GET",
+        path: "/api/fhir/Location/{id}",
+        description: "Read a specific location. IDs: loc-hosp-{id}, loc-lab-{id}, loc-pharm-{id}, loc-img-{id}",
+        params: [
+          { name: "id", type: "string", required: true, description: "Prefixed location ID (e.g., loc-hosp-123)" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "HealthcareService",
+    icon: <FiHeart />,
+    endpoints: [
+      {
+        method: "GET",
+        path: "/api/fhir/HealthcareService",
+        description: "Search services offered by facilities.",
+        params: [
+          { name: "name", type: "string", required: false, description: "Search by service name" },
+          { name: "organization", type: "reference", required: false, description: "Filter by providing Organization" },
+          { name: "location", type: "reference", required: false, description: "Filter by Location" },
+          { name: "service-category", type: "token", required: false, description: "Filter by service category ID" },
+          { name: "service-type", type: "token", required: false, description: "Filter by service type ID" },
+          { name: "_count", type: "integer", required: false, description: "Results per page (max 100, default 20)" },
+          { name: "_offset", type: "integer", required: false, description: "Starting offset" },
+        ],
+      },
+      {
+        method: "GET",
+        path: "/api/fhir/HealthcareService/{id}",
+        description: "Read a specific service by ID (prefixed: svc-{id}).",
+        params: [
+          { name: "id", type: "string", required: true, description: "Service ID (e.g., svc-456)" },
+        ],
+      },
+    ],
+  },
+];
+
 // ─── Subcomponents ──────────────────────────────────────────────────
 
 function CopyButton({ text }: { text: string }) {
@@ -318,6 +461,7 @@ function SideNav({ active, onChange }: { active: string; onChange: (s: string) =
     { id: "authentication", label: "Authentication", icon: <FiKey /> },
     { id: "rate-limiting", label: "Rate Limiting", icon: <FiZap /> },
     { id: "endpoints", label: "API Endpoints", icon: <FiCode /> },
+    { id: "fhir", label: "FHIR R4 API", icon: <FiHeart /> },
     { id: "errors", label: "Error Handling", icon: <FiAlertTriangle /> },
     { id: "examples", label: "Code Examples", icon: <FiCode /> },
     { id: "versioning", label: "Versioning", icon: <FiShield /> },
@@ -481,6 +625,66 @@ foreach ($data['data']['facilities'] as $facility) {
     echo $facility['facility_name'] . " — " . $facility['location']['state']['name'] . "\\n";
 }`;
 
+  // ── FHIR Code Examples ──
+  const fhirCurlExample = `# Get CapabilityStatement (no auth required)
+curl ${API_BASE}/api/fhir/metadata
+
+# Search Organizations by state
+curl -H "X-API-Key: hfr_your_api_key_here" \\
+     -H "Accept: application/fhir+json" \\
+     "${API_BASE}/api/fhir/Organization?address-state=Lagos&_count=10"
+
+# Find facilities near coordinates (within 5km)
+curl -H "X-API-Key: hfr_your_api_key_here" \\
+     "${API_BASE}/api/fhir/Location?near=6.5244|3.3792|5"`;
+
+  const fhirPythonExample = `import requests
+
+API_KEY = "hfr_your_api_key_here"
+FHIR_BASE = "${API_BASE}/api/fhir"
+
+headers = {
+    "X-API-Key": API_KEY,
+    "Accept": "application/fhir+json"
+}
+
+# Search FHIR Organizations in Lagos
+response = requests.get(f"{FHIR_BASE}/Organization", headers=headers, params={
+    "address-state": "Lagos",
+    "_count": 10
+})
+
+bundle = response.json()
+print(f"Total: {bundle['total']} facilities")
+for entry in bundle.get("entry", []):
+    org = entry["resource"]
+    print(f'{org["name"]} (ID: {org["id"]})')`;
+
+  const fhirJsExample = `const API_KEY = "hfr_your_api_key_here";
+const FHIR_BASE = "${API_BASE}/api/fhir";
+
+async function searchFhirOrganizations(state, count = 20) {
+  const params = new URLSearchParams({
+    "address-state": state,
+    "_count": String(count),
+  });
+
+  const response = await fetch(\`\${FHIR_BASE}/Organization?\${params}\`, {
+    headers: {
+      "X-API-Key": API_KEY,
+      "Accept": "application/fhir+json",
+    },
+  });
+
+  const bundle = await response.json();
+  console.log(\`Found \${bundle.total} organizations\`);
+  return bundle;
+}
+
+// Usage
+const bundle = await searchFhirOrganizations("Lagos");
+bundle.entry?.forEach(e => console.log(e.resource.name));`;
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
@@ -502,8 +706,11 @@ foreach ($data['data']['facilities'] as $facility) {
             <code className="px-4 py-2 font-mono text-sm rounded-lg bg-green-800/50">
               Base URL: {API_BASE}/api/v1
             </code>
+            <code className="px-4 py-2 font-mono text-sm rounded-lg bg-blue-800/50">
+              FHIR R4: {API_BASE}/api/fhir
+            </code>
             <span className="px-4 py-2 text-sm font-semibold bg-green-600 rounded-lg">
-              Current Version: v1
+              Current Version: v1 + FHIR R4
             </span>
           </div>
         </div>
@@ -531,6 +738,11 @@ foreach ($data['data']['facilities'] as $facility) {
                     Health Facility Registry. It covers <strong>hospitals &amp; clinics</strong>,{" "}
                     <strong>pharmacies</strong>, <strong>laboratories</strong>, and{" "}
                     <strong>imaging/radiology</strong> premises across all 36 states and the FCT.
+                  </p>
+                  <p>
+                    Two API interfaces are available: the <strong>v1 REST API</strong> with a custom JSON envelope,
+                    and the <strong>FHIR R4 API</strong> for international health data interoperability. Both share
+                    the same API key authentication.
                   </p>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-3 not-prose">
                     {[
@@ -808,7 +1020,27 @@ X-API-Version: v1`}
             {/* Endpoints */}
             {activeSection === "endpoints" && (
               <section id="endpoints">
-                <h2 className="mb-4 text-2xl font-bold">API Endpoints</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">API Endpoints</h2>
+                  <a
+                    href="/docs/HFR_API_Guide.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition bg-green-700 rounded-lg hover:bg-green-800"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const printWindow = window.open('/docs/HFR_API_Guide.html', '_blank');
+                      if (printWindow) {
+                        printWindow.addEventListener('load', () => {
+                          printWindow.print();
+                        });
+                      }
+                    }}
+                  >
+                    <FiDownload className="w-4 h-4" />
+                    Download PDF Guide
+                  </a>
+                </div>
                 <p className="mb-6 text-gray-600">
                   All endpoints are read-only (GET) and return JSON. Responses follow a standardized format.
                 </p>
@@ -826,6 +1058,102 @@ X-API-Version: v1`}
                       </div>
                     </div>
                   ))}
+                </div>
+              </section>
+            )}
+
+            {/* FHIR R4 API */}
+            {activeSection === "fhir" && (
+              <section id="fhir">
+                <h2 className="mb-4 text-2xl font-bold">FHIR R4 API</h2>
+                <div className="space-y-6">
+                  <div className="p-4 border-l-4 border-blue-400 bg-blue-50">
+                    <div className="flex items-start gap-2">
+                      <FiHeart className="w-5 h-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-blue-800">HL7 FHIR R4 (4.0.1) Compliant</p>
+                        <p className="text-sm text-blue-700">
+                          The FHIR API provides an internationally interoperable interface to HFR data.
+                          It uses the same API key authentication as the v1 API. All responses use the
+                          <code className="px-1 mx-1 bg-blue-100 rounded">application/fhir+json</code> content type.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {[
+                      { label: "Base URL", value: `${API_BASE}/api/fhir` },
+                      { label: "Content Type", value: "application/fhir+json" },
+                      { label: "Resources", value: "Organization, Location, HealthcareService" },
+                    ].map((item) => (
+                      <div key={item.label} className="p-4 border border-blue-200 rounded-lg bg-blue-50/50">
+                        <div className="text-sm text-gray-500">{item.label}</div>
+                        <div className="text-sm font-semibold text-gray-800 break-all">{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div>
+                    <h3 className="mb-2 text-lg font-semibold">Key Differences from v1 API</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm border">
+                        <thead>
+                          <tr className="bg-gray-50">
+                            <th className="p-2 text-left border">Aspect</th>
+                            <th className="p-2 text-left border">v1 API</th>
+                            <th className="p-2 text-left border">FHIR R4 API</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr><td className="p-2 border">Base URL</td><td className="p-2 border"><code>/api/v1/</code></td><td className="p-2 border"><code>/api/fhir/</code></td></tr>
+                          <tr><td className="p-2 border">Response format</td><td className="p-2 border">Custom JSON envelope</td><td className="p-2 border">FHIR Bundle / Resource</td></tr>
+                          <tr><td className="p-2 border">Content-Type</td><td className="p-2 border"><code>application/json</code></td><td className="p-2 border"><code>application/fhir+json</code></td></tr>
+                          <tr><td className="p-2 border">Pagination</td><td className="p-2 border"><code>per_page</code> / <code>page</code></td><td className="p-2 border"><code>_count</code> / <code>_offset</code></td></tr>
+                          <tr><td className="p-2 border">Resource IDs</td><td className="p-2 border">Numeric (1, 2, 3)</td><td className="p-2 border">Prefixed (hosp-1, lab-2)</td></tr>
+                          <tr><td className="p-2 border">Search syntax</td><td className="p-2 border">Custom query params</td><td className="p-2 border">FHIR search params with modifiers</td></tr>
+                          <tr><td className="p-2 border">Error format</td><td className="p-2 border">Custom JSON</td><td className="p-2 border">FHIR OperationOutcome</td></tr>
+                          <tr><td className="p-2 border">Authentication</td><td className="p-2 border" colSpan={2}>Same — <code>X-API-Key</code> header</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg font-semibold">Endpoints</h3>
+                  <div className="space-y-8">
+                    {fhirEndpointGroups.map((group) => (
+                      <div key={group.title}>
+                        <h4 className="flex items-center gap-2 mb-3 font-semibold">
+                          {group.icon}
+                          {group.title}
+                        </h4>
+                        <div className="space-y-2">
+                          {group.endpoints.map((ep) => (
+                            <EndpointCard key={ep.path} endpoint={ep} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h3 className="text-lg font-semibold">FHIR Code Examples</h3>
+                  <div className="space-y-6">
+                    {[
+                      { label: "cURL", code: fhirCurlExample, lang: "bash" },
+                      { label: "Python", code: fhirPythonExample, lang: "python" },
+                      { label: "JavaScript / TypeScript", code: fhirJsExample, lang: "javascript" },
+                    ].map((ex) => (
+                      <div key={ex.label}>
+                        <h4 className="mb-2 font-semibold">{ex.label}</h4>
+                        <div className="relative">
+                          <CopyButton text={ex.code} />
+                          <pre className="p-4 overflow-x-auto text-sm leading-relaxed text-green-300 bg-gray-900 rounded-lg">
+                            {ex.code}
+                          </pre>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </section>
             )}
@@ -934,6 +1262,15 @@ Deprecation: true`}
                         </tr>
                       </thead>
                       <tbody>
+                        <tr>
+                          <td className="p-3 border-b">2026-02-25</td>
+                          <td className="p-3 border-b"><code>FHIR R4</code></td>
+                          <td className="p-3 border-b">
+                            FHIR R4 (4.0.1) API — Organization, Location, HealthcareService
+                            resources. CapabilityStatement, FHIR search parameters, geo-search,
+                            OperationOutcome error handling. Same API key authentication.
+                          </td>
+                        </tr>
                         <tr>
                           <td className="p-3 border-b">2026-02-14</td>
                           <td className="p-3 border-b"><code>v1</code></td>

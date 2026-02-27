@@ -143,8 +143,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Expiry Date (optional)</label>
-                                                        <input type="date" name="expires_at" class="form-control">
-                                                        <small class="text-muted">Leave empty for no expiry</small>
+                                                        <input type="date" name="expires_at" class="form-control" value="{{ now()->addYear()->format('Y-m-d') }}">
+                                                        <small class="text-muted">Defaults to 1 year from today. Clear to set no expiry.</small>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -240,6 +240,12 @@
                 responsive: true,
                 order: [[5, 'asc']],
                 pageLength: 25,
+                columnDefs: [
+                    { responsivePriority: 1, targets: 1 },  // Name
+                    { responsivePriority: 2, targets: -1 },  // Actions (last column — always visible)
+                    { responsivePriority: 3, targets: 2 },  // Email
+                    { responsivePriority: 10001, targets: 4 } // Use Case (collapse first)
+                ]
             });
         });
     </script>

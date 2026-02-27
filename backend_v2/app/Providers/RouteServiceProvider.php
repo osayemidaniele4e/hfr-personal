@@ -49,6 +49,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware('api_external')
                 ->group(base_path('routes/api_v1.php'));
 
+            // FHIR R4 API routes
+            Route::prefix('api/fhir')
+                ->middleware(['api_external', 'fhir.response'])
+                ->group(base_path('routes/fhir.php'));
+
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
