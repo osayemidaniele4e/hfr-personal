@@ -1,86 +1,113 @@
-name: 'Facility Approval Tracking - Record Updates'
+name: Administration
 description: |-
 
-  Endpoints that provide detailed audit comparison between the current and updated
-  records of a health facility. This helps reviewers and approvers understand what
-  changed in each facility record during the verification, validation, or publication stages.
+  Handles the dashboard views and related data for federal (national) and state-level users.
 endpoints:
   -
     custom: []
     httpMethods:
-      - GET
-    uri: 'admin/hospitals/approvals/updated/{id}/{stage}'
+      - POST
+    uri: administrator/completeness
     metadata:
       custom: []
-      groupName: 'Facility Approval Tracking - Record Updates'
+      groupName: Administration
       groupDescription: |-
 
-        Endpoints that provide detailed audit comparison between the current and updated
-        records of a health facility. This helps reviewers and approvers understand what
-        changed in each facility record during the verification, validation, or publication stages.
+        Handles the dashboard views and related data for federal (national) and state-level users.
       subgroup: ''
       subgroupDescription: ''
-      title: 'View differences between old and updated facility records.'
-      description: |-
-        This endpoint retrieves the detailed audit trail and compares
-        old versus new values for a given facility update request.
-
-        It shows changes to metadata such as ownership, location, level of care,
-        and service availability. The view also displays the corresponding audit
-        data and allows reviewers to approve or reject updates at different workflow stages.
-      authenticated: false
+      title: 'LGA Completeness Scores'
+      description: 'Returns completeness scores for all LGAs in a given state.'
+      authenticated: true
       deprecated: false
     headers:
       Content-Type: application/json
       Accept: application/json
-    urlParameters:
-      id:
-        custom: []
-        name: id
-        description: 'The ID of the facility history record being reviewed.'
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-      stage:
-        custom: []
-        name: stage
-        description: |-
-          The stage of review:
-           - 1 → Verification stage
-           - 2 → Validation stage
-           - 3 → Publication stage
-        required: true
-        example: 16
-        type: integer
-        enumValues: []
-        exampleWasSpecified: false
-        nullable: false
-        deprecated: false
-    cleanUrlParameters:
-      id: 16
-      stage: 16
+    urlParameters: []
+    cleanUrlParameters: []
     queryParameters: []
     cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
+    bodyParameters:
+      state:
+        custom: []
+        name: state
+        description: 'Name of the state.'
+        required: true
+        example: Lagos
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state: Lagos
     fileParameters: []
     responses:
       -
         custom: []
         status: 200
-        content: 'View showing old and new facility data side by side.'
+        content: |-
+          [
+            {"name": "Ikeja", "y": 85},
+            {"name": "Surulere", "y": 78}
+          ]
         headers: []
-        description: success
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: administrator/facilitystatus
+    metadata:
+      custom: []
+      groupName: Administration
+      groupDescription: |-
+
+        Handles the dashboard views and related data for federal (national) and state-level users.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'LGA Facility Status'
+      description: 'Returns facility status for all LGAs in a given state.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state:
+        custom: []
+        name: state
+        description: 'Name of the state.'
+        required: true
+        example: Lagos
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state: Lagos
+    fileParameters: []
+    responses:
       -
         custom: []
-        status: 404
-        content: 'Facility record or audit not found.'
+        status: 200
+        content: |-
+          [
+            {"lga": "Ikeja", "status": "Active"},
+            {"lga": "Surulere", "status": "Inactive"}
+          ]
         headers: []
-        description: not_found
+        description: ''
     responseFields: []
     auth: []
     controller: null

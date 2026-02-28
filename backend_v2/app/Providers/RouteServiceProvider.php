@@ -38,10 +38,21 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            // Existing internal API routes (untouched)
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
+
+            // External API v1 routes (authenticated, rate-limited, logged)
+            Route::prefix('api/v1')
+                ->middleware('api_external')
+                ->group(base_path('routes/api_v1.php'));
+
+            // FHIR R4 API routes
+            Route::prefix('api/fhir')
+                ->middleware(['api_external', 'fhir.response'])
+                ->group(base_path('routes/fhir.php'));
 
             Route::middleware('web')
                 ->namespace($this->namespace)
@@ -58,6 +69,20 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Per-client rate limiting for external API
+        RateLimiter::for('api_external', function (Request $request) {
+            $client = $request->attributes->get('api_client');
+            $limit = $client ? $client->rate_limit : 30;
+            $key = $client ? 'api_client:' . $client->id : 'api_ip:' . $request->ip();
+            return Limit::perMinute($limit)->by($key)->response(function () use ($limit) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Rate limit exceeded. Maximum {$limit} requests per minute.",
+                    'code' => 'RATE_LIMIT_EXCEEDED',
+                ], 429);
+            });
         });
     }
 }

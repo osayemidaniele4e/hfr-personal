@@ -4,7 +4,7 @@ import Image from "next/image";
 type childrenProps = {
   children: React.ReactNode;
   className?: string;
-  disabled?: string;
+  disabled?: boolean;
   source?: string | StaticImport | React.ReactNode;
   onClick?: () => void;
 };
@@ -25,11 +25,12 @@ const Text = ({ children, className, onClick }: childrenProps) => {
     </p>
   );
 };
-const GreenButton = ({ children, className, onClick }: childrenProps) => {
+const GreenButton = ({ children, className, onClick, disabled }: childrenProps) => {
   return (
     <button
       className={`text-left leading-6 ${className} p-2 bg-[#326F32] rounded-lg text-white text-center`}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
     >
       {children}
     </button>

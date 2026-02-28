@@ -1,0 +1,574 @@
+{
+	"info": {
+		"_postman_id": "hfr-api-v1-collection",
+		"name": "HFR External API v1",
+		"description": "Nigeria Health Facility Registry — External API v1\n\nThis collection covers all endpoints of the HFR External API.\n\n**Authentication:** Include your API key in the `X-API-Key` header.\n\n**Base URL:** `{{base_url}}/api/v1`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "X-API-Key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{api_key}}",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "api_key",
+			"value": "hfr_your_api_key_here",
+			"type": "string"
+		},
+		{
+			"key": "facility_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "pharmacy_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "laboratory_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "imaging_id",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "API Health Check",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", ""]
+						},
+						"description": "Public health check endpoint. No authentication required. Returns API version, documentation link, and available endpoint URLs."
+					}
+				}
+			]
+		},
+		{
+			"name": "API Key Requests (Public)",
+			"item": [
+				{
+					"name": "Request an API Key",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"organisation\": \"Ministry of Health\",\n    \"use_case\": \"Building a health facility locator app for citizens to find nearby hospitals and clinics across Nigeria.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/request-key",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "request-key"]
+						},
+						"description": "Submit a request for an API key. No authentication required. Rate limited to 5 requests per minute per IP.\n\n**Required fields:** name, email, use_case (min 20 chars)\n**Optional fields:** organisation\n\nReturns 201 on success, 409 if a pending/approved request already exists for the email."
+					}
+				},
+				{
+					"name": "Check Request Status",
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/request-key/status?email=john@example.com",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "request-key", "status"],
+							"query": [
+								{ "key": "email", "value": "john@example.com", "description": "Email address used in the API key request" }
+							]
+						},
+						"description": "Check the status of a previously submitted API key request. Returns status (pending/approved/rejected), submission date, and review date."
+					}
+				}
+			]
+		},
+		{
+			"name": "Facilities",
+			"item": [
+				{
+					"name": "List Facilities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/facilities?per_page=25&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "facilities"],
+							"query": [
+								{ "key": "search", "value": "", "description": "Search by facility name, state, LGA, or ward", "disabled": true },
+								{ "key": "state_id", "value": "", "description": "Filter by state ID", "disabled": true },
+								{ "key": "lga_id", "value": "", "description": "Filter by LGA ID", "disabled": true },
+								{ "key": "ward_id", "value": "", "description": "Filter by ward ID", "disabled": true },
+								{ "key": "facility_type_id", "value": "", "description": "Filter by facility type", "disabled": true },
+								{ "key": "facility_level_id", "value": "", "description": "Filter by level of care", "disabled": true },
+								{ "key": "ownership_id", "value": "", "description": "Filter by ownership category", "disabled": true },
+								{ "key": "ownership_type_id", "value": "", "description": "Filter by ownership type", "disabled": true },
+								{ "key": "operational_status_id", "value": "", "description": "Filter by operational status", "disabled": true },
+								{ "key": "registration_status_id", "value": "", "description": "Filter by registration status", "disabled": true },
+								{ "key": "license_status_id", "value": "", "description": "Filter by license status", "disabled": true },
+								{ "key": "has_coordinates", "value": "true", "description": "Filter facilities with GPS coordinates (true/false)", "disabled": true },
+								{ "key": "service_ids", "value": "", "description": "Comma-separated service IDs to filter by", "disabled": true },
+								{ "key": "per_page", "value": "25", "description": "Results per page (1-100, default 25)" },
+								{ "key": "page", "value": "1", "description": "Page number" },
+								{ "key": "sort_by", "value": "facility_name", "description": "Sort by: facility_name, state, lga, updated_at", "disabled": true },
+								{ "key": "sort_order", "value": "asc", "description": "Sort direction: asc or desc", "disabled": true }
+							]
+						},
+						"description": "Search and list health facilities with filtering and pagination. Enable disabled query params to apply filters."
+					}
+				},
+				{
+					"name": "Get Facility Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/facilities/{{facility_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "facilities", "{{facility_id}}"]
+						},
+						"description": "Get detailed information about a single facility by ID. Returns full facility data including location, classification, status, contact, operations, and staffing."
+					}
+				},
+				{
+					"name": "Get Facility Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/facilities/{{facility_id}}/services",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "facilities", "{{facility_id}}", "services"]
+						},
+						"description": "Get all services offered by a specific facility, grouped by category."
+					}
+				},
+				{
+					"name": "Facility Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/facilities/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "facilities", "statistics"],
+							"query": [
+								{ "key": "state_id", "value": "", "description": "Filter statistics by state", "disabled": true },
+								{ "key": "lga_id", "value": "", "description": "Filter statistics by LGA", "disabled": true }
+							]
+						},
+						"description": "Get summary statistics: total facilities, breakdown by ownership, level of care, and state."
+					}
+				}
+			]
+		},
+		{
+			"name": "Pharmacies",
+			"item": [
+				{
+					"name": "List Pharmacies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pharmacies?per_page=25&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "pharmacies"],
+							"query": [
+								{ "key": "search", "value": "", "description": "Search by facility name", "disabled": true },
+								{ "key": "state_id", "value": "", "description": "Filter by state", "disabled": true },
+								{ "key": "lga_id", "value": "", "description": "Filter by LGA", "disabled": true },
+								{ "key": "ward_id", "value": "", "description": "Filter by ward", "disabled": true },
+								{ "key": "ownership_id", "value": "", "description": "Filter by ownership", "disabled": true },
+								{ "key": "operational_status_id", "value": "", "description": "Filter by operational status", "disabled": true },
+								{ "key": "registration_status_id", "value": "", "description": "Filter by registration status", "disabled": true },
+								{ "key": "license_status_id", "value": "", "description": "Filter by license status", "disabled": true },
+								{ "key": "has_coordinates", "value": "true", "description": "Filter with GPS coordinates", "disabled": true },
+								{ "key": "per_page", "value": "25", "description": "Results per page (1-100)" },
+								{ "key": "page", "value": "1", "description": "Page number" }
+							]
+						},
+						"description": "Search and list pharmaceutical premises with filtering and pagination."
+					}
+				},
+				{
+					"name": "Get Pharmacy Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/pharmacies/{{pharmacy_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "pharmacies", "{{pharmacy_id}}"]
+						},
+						"description": "Get detailed information about a single pharmacy by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "Laboratories",
+			"item": [
+				{
+					"name": "List Laboratories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/laboratories?per_page=25&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "laboratories"],
+							"query": [
+								{ "key": "search", "value": "", "description": "Search by facility name", "disabled": true },
+								{ "key": "state_id", "value": "", "description": "Filter by state", "disabled": true },
+								{ "key": "lga_id", "value": "", "description": "Filter by LGA", "disabled": true },
+								{ "key": "ward_id", "value": "", "description": "Filter by ward", "disabled": true },
+								{ "key": "facility_level_id", "value": "", "description": "Filter by level of care", "disabled": true },
+								{ "key": "ownership_id", "value": "", "description": "Filter by ownership", "disabled": true },
+								{ "key": "operational_status_id", "value": "", "description": "Filter by operational status", "disabled": true },
+								{ "key": "registration_status_id", "value": "", "description": "Filter by registration status", "disabled": true },
+								{ "key": "license_status_id", "value": "", "description": "Filter by license status", "disabled": true },
+								{ "key": "accreditation_status_id", "value": "", "description": "Filter by accreditation status", "disabled": true },
+								{ "key": "has_coordinates", "value": "true", "description": "Filter with GPS coordinates", "disabled": true },
+								{ "key": "per_page", "value": "25", "description": "Results per page (1-100)" },
+								{ "key": "page", "value": "1", "description": "Page number" }
+							]
+						},
+						"description": "Search and list laboratory premises with filtering and pagination."
+					}
+				},
+				{
+					"name": "Get Laboratory Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/laboratories/{{laboratory_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "laboratories", "{{laboratory_id}}"]
+						},
+						"description": "Get detailed information about a single laboratory by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "Imaging / Radiology",
+			"item": [
+				{
+					"name": "List Imaging Facilities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/imaging?per_page=25&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "imaging"],
+							"query": [
+								{ "key": "search", "value": "", "description": "Search by facility name", "disabled": true },
+								{ "key": "state_id", "value": "", "description": "Filter by state", "disabled": true },
+								{ "key": "lga_id", "value": "", "description": "Filter by LGA", "disabled": true },
+								{ "key": "ward_id", "value": "", "description": "Filter by ward", "disabled": true },
+								{ "key": "ownership_id", "value": "", "description": "Filter by ownership", "disabled": true },
+								{ "key": "operational_status_id", "value": "", "description": "Filter by operational status", "disabled": true },
+								{ "key": "registration_status_id", "value": "", "description": "Filter by registration status", "disabled": true },
+								{ "key": "license_status_id", "value": "", "description": "Filter by license status", "disabled": true },
+								{ "key": "has_coordinates", "value": "true", "description": "Filter with GPS coordinates", "disabled": true },
+								{ "key": "per_page", "value": "25", "description": "Results per page (1-100)" },
+								{ "key": "page", "value": "1", "description": "Page number" }
+							]
+						},
+						"description": "Search and list imaging/radiology premises with filtering and pagination."
+					}
+				},
+				{
+					"name": "Get Imaging Facility Detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/imaging/{{imaging_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "imaging", "{{imaging_id}}"]
+						},
+						"description": "Get detailed information about a single imaging facility by ID."
+					}
+				}
+			]
+		},
+		{
+			"name": "Lookups / Reference Data",
+			"item": [
+				{
+					"name": "List States",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/states",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "states"]
+						},
+						"description": "List all 36 Nigerian states and FCT."
+					}
+				},
+				{
+					"name": "List LGAs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/lgas",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "lgas"],
+							"query": [
+								{ "key": "state_id", "value": "", "description": "Filter by state ID", "disabled": true }
+							]
+						},
+						"description": "List Local Government Areas. Optionally filter by state_id."
+					}
+				},
+				{
+					"name": "List Wards",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/wards",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "wards"],
+							"query": [
+								{ "key": "lga_id", "value": "", "description": "Filter by LGA ID", "disabled": true }
+							]
+						},
+						"description": "List wards. Optionally filter by lga_id."
+					}
+				},
+				{
+					"name": "List Facility Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/facility-types",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "facility-types"]
+						},
+						"description": "List all facility type classifications."
+					}
+				},
+				{
+					"name": "List Facility Levels",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/facility-levels",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "facility-levels"]
+						},
+						"description": "List all levels of care (Primary, Secondary, Tertiary)."
+					}
+				},
+				{
+					"name": "List Ownership Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/ownership",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "ownership"]
+						},
+						"description": "List ownership categories (e.g., Public, Private)."
+					}
+				},
+				{
+					"name": "List Ownership Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/ownership-types",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "ownership-types"],
+							"query": [
+								{ "key": "ownership_id", "value": "", "description": "Filter by ownership category ID", "disabled": true }
+							]
+						},
+						"description": "List ownership types. Optionally filter by ownership_id."
+					}
+				},
+				{
+					"name": "List Operational Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/operational-statuses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "operational-statuses"]
+						},
+						"description": "List all operational status options."
+					}
+				},
+				{
+					"name": "List Registration Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/registration-statuses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "registration-statuses"]
+						},
+						"description": "List all registration status options."
+					}
+				},
+				{
+					"name": "List License Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/license-statuses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "license-statuses"]
+						},
+						"description": "List all license status options."
+					}
+				},
+				{
+					"name": "List Accreditation Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/accreditation-statuses",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "accreditation-statuses"]
+						},
+						"description": "List all accreditation status options."
+					}
+				},
+				{
+					"name": "List Service Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/service-categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "service-categories"]
+						},
+						"description": "List all health service categories."
+					}
+				},
+				{
+					"name": "List Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/lookups/services",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "lookups", "services"],
+							"query": [
+								{ "key": "category_id", "value": "", "description": "Filter by service category ID", "disabled": true }
+							]
+						},
+						"description": "List health services. Optionally filter by category_id."
+					}
+				}
+			]
+		}
+	]
+}

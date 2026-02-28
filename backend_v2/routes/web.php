@@ -30,6 +30,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AuditTrail;
 use App\Http\Controllers\ValidateDownloadController;
+use App\Http\Controllers\ApiClientController;
 
 // use Illuminate\Support\Facades\Auth;
 
@@ -56,6 +57,19 @@ Route::middleware(["auth"])->group(function () {
 
 
         require base_path('routes/hfrdhis.php');
+
+        //api clients management
+        Route::get('admin/api-clients', [ApiClientController::class, 'index'])->name('api-clients.index');
+        Route::get('admin/api-clients/pending', [ApiClientController::class, 'pending'])->name('api-clients.pending');
+        Route::post('admin/api-clients/approve', [ApiClientController::class, 'approve'])->name('api-clients.approve');
+        Route::post('admin/api-clients/reject', [ApiClientController::class, 'reject'])->name('api-clients.reject');
+        Route::get('admin/api-clients/create', [ApiClientController::class, 'create'])->name('api-clients.create');
+        Route::post('admin/api-clients', [ApiClientController::class, 'store'])->name('api-clients.store');
+        Route::post('admin/api-clients/toggle', [ApiClientController::class, 'toggleStatus'])->name('api-clients.toggle');
+        Route::post('admin/api-clients/update', [ApiClientController::class, 'update'])->name('api-clients.update');
+        Route::post('admin/api-clients/regenerate', [ApiClientController::class, 'regenerate'])->name('api-clients.regenerate');
+        Route::post('admin/api-clients/delete', [ApiClientController::class, 'destroy'])->name('api-clients.destroy');
+        Route::get('admin/api-clients/{id}/logs', [ApiClientController::class, 'logs'])->name('api-clients.logs');
 
         //roles
         Route::get('admin/roles', [RoleController::class, 'index'])->name('roles.index');

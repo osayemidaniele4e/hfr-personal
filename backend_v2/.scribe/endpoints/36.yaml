@@ -1,0 +1,357 @@
+name: 'Administration - LGA Management'
+description: |-
+
+  APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/masters/lgas
+    metadata:
+      custom: []
+      groupName: 'Administration - LGA Management'
+      groupDescription: |-
+
+        APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all LGAs with pagination.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'View with paginated LGAs'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/masters/lgas
+    metadata:
+      custom: []
+      groupName: 'Administration - LGA Management'
+      groupDescription: |-
+
+        APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Add a new LGA.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Name of the LGA.'
+        required: true
+        example: Ikeja
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: 'ID of the state the LGA belongs to.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_code:
+        custom: []
+        name: lga_code
+        description: 'LGA code.'
+        required: true
+        example: '01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: Ikeja
+      state_id: 1
+      lga_code: '01'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect back with success message'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: 'Validation error if required fields are missing or invalid'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'admin/masters/lgas/{id}'
+    metadata:
+      custom: []
+      groupName: 'Administration - LGA Management'
+      groupDescription: |-
+
+        APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update an existing LGA.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the lga.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name1:
+        custom: []
+        name: name1
+        description: 'Updated name of the LGA.'
+        required: true
+        example: Ikeja
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      state_id1:
+        custom: []
+        name: state_id1
+        description: 'Updated state ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_code1:
+        custom: []
+        name: lga_code1
+        description: 'Updated LGA code.'
+        required: true
+        example: '01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      id1:
+        custom: []
+        name: id1
+        description: 'ID of the LGA to update.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name1: Ikeja
+      state_id1: 1
+      lga_code1: '01'
+      id1: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect back with success message'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: 'Validation error if required fields are missing or invalid'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'admin/masters/lgas/{id}'
+    metadata:
+      custom: []
+      groupName: 'Administration - LGA Management'
+      groupDescription: |-
+
+        APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a LGA.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the lga.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'ID of the LGA to delete.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      lga_id: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect back with success message'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/masters/lga/search
+    metadata:
+      custom: []
+      groupName: 'Administration - LGA Management'
+      groupDescription: |-
+
+        APIs for managing Local Government Areas (LGAs). Includes listing, creating, updating, deleting, and searching LGAs.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search LGAs by state and name.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state:
+        custom: []
+        name: state
+        description: 'optional State ID to filter by.'
+        required: false
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name:
+        custom: []
+        name: name
+        description: 'optional LGA name to filter by.'
+        required: false
+        example: Ikeja
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state: '1'
+      name: Ikeja
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'View with paginated search results'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

@@ -20,7 +20,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
-         \Fruitcake\Cors\HandleCors::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -45,6 +45,12 @@ class Kernel extends HttpKernel
             'bindings',
             // \App\Http\Middleware\CorsMiddleware::class,
         ],
+
+        // External API middleware group (authenticated, rate-limited, logged)
+        'api_external' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ApiVersionHeader::class . ':v1',
+        ],
     ];
 
     /**
@@ -65,5 +71,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'newuser' => \App\Http\Middleware\PasswordNotChanged::class,
         'cors' => \App\Http\Middleware\CorsMiddleware::class,
+        'verify.api.key' => \App\Http\Middleware\VerifyApiKey::class,
+        'log.api.request' => \App\Http\Middleware\LogApiRequest::class,
+        'api.version' => \App\Http\Middleware\ApiVersionHeader::class,
+        'fhir.response' => \App\Http\Middleware\FhirResponseMiddleware::class,
     ];
 }

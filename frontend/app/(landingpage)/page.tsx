@@ -22,7 +22,7 @@ export const metadata = createPageMetadata(
 const Home = () => {
   return (
     <div className=" flex flex-col gap-[5rem] md:gap-[5rem] ">
-      <div>
+      <div style={{ position: "relative", zIndex: 1 }}>
         <HeroSlideShow />
       </div>
       <Overlay />
