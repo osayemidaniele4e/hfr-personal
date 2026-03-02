@@ -14,7 +14,7 @@ export const metadata = createPageMetadata(
 
 const FacilityFinder = () => {
   return (
-    <div className="pt-32">
+    <div>
       <Facility />
     </div>
   );

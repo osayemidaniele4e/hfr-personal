@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -70,7 +70,14 @@ export default function RootLayout({
 }>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const pathname = usePathname();
-  const isMobile = true;
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkWidth = () => setIsDesktop(window.innerWidth >= 1024);
+    checkWidth(); // run on mount
+    window.addEventListener("resize", checkWidth);
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
 
   const renderNavLinks = (navData: typeof topNavData) => (
     <nav>
@@ -92,11 +99,15 @@ export default function RootLayout({
   );
 
   return (
-    <div className="flex flex-col overflow-x-auto">
+    <div>
       <Header />
-      <div className="block lg:hidden mt-28">
-        <MdOutlineDoubleArrow fontSize={44} onClick={onOpen} />
-      </div>
+
+      {/* Mobile menu toggle - shows below header on small screens */}
+      {!isDesktop && (
+        <div style={{ marginTop: "80px" }}>
+          <MdOutlineDoubleArrow fontSize={44} onClick={onOpen} />
+        </div>
+      )}
 
       {/* Sidebar Drawer for Mobile */}
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -118,22 +129,44 @@ export default function RootLayout({
         </DrawerContent>
       </Drawer>
 
-      <div className="flex flex-col bg-white md:flex-row items-start lg:relative">
-        <div className="hidden lg:block lg:fixed w-64 bg-white border-r border-gray-200 h-full md:pt-24">
-          <aside className="overflow-y-auto">
-            <nav className="mt-6">
-              <Text className="text-[#AEAEAE] px-6 py-1">Overview</Text>
-              {renderNavLinks(topNavData)}
-            </nav>
-            <nav className="mt-6">
-              <Text className="text-[#AEAEAE] px-6 py-1">Resources</Text>
-              {renderNavLinks(bottomNavData)}
-            </nav>
-          </aside>
-        </div>
+      {/* Desktop sidebar - rendered when screen >= 1024px */}
+      {isDesktop && (
+        <aside
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "256px",
+            height: "100vh",
+            paddingTop: "96px",
+            borderRight: "1px solid #e5e7eb",
+            background: "#fff",
+            zIndex: 40,
+            overflowY: "auto",
+          }}
+        >
+          <nav className="mt-6">
+            <Text className="text-[#AEAEAE] px-6 py-1">Overview</Text>
+            {renderNavLinks(topNavData)}
+          </nav>
+          <nav className="mt-6">
+            <Text className="text-[#AEAEAE] px-6 py-1">Resources</Text>
+            {renderNavLinks(bottomNavData)}
+          </nav>
+        </aside>
+      )}
 
-        <main className="lg:ml-64 flex-1">{children}</main>
-      </div>
+      {/* Main content area */}
+      <main
+        style={{
+          paddingTop: "96px",
+          marginLeft: isDesktop ? "256px" : "0",
+          minHeight: "100vh",
+          background: "#fff",
+        }}
+      >
+        {children}
+      </main>
     </div>
   );
 }

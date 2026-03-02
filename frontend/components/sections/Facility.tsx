@@ -632,11 +632,22 @@ function Facility() {
     const searchQuery = localStorage.getItem("homePageSearchQuery");
     const searchQueryResult = searchQuery ? JSON.parse(searchQuery) : {};
 
-    setSearch(searchQueryResult.search);
+    setSearch(searchQueryResult.search || "");
     setSelectedFacilityType(searchQueryResult.facilityType || "");
     setSelectedFacilityLevel(searchQueryResult.facilityLevel || "");
 
-    // console.log({ searchQueryResult });
+    // If we have homePageSearchQuery but NO searchResults, the home page
+    // sent us here to do the search — fetch from API using the params
+    if (searchQuery && !rawResults) {
+      console.log("Home page search params found, fetching from API...");
+      fetchFacilities({
+        search: searchQueryResult.search || "",
+        facilityType: searchQueryResult.facilityType || "",
+        facilityLevel: searchQueryResult.facilityLevel || "",
+      });
+      localStorage.removeItem("homePageSearchQuery");
+      return;
+    }
 
     let storedResults: Facility[] = [];
 

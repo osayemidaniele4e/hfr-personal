@@ -12,7 +12,7 @@ export const metadata = createPageMetadata(
 
 const Resources = () => {
   return (
-    <div className="pt-32">
+    <div>
       <ResourceX />
     </div>
   );
