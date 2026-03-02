@@ -13,7 +13,7 @@ export const metadata = createPageMetadata(
 
 const FacilitiesList = () => {
   return (
-    <div className="lg:pt-32">
+    <div className="">
       <ListOfFacilities />
     </div>
   );

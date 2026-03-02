@@ -34,16 +34,11 @@ const Overlay = () => {
     fetchDropdowns();
   }, []);
 
-  const doSearch = async () => {
+  const doSearch = () => {
     if (loading) return;
     setLoading(true);
 
     const trimmedSearch = (search || "").trim();
-
-    const params: Record<string, string> = {};
-    if (selectedFacilityLevel) params.facility_level_id = selectedFacilityLevel;
-    if (selectedFacilityType) params.facility_type_id = selectedFacilityType;
-    if (trimmedSearch) params.facility_name = trimmedSearch;
 
     const query = {
       facilityLevel: selectedFacilityLevel || "",
@@ -51,37 +46,21 @@ const Overlay = () => {
       search: trimmedSearch,
     };
 
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/facilities-hospitals-search3`,
-        { params }
-      );
+    // Store search params — let the Facility page do the actual API call
+    localStorage.setItem("homePageSearchQuery", JSON.stringify(query));
+    // Clear any stale results so the Facility page knows to fetch fresh
+    localStorage.removeItem("searchResults");
 
-      const facilities =
-        response.data?.data?.facilities?.data ??
-        response.data?.data?.facilities ??
-        [];
+    const sp = new URLSearchParams();
+    if (query.search) sp.set("search", query.search);
+    if (query.facilityType) sp.set("facilityType", query.facilityType);
+    if (query.facilityLevel) sp.set("facilityLevel", query.facilityLevel);
+    const qs = sp.toString();
 
-      localStorage.setItem(
-        "searchResults",
-        JSON.stringify(Array.isArray(facilities) ? facilities : [])
-      );
-      localStorage.setItem("homePageSearchQuery", JSON.stringify(query));
-
-      const sp = new URLSearchParams();
-      if (query.search) sp.set("search", query.search);
-      if (query.facilityType) sp.set("facilityType", query.facilityType);
-      if (query.facilityLevel) sp.set("facilityLevel", query.facilityLevel);
-      const qs = sp.toString();
-
-      // Full page navigation to guarantee localStorage is read fresh
-      window.location.href = qs
-        ? `/facilityfinder?${qs}`
-        : "/facilityfinder";
-    } catch (err) {
-      console.error("Search error:", err);
-      setLoading(false);
-    }
+    // Full page navigation to the facility finder page
+    window.location.href = qs
+      ? `/facilityfinder?${qs}`
+      : "/facilityfinder";
   };
 
   return (
