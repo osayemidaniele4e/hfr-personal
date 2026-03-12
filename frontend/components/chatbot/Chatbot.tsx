@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChatBotWidget } from "chatbot-widget-ui";
 import { Bot } from "lucide-react";
+import { useEffect } from "react";
 
 const Chatbot = () => {
     // Save all messages conversation
@@ -14,8 +15,24 @@ const Chatbot = () => {
 
     ]);
 
+    const [sessionId, setSessionId] = useState<string | null>(null);
+
+     useEffect(() => {
+        // This runs only in the browser
+        let existingSession = localStorage.getItem("hfr_chat_session");
+
+        if (!existingSession) {
+            existingSession = crypto.randomUUID();
+            localStorage.setItem("hfr_chat_session", existingSession);
+        }
+
+        setSessionId(existingSession);
+    }, []);
+
     const customApiCall = async (message: string): Promise<string> => {
-        const response = await fetch("https://n8n.e4eweb.space/webhook/d2a145a2-bbf6-4fc9-87c4-826f5f566cb4", {
+         if (!sessionId) return "Initializing session...";
+       // const response = await fetch("https://n8n.e4eweb.space/webhook/d2a145a2-bbf6-4fc9-87c4-826f5f566cb4", {
+             const response = await fetch("https://n8n.e4eweb.space/webhook/41b36be2-093e-48a4-bf08-a74dd29e06f4", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -23,12 +40,12 @@ const Chatbot = () => {
             body: JSON.stringify({
                 question: message,
                 "overrideConfig": {
-                    "sessionId": "4672657373735"
+                    "sessionId": sessionId
                 }
             }),
         });
-        const data = await response.json();
-        return data.output;
+        const data = await response.text();
+        return data;
     };
 
     const handleBotResponse = (response: string) => {

@@ -40,9 +40,10 @@ export const DataVisualization = () => {
         <Image src={"/data-visual.svg"} width={472} height={360} alt="img" />
         <div className="flex flex-col gap-[1rem]">
           <Text className="font-[600] md:text-center lg:text-start p-4 md:p-0">
-            Data <span className="text-[#5CB85C]">Visualizations</span>
+            Data <span className="text-[#5CB85C]"> <Link href="/overview" passHref>
+                Visualizations
+              </Link></span>
           </Text>
-
           <Text className="font-[400]  w-full  lg:w-[440px] md:text-center lg:text-start p-4 md:p-0">
             Charts, graphs, and maps to present key health facility data in an
             easily interpretable format.

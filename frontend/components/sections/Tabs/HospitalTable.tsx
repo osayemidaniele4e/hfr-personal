@@ -296,7 +296,7 @@ const HospitalTable: React.FC<{
   { key: "mortuary_services", label: "Mortuary Services" },
 
   // Operations
-  { key: "operational_days", label: "Operational Days" },
+/*   { key: "operational_days", label: "Operational Days" },
   { key: "operational_hours", label: "Operational Hours" },
 
   // Dates
@@ -330,7 +330,7 @@ const HospitalTable: React.FC<{
   { key: "published_at", label: "Published At" },
   { key: "publish_note", label: "Publish Note" },
   { key: "published_email", label: "Publisher Email" },
-  { key: "published_mobile", label: "Publisher Mobile" },
+  { key: "published_mobile", label: "Publisher Mobile" }, */
 ];
 
       const csvRows = [];
