@@ -29,6 +29,8 @@ class HospitalsController extends Controller
 
     public function index()
     {
+        $perPage = in_array(request('per_page'), [15, 25, 50, 100, 250, 500]) ? (int) request('per_page') : 15;
+
         if (auth()->user()->hasPermissionTo('lga_1000')) {
             $facilities = DB::table('hospital_details')
                 ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
@@ -51,7 +53,7 @@ class HospitalsController extends Controller
                 ->orderBy('hospital_details.lga_id')
                 ->orderBy('hospital_details.ward_id')
                 ->orderBy('hospital_details.facility_name')
-                ->paginate(15);
+                ->paginate($perPage)->appends(['per_page' => $perPage]);
         } else {
             $facilities = DB::table('hospital_details')
                 ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
@@ -75,7 +77,7 @@ class HospitalsController extends Controller
                 ->orderBy('hospital_details.lga_id')
                 ->orderBy('hospital_details.ward_id')
                 ->orderBy('hospital_details.facility_name')
-                ->paginate(15);
+                ->paginate($perPage)->appends(['per_page' => $perPage]);
         }
 
 
@@ -529,6 +531,317 @@ class HospitalsController extends Controller
     }
 
 
+    /**
+     * Build a filtered query for hospital_details based on search parameters.
+     * Mirrors the same filter logic used in search().
+     */
+    private function buildFilteredHospitalQuery(Request $request)
+    {
+        $query = DB::table('hospital_details');
+
+        if (!empty($request->state_id)) {
+            $query->where('hospital_details.state_id', $request->state_id);
+        }
+        if (!empty($request->lga_id) && $request->lga_id != 1) {
+            $query->where('hospital_details.lga_id', $request->lga_id);
+        }
+        if (!empty($request->ward_id) && $request->ward_id != 0) {
+            $query->where('hospital_details.ward_id', $request->ward_id);
+        }
+        if (!empty($request->facility_level_id) && $request->facility_level_id != 0) {
+            $query->where('hospital_details.facility_level_id', $request->facility_level_id);
+        }
+        if (!empty($request->ownership_id) && $request->ownership_id != 0) {
+            $query->where('hospital_details.ownership_id', $request->ownership_id);
+        }
+        if (!empty($request->filter_operational_status_id) && $request->filter_operational_status_id != 0) {
+            $query->where('hospital_details.operational_status_id', $request->filter_operational_status_id);
+        }
+        if (!empty($request->registration_status_id) && $request->registration_status_id != 0) {
+            $query->where('hospital_details.registration_status_id', $request->registration_status_id);
+        }
+        if (!empty($request->license_status_id) && $request->license_status_id != 0) {
+            $query->where('hospital_details.license_status_id', $request->license_status_id);
+        }
+        if (!empty($request->facility_name)) {
+            $query->where('hospital_details.facility_name', 'like', '%' . $request->facility_name . '%');
+        }
+        if ($request->geo_codes !== null) {
+            switch ($request->geo_codes) {
+                case 0:
+                    $query->where(DB::raw("IFNULL(latitude, '')"), '<>', 'XXX');
+                    break;
+                case 1:
+                    $query->where(DB::raw("IFNULL(latitude, '')"), '<>', '');
+                    break;
+                case 2:
+                    $query->where(DB::raw("IFNULL(latitude, '')"), '=', '');
+                    break;
+            }
+        }
+
+        return $query;
+    }
+
+
+    /**
+     * Batch update operational status for selected hospitals.
+     */
+    public function batchUpdateStatus(Request $request)
+    {
+        $selectAllFiltered = $request->boolean('select_all_filtered', false);
+
+        if (!$selectAllFiltered) {
+            $request->validate([
+                'state_id' => 'required|integer',
+                'hospital_ids' => 'required|array|min:1',
+                'hospital_ids.*' => 'integer',
+                'operational_status_id' => 'required|integer',
+            ]);
+            $hospitalIds = $request->input('hospital_ids');
+        } else {
+            $request->validate([
+                'state_id' => 'required|integer',
+                'operational_status_id' => 'required|integer',
+            ]);
+            $hospitalIds = $this->buildFilteredHospitalQuery($request)
+                ->pluck('hospital_details.id')
+                ->toArray();
+        }
+
+        $newStatusId = $request->input('operational_status_id');
+        $stateId = $request->input('state_id');
+
+        DB::beginTransaction();
+        try {
+            $count = Hospital::whereIn('id', $hospitalIds)
+                ->where('state_id', $stateId)
+                ->count();
+
+            if ($count === 0) {
+                session()->flash('alert-warning', 'No hospitals matched the selection.');
+                return redirect()->back();
+            }
+
+            Hospital::disableAuditing();
+
+            Hospital::whereIn('id', $hospitalIds)
+                ->where('state_id', $stateId)
+                ->update([
+                    'operational_status_id' => $newStatusId,
+                    'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                ]);
+
+            // Insert status tracking for each hospital
+            foreach ($hospitalIds as $id) {
+                $tracking = new StatusTracking;
+                $tracking->hospital_id = $id;
+                $tracking->user_id = Auth::user()->id;
+                $tracking->status_id = 8;
+                $tracking->note = 'Batch operational status update';
+                $tracking->created_at = Carbon::now()->format('Y-m-d H:i:s');
+                $tracking->save();
+            }
+
+            Hospital::enableAuditing();
+            DB::commit();
+        } catch (\Exception $ex) {
+            DB::rollback();
+            session()->flash('alert-danger', 'Batch update failed: ' . $ex->getMessage());
+            return redirect()->back();
+        }
+
+        session()->flash('alert-success', "{$count} hospital(s) operational status updated successfully.");
+        return redirect()->back();
+    }
+
+
+    /**
+     * Batch export selected hospitals to Excel.
+     */
+    public function batchExport(Request $request)
+    {
+        $request->validate([
+            'state_id' => 'required|integer',
+            'hospital_ids' => 'nullable|array',
+            'hospital_ids.*' => 'integer',
+            'select_all' => 'nullable|boolean',
+            'select_all_filtered' => 'nullable|boolean',
+        ]);
+
+        $stateId = $request->input('state_id');
+        $selectAll = $request->boolean('select_all', false);
+        $selectAllFiltered = $request->boolean('select_all_filtered', false);
+        $hospitalIds = $request->input('hospital_ids', []);
+
+        $query = DB::table('hospital_details')
+            ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+            ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+            ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+            ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+            ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+            ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+            ->leftJoin('lst_ownership_types', 'hospital_details.ownership_type_id', '=', 'lst_ownership_types.id')
+            ->leftJoin('lst_level_of_care_options', 'hospital_details.facility_level_option_id', '=', 'lst_level_of_care_options.id')
+            ->leftJoin('lst_oparational_status', 'hospital_details.operational_status_id', '=', 'lst_oparational_status.id')
+            ->leftJoin('lst_registration_status', 'hospital_details.registration_status_id', '=', 'lst_registration_status.id')
+            ->leftJoin('lst_license_status', 'hospital_details.license_status_id', '=', 'lst_license_status.id')
+            ->select(
+                'ou_states.name as state',
+                'ou_lgas.name as lga',
+                'ou_wards.name as ward',
+                'hospital_details.id',
+                'hospital_details.unique_id',
+                'hospital_details.facility_name',
+                'hospital_details.registration_no',
+                'hospital_details.start_date',
+                'hospital_details.close_date',
+                'lst_ownerships.name as ownership',
+                'lst_ownership_types.type as ownership_type',
+                'lst_level_of_care.name as facility_level',
+                'lst_level_of_care_options.description as facility_level_option',
+                'hospital_details.longitude',
+                'hospital_details.latitude',
+                'lst_oparational_status.status as operation_status',
+                'lst_registration_status.status as registration_status',
+                'lst_license_status.status as license_status',
+                'hospital_details.created_at',
+                'hospital_details.updated_at'
+            )
+            ->where('hospital_details.state_id', $stateId);
+
+        // Apply additional filters when select_all_filtered is on
+        if ($selectAllFiltered || $selectAll) {
+            if (!empty($request->lga_id) && $request->lga_id != 1) {
+                $query->where('hospital_details.lga_id', $request->lga_id);
+            }
+            if (!empty($request->ward_id) && $request->ward_id != 0) {
+                $query->where('hospital_details.ward_id', $request->ward_id);
+            }
+            if (!empty($request->facility_level_id) && $request->facility_level_id != 0) {
+                $query->where('hospital_details.facility_level_id', $request->facility_level_id);
+            }
+            if (!empty($request->ownership_id) && $request->ownership_id != 0) {
+                $query->where('hospital_details.ownership_id', $request->ownership_id);
+            }
+            if (!empty($request->filter_operational_status_id) && $request->filter_operational_status_id != 0) {
+                $query->where('hospital_details.operational_status_id', $request->filter_operational_status_id);
+            }
+            if (!empty($request->registration_status_id) && $request->registration_status_id != 0) {
+                $query->where('hospital_details.registration_status_id', $request->registration_status_id);
+            }
+            if (!empty($request->license_status_id) && $request->license_status_id != 0) {
+                $query->where('hospital_details.license_status_id', $request->license_status_id);
+            }
+            if (!empty($request->facility_name)) {
+                $query->where('hospital_details.facility_name', 'like', '%' . $request->facility_name . '%');
+            }
+            if ($request->geo_codes !== null) {
+                switch ($request->geo_codes) {
+                    case 0:
+                        $query->where(DB::raw("IFNULL(latitude, '')"), '<>', 'XXX');
+                        break;
+                    case 1:
+                        $query->where(DB::raw("IFNULL(latitude, '')"), '<>', '');
+                        break;
+                    case 2:
+                        $query->where(DB::raw("IFNULL(latitude, '')"), '=', '');
+                        break;
+                }
+            }
+        } elseif (!empty($hospitalIds)) {
+            $query->whereIn('hospital_details.id', $hospitalIds);
+        }
+
+        $facilities = $query->orderBy('ou_states.name')
+            ->orderBy('ou_lgas.name')
+            ->orderBy('hospital_details.facility_name')
+            ->get();
+
+        if ($facilities->isEmpty()) {
+            session()->flash('alert-warning', 'No hospitals to export.');
+            return redirect()->back();
+        }
+
+        $column_header = [
+            "state", "lga", "ward", "uid", "facility_code", "facility_name",
+            "reg_number", "start_date", "close_date", "ownership", "ownership_type",
+            "facility_level", "facility_level_option", "longitude", "latitude",
+            "operation_status", "registration_status", "license_status", "created", "last_updated"
+        ];
+
+        $stateName = DB::table('ou_states')->where('id', $stateId)->value('name') ?? 'selected';
+        $filename = 'hospitals_' . str_replace(' ', '_', $stateName) . '_' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new HFExport($facilities->all(), $column_header), $filename);
+    }
+
+
+    /**
+     * Batch delete (initiate delete request) for selected hospitals.
+     */
+    public function batchDelete(Request $request)
+    {
+        $selectAllFiltered = $request->boolean('select_all_filtered', false);
+
+        if (!$selectAllFiltered) {
+            $request->validate([
+                'state_id' => 'required|integer',
+                'hospital_ids' => 'required|array|min:1',
+                'hospital_ids.*' => 'integer',
+            ]);
+            $hospitalIds = $request->input('hospital_ids');
+        } else {
+            $request->validate([
+                'state_id' => 'required|integer',
+            ]);
+            $hospitalIds = $this->buildFilteredHospitalQuery($request)
+                ->pluck('hospital_details.id')
+                ->toArray();
+        }
+
+        $stateId = $request->input('state_id');
+
+        $hospitals = Hospital::where('state_id', $stateId)
+            ->whereIn('id', $hospitalIds)
+            ->get();
+
+        if ($hospitals->isEmpty()) {
+            session()->flash('alert-warning', 'No hospitals found matching the selection.');
+            return redirect()->back();
+        }
+
+        DB::beginTransaction();
+        try {
+            Hospital::disableAuditing();
+
+            foreach ($hospitals as $hosp) {
+                // Remove related status tracking records
+                StatusTracking::where('hospital_id', $hosp->id)->delete();
+
+                // Remove related hospital services
+                DB::table('hs_hospital_services')->where('hospital_id', $hosp->id)->delete();
+                DB::table('hs_hospital_services_history')->where('hospital_id', $hosp->id)->delete();
+
+                // Delete the hospital record
+                $hosp->delete();
+            }
+
+            Hospital::enableAuditing();
+            DB::commit();
+        } catch (\Exception $ex) {
+            DB::rollback();
+            session()->flash('alert-danger', 'Batch delete failed: ' . $ex->getMessage());
+            return redirect()->back();
+        }
+
+        $count = $hospitals->count();
+
+        session()->flash('alert-success', "{$count} hospital(s) deleted successfully.");
+        return redirect()->back();
+    }
+
+
     public function searchold(Request $request)
     {
         $state_id = $request->state_id;
@@ -620,6 +933,7 @@ class HospitalsController extends Controller
 
     public function search(Request $request)
     {
+        $perPage = in_array($request->per_page, [15, 25, 50, 100, 250, 500]) ? (int) $request->per_page : 15;
         $query = DB::table('hospital_details')
             ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
@@ -693,7 +1007,7 @@ class HospitalsController extends Controller
             ->orderBy('hospital_details.lga_id')
             ->orderBy('hospital_details.ward_id')
             ->orderBy('hospital_details.facility_name')
-            ->paginate(15)
+            ->paginate($perPage)
             ->appends($request->all());
 
         $request->flash();

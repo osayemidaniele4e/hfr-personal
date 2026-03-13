@@ -115,6 +115,10 @@ Route::middleware(["auth"])->group(function () {
 
         Route::post('admin/hospitals/admin-update', [HospitalsController::class, 'adminUpdate'])->name('hospitals.adminupdate');
 
+        // Batch operations on hospitals
+        Route::post('admin/hospitals/batch/update-status', [HospitalsController::class, 'batchUpdateStatus'])->name('hospitals.batch.updateStatus');
+        Route::post('admin/hospitals/batch/export', [HospitalsController::class, 'batchExport'])->name('hospitals.batch.export');
+        Route::post('admin/hospitals/batch/delete', [HospitalsController::class, 'batchDelete'])->name('hospitals.batch.delete');
 
         //my requests
         Route::get('admin/hospitals/myrequest/pending', [MyRequestController::class, 'myPendingRequest'])->name('myrequest.pending');
