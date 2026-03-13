@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 use App\Models\Imaging;
 use Illuminate\Support\Facades\Log;
 
@@ -159,7 +159,7 @@ class ImagingController extends Controller
 
         $start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $im = new Imaging;
         $im->fill($request->all());
         $im->unique_id = $hosp->generateFacilityCode($request->lga_id, '4', $request->facility_level_id, $request->ownership_id);
@@ -263,7 +263,7 @@ class ImagingController extends Controller
 
         $start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $im = Imaging::find($id);
         $im->fill($request->all());
         $im->start_date = $start_date;

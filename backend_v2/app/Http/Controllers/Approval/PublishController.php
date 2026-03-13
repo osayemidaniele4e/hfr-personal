@@ -9,7 +9,6 @@ use App\Models\StatusTracking;
 use Auth;
 use Carbon\Carbon;
 use App\Models\Hospital;
-use App\Models\HospitalHistory;
 use App\Models\HospitalService;
 use App\Models\HospitalServiceHistory;
 use App\Models\audit;
@@ -234,9 +233,9 @@ class PublishController extends Controller
     {
         //check if the request is publised
         if (!$this->isPublished($request->id)) {
-            HospitalHistory::disableAuditing();
-            $hosp = new HospitalHistory();
-            $hosp = HospitalHistory::find($request->id);
+            Hospital::disableAuditing();
+            $hosp = new Hospital();
+            $hosp = Hospital::find($request->id);
             $facility_name = $hosp['facility_name'];
             $state_id = $hosp['state_id'];
             $ward_id = $hosp['ward_id'];
@@ -299,7 +298,7 @@ class PublishController extends Controller
                 $hosp->published_at = $date;
                 $hosp->publish_note = $request->notes;
                 $hosp->save();
-                HospitalHistory::enableAuditing();
+                Hospital::enableAuditing();
 
                 $status = new StatusTracking;
                 $status->hospital_id = $request->id;
@@ -311,8 +310,8 @@ class PublishController extends Controller
 
                 //insert new facility data to main table after published
                 if ($status_id == 6) {
-                    $hosp_history = new HospitalHistory;
-                    $hosp_history = HospitalHistory::find($request->id);
+                    $hosp_history = new Hospital;
+                    $hosp_history = Hospital::find($request->id);
 
                     //copy data from  history to main
                     $hosp_main = new Hospital;
@@ -341,8 +340,8 @@ class PublishController extends Controller
 
                 //update hospital, and hospital services to main table
                 if ($status_id == 13) {
-                    $hosp_history = new HospitalHistory;
-                    $hosp_history = HospitalHistory::find($request->id);
+                    $hosp_history = new Hospital;
+                    $hosp_history = Hospital::find($request->id);
 
                     //copy data from  history to main
                     $hosp_main = new Hospital;
@@ -453,8 +452,8 @@ class PublishController extends Controller
     //before trying to publish
     public function isPublished($fac_id)
     {
-        $hosp = new HospitalHistory();
-        $hosp = HospitalHistory::find($fac_id);
+        $hosp = new Hospital();
+        $hosp = Hospital::find($fac_id);
 
         if ($hosp['status_id'] == 6 or $hosp['status_id'] == 13 or $hosp['status_id'] == 20) {
             return true;

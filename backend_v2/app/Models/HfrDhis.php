@@ -347,12 +347,12 @@ class HfrDhis extends Model
         $audit_id = DB::table('audits')
             ->select('id')
             ->where('event', '=', 'updated')
-            ->where('auditable_type','=','App\HospitalHistory')
+            ->where('auditable_type','=','App\Hospital')
             ->where('auditable_id','=',$id)
             ->orderBy('id', 'DESC')
             ->first();
 
-        $hosp = HospitalHistory::find($id);
+        $hosp = Hospital::find($id);
         $audit = $hosp->audits()->find($audit_id->id);
         $allUpdatedValues= $audit->getModified();
 

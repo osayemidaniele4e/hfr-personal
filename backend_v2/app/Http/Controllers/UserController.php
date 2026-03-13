@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -171,7 +171,7 @@ class UserController extends Controller
         \Log::info($request->all());
 
 
-        $hosp = new HospitalHistory();
+        $hosp = new Hospital();
         $lgas = $hosp->arrayValuesTostring($request->lga_id1);
 
         // dd($lgas);

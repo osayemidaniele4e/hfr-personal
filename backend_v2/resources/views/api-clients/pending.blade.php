@@ -100,12 +100,16 @@
                                     </td>
                                     <td>{{ $client->created_at->diffForHumans() }}<br><small class="text-muted">{{ $client->created_at->format('d M Y H:i') }}</small></td>
                                     <td>
+                                        @if (auth()->user()->hasPermissionTo(79))
                                         <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveModal{{ $client->id }}">
                                             <i class="fa fa-check"></i> Approve
                                         </button>
                                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal{{ $client->id }}">
                                             <i class="fa fa-times"></i> Reject
                                         </button>
+                                        @else
+                                        <span class="text-muted">No permission</span>
+                                        @endif
                                     </td>
                                 </tr>
 

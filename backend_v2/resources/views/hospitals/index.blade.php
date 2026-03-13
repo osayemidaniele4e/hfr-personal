@@ -5,8 +5,13 @@
     Hospitals and Clinics
     @if (auth()->user()->hasPermissionTo(2))
         <a href="{{ route('hospitals.create') }}">
-            <button type="button" class="btn btn-primary pull-right">
+            <button type="button" class="btn btn-primary pull-right ml-3 mr-3">
                 Add Hospital or Clinic
+            </button>
+        </a> 
+        <a href="{{ route('hospitals.import.index') }}" style="margin-right: 10px;">
+            <button type="button" class="btn btn-info pull-right ">
+                <i class="fa fa-upload"></i> Import Hospitals
             </button>
         </a>
     @endif

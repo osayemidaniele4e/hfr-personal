@@ -9,7 +9,7 @@ INSERT INTO model_has_roles (role_id, model_type, model_id)
 VALUES (1, 'App\\Models\\User', 5);
 
 
-ALTER TABLE hs_hospitals_history
+ALTER TABLE hs_hospitals
 ADD COLUMN action VARCHAR(255) NULL,
 ADD COLUMN verified_id INT NULL,
 ADD COLUMN verified_email VARCHAR(255) NULL,
@@ -19,7 +19,7 @@ ADD COLUMN validated_mobile VARCHAR(20) NULL,
 ADD COLUMN published_email VARCHAR(255) NULL,
 ADD COLUMN published_mobile VARCHAR(20) NULL;
 
-UPDATE `hs_hospitals_history` SET `action`='CREATE FACILITY' WHERE 1
+UPDATE `hs_hospitals` SET `action`='CREATE FACILITY' WHERE 1
 
 
 -- Create facility_status_lga view
@@ -32,7 +32,7 @@ SELECT
     h.status_id,
     st.status AS status,
     COUNT(*) AS count
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN lst_status st ON h.status_id = st.id
@@ -61,7 +61,7 @@ SELECT
     COUNT(CASE WHEN h.status_id IN (5, 12, 19) THEN 1 END) AS Validation_Rejected,
     COUNT(CASE WHEN h.status_id IN (7, 14, 21) THEN 1 END) AS Publishing_Rejected
 
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas lga ON h.lga_id = lga.id
 JOIN ou_states s ON lga.state_id = s.id
 GROUP BY lga.id, lga.state_id, s.name, lga.name;
@@ -82,7 +82,7 @@ SELECT
   SUM(CASE WHEN h.status_id IN (5, 12, 19) THEN 1 ELSE 0 END) AS Validation_Rejected,
   SUM(CASE WHEN h.status_id IN (7, 14, 21) THEN 1 ELSE 0 END) AS Publishing_Rejected
 FROM
-  hs_hospitals_history h
+  hs_hospitals h
 JOIN
   ou_states s ON h.state_id = s.id
 GROUP BY
@@ -170,7 +170,7 @@ SELECT
     validated_mobile,
     published_email,
     published_mobile
-FROM hs_hospitals_history;
+FROM hs_hospitals;
 
 -- Create hospital_details_history view
 CREATE OR REPLACE VIEW hospital_details_history AS
@@ -255,7 +255,7 @@ SELECT
     validated_mobile,
     published_email,
     published_mobile
-FROM hs_hospitals_history;
+FROM hs_hospitals;
 -- Create hospital_offered_services view
 CREATE OR REPLACE VIEW hospital_offered_services AS
 SELECT
@@ -340,7 +340,7 @@ SELECT
     h.published_email,
     h.published_mobile,
     COALESCE(sv.services, '') AS services
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 LEFT JOIN (
     SELECT
         hs.hospital_id,
@@ -367,7 +367,7 @@ SELECT
   SUM(CASE WHEN h.status_id IN (5, 12, 19) THEN 1 ELSE 0 END) AS Validation_Rejected,
   SUM(CASE WHEN h.status_id IN (7, 14, 21) THEN 1 ELSE 0 END) AS Publishing_Rejected
 FROM
-  hs_hospitals_history h
+  hs_hospitals h
 JOIN
   ou_states s ON h.state_id = s.id
 GROUP BY
@@ -400,7 +400,7 @@ SELECT
     l.name AS lga,
     fl.name AS facility_level,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
@@ -415,7 +415,7 @@ SELECT
     SUM(CASE WHEN fl.name = 'primary' THEN 1 ELSE 0 END) AS `Primary`,
     SUM(CASE WHEN fl.name = 'secondary' THEN 1 ELSE 0 END) AS `Secondary`,
     SUM(CASE WHEN fl.name = 'tertiary' THEN 1 ELSE 0 END) AS `Tertiary`
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
@@ -427,7 +427,7 @@ SELECT
     s.name AS state,
     fl.name AS facility_level,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
 GROUP BY s.id, s.name, fl.name;
@@ -439,7 +439,7 @@ SELECT
     SUM(CASE WHEN fl.name = 'primary' THEN 1 ELSE 0 END) AS `Primary`,
     SUM(CASE WHEN fl.name = 'secondary' THEN 1 ELSE 0 END) AS `Secondary`,
     SUM(CASE WHEN fl.name = 'tertiary' THEN 1 ELSE 0 END) AS `Tertiary`
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
 GROUP BY s.id, s.name;
@@ -450,7 +450,7 @@ SELECT
     s.name AS state,
     o.name AS ownership,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 GROUP BY s.id, s.name, o.name;
@@ -461,7 +461,7 @@ SELECT
     s.name AS state,
     SUM(CASE WHEN o.name = 'Private' THEN 1 ELSE 0 END) AS Private,
     SUM(CASE WHEN o.name = 'Public' THEN 1 ELSE 0 END) AS Public
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 GROUP BY s.id, s.name;
@@ -474,7 +474,7 @@ SELECT
     l.name AS lga,
     o.name AS ownership,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
@@ -489,7 +489,7 @@ SELECT
     l.name AS lga,
     SUM(CASE WHEN o.name = 'Public' THEN 1 ELSE 0 END) AS Public,
     SUM(CASE WHEN o.name = 'Private' THEN 1 ELSE 0 END) AS Private
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
@@ -502,7 +502,7 @@ SELECT
     s.name AS state,
     o.name AS ownership,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 WHERE h.onsite_imaging = 'Yes'
@@ -514,7 +514,7 @@ SELECT
     s.name AS state,
     SUM(CASE WHEN o.name = 'Public' THEN 1 ELSE 0 END) AS Public,
     SUM(CASE WHEN o.name = 'Private' THEN 1 ELSE 0 END) AS Private
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 WHERE h.onsite_imaging = 'Yes'
@@ -529,7 +529,7 @@ SELECT
     o.name AS ownership,
     fl.name AS facility_level,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
@@ -548,7 +548,7 @@ SELECT
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'primary' THEN 1 ELSE 0 END) AS Priv_Primary,
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'secondary' THEN 1 ELSE 0 END) AS Priv_Secondary,
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'tertiary' THEN 1 ELSE 0 END) AS Priv_Tertiary
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
@@ -562,7 +562,7 @@ SELECT
     o.name AS ownership,
     fl.name AS facility_level,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
@@ -578,7 +578,7 @@ SELECT
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'primary' THEN 1 ELSE 0 END) AS Priv_Primary,
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'secondary' THEN 1 ELSE 0 END) AS Priv_Secondary,
     SUM(CASE WHEN o.name = 'Private' AND fl.name = 'tertiary' THEN 1 ELSE 0 END) AS Priv_Tertiary
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_states s ON h.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
 JOIN lst_level_of_care fl ON h.facility_level_id = fl.id
@@ -592,7 +592,7 @@ SELECT
     l.name AS lga,
     o.name AS ownership,
     COUNT(*) AS total
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id
@@ -606,7 +606,7 @@ SELECT
     l.name AS lga,
     SUM(CASE WHEN o.name = 'Private' THEN 1 ELSE 0 END) AS Private,
     SUM(CASE WHEN o.name = 'Public' THEN 1 ELSE 0 END) AS Public
-FROM hs_hospitals_history h
+FROM hs_hospitals h
 JOIN ou_lgas l ON h.lga_id = l.id
 JOIN ou_states s ON l.state_id = s.id
 JOIN lst_ownerships o ON h.ownership_id = o.id

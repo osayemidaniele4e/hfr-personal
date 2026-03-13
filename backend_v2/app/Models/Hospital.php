@@ -11,7 +11,7 @@ class Hospital extends Model implements Auditable
 {
     use AuditableTrait;
 
-    protected $table = 'hs_hospitals';
+    protected $table = 'hs_hospitals_history';
 
     protected $guarded = [
         'unique_id',

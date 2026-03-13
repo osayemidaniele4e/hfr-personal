@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\StatusTracking;
 use Auth;
 use Carbon\Carbon;
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 use App\Models\HospitalServiceHistory;
 use App\Models\audit;
 use App\Models\ApprovalNotifications;
@@ -374,9 +374,9 @@ class VerifyController extends Controller
     public function store(Request $request)
     {
 
-        HospitalHistory::disableAuditing();
-        $hosp = new HospitalHistory;
-        $hosp = HospitalHistory::findOrFail($request->id);
+        Hospital::disableAuditing();
+        $hosp = new Hospital;
+        $hosp = Hospital::findOrFail($request->id);
         $user = Auth::user();
 
         if ($request->action == "approve") {
@@ -453,7 +453,7 @@ class VerifyController extends Controller
             return response()->json(['error' => $ex->getMessage()], 500);
         }
 
-        HospitalHistory::enableAuditing();
+        Hospital::enableAuditing();
 
         //send notifications
         if (config('hfr.notify_validator')) {
@@ -510,9 +510,9 @@ class VerifyController extends Controller
 
             $date = Carbon::now()->format('Y-m-d H:i:s');
 
-            HospitalHistory::disableAuditing();
-            $hosp = new HospitalHistory;
-            $hosp = HospitalHistory::findOrFail($request->hosp_id);
+            Hospital::disableAuditing();
+            $hosp = new Hospital;
+            $hosp = Hospital::findOrFail($request->hosp_id);
             $hosp->status_id = $status_id;
             $hosp->verified_by = $request->verified_by;
             $hosp->verified_at = $request->verified_at;
@@ -536,7 +536,7 @@ class VerifyController extends Controller
                 return response()->json(['error' => $ex->getMessage()], 500);
             }
 
-            HospitalHistory::enableAuditing();
+            Hospital::enableAuditing();
 
             session()->flash("alert-success", "Verification recalled successfully!");
         } else {
@@ -548,7 +548,7 @@ class VerifyController extends Controller
 
     private function isVerified($id)
     {
-        $hosp = HospitalHistory::find($id);
+        $hosp = Hospital::find($id);
 
         if (in_array($hosp->status_id, [2, 9, 16])) {
             return true;
