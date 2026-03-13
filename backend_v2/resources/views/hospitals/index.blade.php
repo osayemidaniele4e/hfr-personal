@@ -8,7 +8,7 @@
             <button type="button" class="btn btn-primary pull-right ml-3 mr-3">
                 Add Hospital or Clinic
             </button>
-        </a> 
+        </a>
         <a href="{{ route('hospitals.import.index') }}" style="margin-right: 10px;">
             <button type="button" class="btn btn-info pull-right ">
                 <i class="fa fa-upload"></i> Import Hospitals
@@ -133,11 +133,18 @@
                     </div>
 
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
                         <input class="form-control input-sm"type="text" name="facility_name" id="facility_name"
                             value="{{ old('facility_name') }}" class="form-control" placeholder="Facility name">
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-1">
+                        <select class="form-control input-sm" id="per_page" name="per_page">
+                            @foreach ([15, 25, 50, 100, 250, 500] as $pp)
+                                <option value="{{ $pp }}" {{ (old('per_page', request('per_page', 15)) == $pp) ? 'selected' : '' }}>{{ $pp }} per page</option>
+                            @endforeach
+                        </select>
+                    </div>
+                     <div class="col-sm-3">
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <button type="button" class="btn btn-sm pull-right btn-block" id='reset'>Reset</button>
@@ -148,16 +155,107 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    {{-- <div class="col-sm-9"></div> --}}
+
+                </div>
 
             </form>
         </div>
 
+
+        {{-- Batch Operations Panel (shown when a state filter is active) --}}
+        @if(old('state_id') && old('state_id') > 1)
+        <div class="box-body" id="batch-operations-panel">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-12">
+                    <label style="margin-right: 15px;">
+                        <input type="checkbox" id="selectAllPage" />
+                        <strong>Select All on This Page</strong>
+                    </label>
+                    <label style="margin-right: 15px; margin-left: 10px;">
+                        <input type="checkbox" id="selectAllFiltered" />
+                        <strong>Select All Filtered Results ({{ $facilities->total() }})</strong>
+                    </label>
+                    <span id="selectedCount" class="label label-info">0 selected</span>
+                </div>
+            </div>
+            <div class="row">
+                {{-- Batch Update Status --}}
+                <div class="col-md-4">
+                    <form action="{{ route('hospitals.batch.updateStatus') }}" method="POST" id="batchUpdateForm">
+                        @csrf
+                        <input type="hidden" name="state_id" value="{{ old('state_id') }}">
+                        <input type="hidden" name="select_all_filtered" class="select-all-filtered-flag" value="0">
+                        <input type="hidden" name="lga_id" value="{{ old('lga_id') }}">
+                        <input type="hidden" name="ward_id" value="{{ old('ward_id') }}">
+                        <input type="hidden" name="facility_level_id" value="{{ old('facility_level_id') }}">
+                        <input type="hidden" name="ownership_id" value="{{ old('ownership_id') }}">
+                        <input type="hidden" name="filter_operational_status_id" value="{{ old('operational_status_id') }}">
+                        <input type="hidden" name="registration_status_id" value="{{ old('registration_status_id') }}">
+                        <input type="hidden" name="license_status_id" value="{{ old('license_status_id') }}">
+                        <input type="hidden" name="facility_name" value="{{ old('facility_name') }}">
+                        <input type="hidden" name="geo_codes" value="{{ old('geo_codes') }}">
+                        <div class="hospital-ids-container"></div>
+                        <div class="input-group">
+                            <select name="operational_status_id" class="form-control" required>
+                                <option value="">-- Change Status To --</option>
+                                @foreach (getOperationalStatus() as $st)
+                                    <option value="{{ $st->id }}">{{ $st->status }}</option>
+                                @endforeach
+                            </select>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fa fa-pencil"></i> Update Status
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+
+                {{-- Batch Export --}}
+                <div class="col-md-4">
+                    <form action="{{ route('hospitals.batch.export') }}" method="POST" id="batchExportForm">
+                        @csrf
+                        <input type="hidden" name="state_id" value="{{ old('state_id') }}">
+                        <input type="hidden" name="select_all" id="exportSelectAllFlag" value="0">
+                        <input type="hidden" name="select_all_filtered" class="select-all-filtered-flag" value="0">
+                        <input type="hidden" name="lga_id" value="{{ old('lga_id') }}">
+                        <input type="hidden" name="ward_id" value="{{ old('ward_id') }}">
+                        <input type="hidden" name="facility_level_id" value="{{ old('facility_level_id') }}">
+                        <input type="hidden" name="ownership_id" value="{{ old('ownership_id') }}">
+                        <input type="hidden" name="filter_operational_status_id" value="{{ old('operational_status_id') }}">
+                        <input type="hidden" name="registration_status_id" value="{{ old('registration_status_id') }}">
+                        <input type="hidden" name="license_status_id" value="{{ old('license_status_id') }}">
+                        <input type="hidden" name="facility_name" value="{{ old('facility_name') }}">
+                        <input type="hidden" name="geo_codes" value="{{ old('geo_codes') }}">
+                        <div class="hospital-ids-container"></div>
+                        <button type="submit" class="btn btn-success btn-block">
+                            <i class="fa fa-download"></i> Export Selected to Excel
+                        </button>
+                    </form>
+                </div>
+
+                {{-- Batch Delete --}}
+                <div class="col-md-4">
+                    @if (auth()->user()->hasPermissionTo(4))
+                    <button type="button" class="btn btn-danger btn-block" id="batchDeleteBtn" data-toggle="modal" data-target="#batch_delete">
+                        <i class="fa fa-trash"></i> Delete Selected
+                    </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="box-body">
 
             <table id="table1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
+                        @if(old('state_id') && old('state_id') > 1)
+                            <th style="width: 30px;"><input type="checkbox" id="selectAllPage" class="selectAllPageCb" /></th>
+                        @endif
                         <th>State</th>
                         <th>LGA</th>
                         <th>Ward</th>
@@ -172,6 +270,9 @@
 
                     @foreach ($facilities as $fac)
                         <tr>
+                            @if(old('state_id') && old('state_id') > 1)
+                                <td><input type="checkbox" class="hospital-checkbox" value="{{ $fac->id }}" data-status="{{ $fac->status_id }}"></td>
+                            @endif
                             <td>{{ $fac->state }}</td>
                             <td>{{ $fac->lga }}</td>
                             <td>{{ $fac->ward }}</td>
@@ -397,6 +498,48 @@
         </div>
     </div> <!--/.modal -->
 
+    {{-- modal batch delete --}}
+    @if(old('state_id') && old('state_id') > 1)
+    <div class="modal fade" id="batch_delete" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Batch Delete Facilities</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('hospitals.batch.delete') }}" id="batchDeleteForm">
+                        @csrf
+                        <input type="hidden" name="state_id" value="{{ old('state_id') }}">
+                        <input type="hidden" name="select_all_filtered" class="select-all-filtered-flag" value="0">
+                        <input type="hidden" name="lga_id" value="{{ old('lga_id') }}">
+                        <input type="hidden" name="ward_id" value="{{ old('ward_id') }}">
+                        <input type="hidden" name="facility_level_id" value="{{ old('facility_level_id') }}">
+                        <input type="hidden" name="ownership_id" value="{{ old('ownership_id') }}">
+                        <input type="hidden" name="filter_operational_status_id" value="{{ old('operational_status_id') }}">
+                        <input type="hidden" name="registration_status_id" value="{{ old('registration_status_id') }}">
+                        <input type="hidden" name="license_status_id" value="{{ old('license_status_id') }}">
+                        <input type="hidden" name="facility_name" value="{{ old('facility_name') }}">
+                        <input type="hidden" name="geo_codes" value="{{ old('geo_codes') }}">
+                        <div class="hospital-ids-container"></div>
+
+                        <div class="alert alert-danger">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Warning:</strong> You are about to permanently delete <strong><span id="batchDeleteCount">0</span></strong> hospital(s).
+                            This action cannot be undone.
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete Permanently</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- modal admin update  --}}
     <div class="modal fade" id="admin_update" tabindex="-1" role="dialog">
         <div class="modal-dialog " role="document">
@@ -551,6 +694,7 @@
             $("#operational_status_id").val(0).change();
             $("#registration_status_id").val(0).change();
             $("#license_status_id").val(0).change();
+            $("#per_page").val(15).change();
         });
 
 
@@ -689,5 +833,135 @@
 
 
         }); //end
+
+        // ============ Batch Operations ============
+        var selectAllFilteredMode = false;
+        var totalFilteredCount = {{ $facilities->total() }};
+
+        // Select All on This Page (header + panel checkboxes)
+        $('#selectAllPage, .selectAllPageCb').on('change', function() {
+            var isChecked = $(this).is(':checked');
+            $('.hospital-checkbox').prop('checked', isChecked);
+            $('#selectAllPage, .selectAllPageCb').prop('checked', isChecked);
+
+            // If unchecking page select, also uncheck filtered select
+            if (!isChecked) {
+                $('#selectAllFiltered').prop('checked', false);
+                selectAllFilteredMode = false;
+            }
+            updateSelectedCount();
+            syncHiddenInputs();
+        });
+
+        // Select All Filtered Results (across all pages)
+        $('#selectAllFiltered').on('change', function() {
+            var isChecked = $(this).is(':checked');
+            selectAllFilteredMode = isChecked;
+
+            if (isChecked) {
+                // Also check all visible checkboxes
+                $('.hospital-checkbox').prop('checked', true);
+                $('#selectAllPage, .selectAllPageCb').prop('checked', true);
+            } else {
+                // Uncheck everything
+                $('.hospital-checkbox').prop('checked', false);
+                $('#selectAllPage, .selectAllPageCb').prop('checked', false);
+            }
+            updateSelectedCount();
+            syncHiddenInputs();
+        });
+
+        // Individual checkbox change
+        $(document).on('change', '.hospital-checkbox', function() {
+            // If unchecking one, exit select-all-filtered mode
+            if (!$(this).is(':checked')) {
+                $('#selectAllPage, .selectAllPageCb').prop('checked', false);
+                $('#selectAllFiltered').prop('checked', false);
+                selectAllFilteredMode = false;
+            }
+
+            if ($('.hospital-checkbox:checked').length === $('.hospital-checkbox').length && $('.hospital-checkbox').length > 0) {
+                $('#selectAllPage, .selectAllPageCb').prop('checked', true);
+            }
+
+            updateSelectedCount();
+            syncHiddenInputs();
+        });
+
+        function updateSelectedCount() {
+            var count;
+            if (selectAllFilteredMode) {
+                count = totalFilteredCount;
+            } else {
+                count = $('.hospital-checkbox:checked').length;
+            }
+            $('#selectedCount').text(count + ' selected');
+            $('#batchDeleteCount').text(count);
+        }
+
+        function syncHiddenInputs() {
+            // Clear existing hospital ID hidden inputs
+            $('.hospital-ids-container').empty();
+
+            // Set the select_all_filtered flags
+            $('.select-all-filtered-flag').val(selectAllFilteredMode ? '1' : '0');
+            $('#exportSelectAllFlag').val(selectAllFilteredMode ? '1' : '0');
+
+            if (!selectAllFilteredMode) {
+                // Add hidden inputs for each selected hospital on this page
+                $('.hospital-checkbox:checked').each(function() {
+                    var id = $(this).val();
+                    $('.hospital-ids-container').append(
+                        '<input type="hidden" name="hospital_ids[]" value="' + id + '">'
+                    );
+                });
+            }
+        }
+
+        // Validate batch forms before submit
+        $('#batchUpdateForm').on('submit', function(e) {
+            var count = selectAllFilteredMode ? totalFilteredCount : $('.hospital-checkbox:checked').length;
+            if (count === 0) {
+                e.preventDefault();
+                alert('Please select at least one hospital.');
+                return false;
+            }
+            syncHiddenInputs();
+            var msg = selectAllFilteredMode
+                ? 'Are you sure you want to update the operational status of ALL ' + count + ' filtered hospital(s)?'
+                : 'Are you sure you want to update the operational status of ' + count + ' hospital(s)?';
+            return confirm(msg);
+        });
+
+        $('#batchExportForm').on('submit', function(e) {
+            syncHiddenInputs();
+            return true;
+        });
+
+        $('#batchDeleteForm').on('submit', function(e) {
+            var count = selectAllFilteredMode ? totalFilteredCount : $('.hospital-checkbox:checked').length;
+            if (count === 0) {
+                e.preventDefault();
+                alert('Please select at least one hospital.');
+                return false;
+            }
+            syncHiddenInputs();
+            var msg = selectAllFilteredMode
+                ? 'Are you sure you want to PERMANENTLY DELETE ALL ' + count + ' filtered hospital(s)? This action cannot be undone.'
+                : 'Are you sure you want to PERMANENTLY DELETE ' + count + ' hospital(s)? This action cannot be undone.';
+            return confirm(msg);
+        });
+
+        // When batch delete modal opens, sync the hidden inputs
+        $('#batch_delete').on('show.bs.modal', function() {
+            var count = selectAllFilteredMode ? totalFilteredCount : $('.hospital-checkbox:checked').length;
+            if (count === 0) {
+                alert('Please select at least one hospital first.');
+                return false;
+            }
+            syncHiddenInputs();
+            $('#batchDeleteCount').text(count);
+        });
+
     </script>
 @endpush
