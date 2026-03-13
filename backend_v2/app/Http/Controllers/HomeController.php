@@ -19,7 +19,7 @@ class HomeController extends Controller
     {
         //get number of facilities by state
         $total_facilities_state = Cache::remember('total_facilities_home', 30, function () {
-            return DB::select("SELECT s.short_code statecode,count(h.id) as 'value' FROM hs_hospitals h
+            return DB::select("SELECT s.short_code statecode,count(h.id) as 'value' FROM hs_hospitals_history h
             JOIN ou_states s ON s.id = h.state_id GROUP BY s.short_code");
         });
 
@@ -47,7 +47,7 @@ class HomeController extends Controller
     public function getFacilitesByLGA(Request $request)
     {
         $total_facilities_lga = DB::select("SELECT l.map_code LGA_UID,count(h.id) value
-                    FROM hs_hospitals h
+                    FROM hs_hospitals_history h
                     JOIN ou_lgas l ON l.id = h.lga_id
                     JOIN ou_states s ON s.id=l.state_id
                     WHERE s.short_code ='" . $request->state_code .

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 use App\Models\Pharmacy;
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 use Illuminate\Support\Facades\Log;
 
 
@@ -189,7 +189,7 @@ class PharmacyController extends Controller
 
         $start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $ph = new Pharmacy;
         $ph->fill($request->all());
         $ph->unique_id = $hosp->generateFacilityCode($request->lga_id, '2', '0', $request->ownership_id);
@@ -331,7 +331,7 @@ class PharmacyController extends Controller
             'pharmacy_technicians' => 'nullable|numeric',
         ]);
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $ph = Pharmacy::findorfail($id);
         $ph->fill($request->all());
         $ph->start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));

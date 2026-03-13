@@ -13,7 +13,6 @@ use App\Models\StatusTracking;
 use Carbon\Carbon;
 use Auth;
 use App\Models\ApprovalNotifications;
-use App\Models\HospitalHistory;
 
 
 /**
@@ -32,12 +31,12 @@ class HospitalsController extends Controller
     {
         if (auth()->user()->hasPermissionTo('lga_1000')) {
             $facilities = DB::table('hospital_details')
-                ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-                ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-                ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-                ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-                ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-                ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+                ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+                ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+                ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+                ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+                ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+                ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
                 ->select(
                     'hospital_details.*',
                     'ou_states.name as state',
@@ -55,12 +54,12 @@ class HospitalsController extends Controller
                 ->paginate(15);
         } else {
             $facilities = DB::table('hospital_details')
-                ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-                ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-                ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-                ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-                ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-                ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+                ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+                ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+                ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+                ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+                ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+                ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
                 ->select(
                     'hospital_details.*',
                     'ou_states.name as state',
@@ -175,7 +174,7 @@ class HospitalsController extends Controller
 
 
         // dd($request->all());
-        $hosp = new HospitalHistory();
+        $hosp = new Hospital();
 
         $hosp->fill($request->except(['images']));
 
@@ -248,7 +247,7 @@ class HospitalsController extends Controller
     public function edit($id)
     {
         $hosp = Hospital::findorfail($id);
-        $hosp_his = HospitalHistory::findorfail($id);
+        $hosp_his = Hospital::findorfail($id);
         $status = $hosp_his['status_id'];
 
         $services = DB::table('hs_hospital_services')
@@ -342,8 +341,8 @@ class HospitalsController extends Controller
 
 
         //update records in history with new changes
-        $hosp = new HospitalHistory;
-        $hosp = HospitalHistory::findOrFail($id);
+        $hosp = new Hospital;
+        $hosp = Hospital::findOrFail($id);
         $state_id = $hosp['state_id'];
 
         // $hosp->fill($request->all());
@@ -443,9 +442,9 @@ class HospitalsController extends Controller
         ]);
 
 
-        $hospH = new HospitalHistory;
+        $hospH = new Hospital;
         $hosp = new Hospital;
-        $hospH = HospitalHistory::findOrFail($request->facility_id_x);
+        $hospH = Hospital::findOrFail($request->facility_id_x);
         $hosp = Hospital::findOrFail($request->facility_id_x);
 
 
@@ -487,8 +486,8 @@ class HospitalsController extends Controller
         $hs_tracking->note = $request->reason;
         $hs_tracking->created_at = Carbon::now()->format('Y-m-d H:i:s');
 
-        $hosp = new HospitalHistory;
-        $hosp = HospitalHistory::findOrFail($request->facility_id);
+        $hosp = new Hospital;
+        $hosp = Hospital::findOrFail($request->facility_id);
         $state_id = $hosp['state_id'];
         $hosp->status_id = '15';
         $hosp->action = 'DELETE FACILITY';
@@ -507,10 +506,10 @@ class HospitalsController extends Controller
 
         DB::beginTransaction();
         try {
-            HospitalHistory::disableAuditing();
+            Hospital::disableAuditing();
             $hs_tracking->save();
             $hosp->save();
-            HospitalHistory::enableAuditing();
+            Hospital::enableAuditing();
 
             DB::commit();
         } catch (\Exception $ex) {
@@ -580,12 +579,12 @@ class HospitalsController extends Controller
 
         // $facilities = DB::table('hospital_details')
         $facilities = DB::table('hospital_details')
-            ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-            ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-            ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-            ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-            ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-            ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+            ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+            ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+            ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+            ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+            ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+            ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
             ->select(
                 'hospital_details.*',
                 'ou_states.name as state_name',
@@ -622,12 +621,12 @@ class HospitalsController extends Controller
     public function search(Request $request)
     {
         $query = DB::table('hospital_details')
-            ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-            ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-            ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-            ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-            ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-            ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+            ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+            ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+            ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+            ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+            ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+            ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
             ->select(
                 'hospital_details.*',
                 'ou_states.name as state',
@@ -771,17 +770,17 @@ class HospitalsController extends Controller
         }
 
         $facilities = DB::table('hospital_details')
-            ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-            ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-            ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-            ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-            ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-            ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
-            ->join('lst_ownership_types', 'hospital_details.ownership_type_id', '=', 'lst_ownership_types.id')
-            ->join('lst_level_of_care_options', 'hospital_details.facility_level_option_id', '=', 'lst_level_of_care_options.id')
-            ->join('lst_oparational_status', 'hospital_details.operational_status_id', '=', 'lst_oparational_status.id')
-            ->join('lst_registration_status', 'hospital_details.registration_status_id', '=', 'lst_registration_status.id')
-            ->join('lst_license_status', 'hospital_details.license_status_id', '=', 'lst_license_status.id')
+            ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+            ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+            ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+            ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+            ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+            ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+            ->leftJoin('lst_ownership_types', 'hospital_details.ownership_type_id', '=', 'lst_ownership_types.id')
+            ->leftJoin('lst_level_of_care_options', 'hospital_details.facility_level_option_id', '=', 'lst_level_of_care_options.id')
+            ->leftJoin('lst_oparational_status', 'hospital_details.operational_status_id', '=', 'lst_oparational_status.id')
+            ->leftJoin('lst_registration_status', 'hospital_details.registration_status_id', '=', 'lst_registration_status.id')
+            ->leftJoin('lst_license_status', 'hospital_details.license_status_id', '=', 'lst_license_status.id')
             ->select(
                 'ou_states.name as state',
                 'ou_lgas.name as lga',
@@ -850,17 +849,17 @@ class HospitalsController extends Controller
     public function export(Request $request)
     {
         $query = DB::table('hospital_details')
-            ->join('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
-            ->join('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
-            ->join('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
-            ->join('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
-            ->join('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
-            ->join('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
-            ->join('lst_ownership_types', 'hospital_details.ownership_type_id', '=', 'lst_ownership_types.id')
-            ->join('lst_level_of_care_options', 'hospital_details.facility_level_option_id', '=', 'lst_level_of_care_options.id')
-            ->join('lst_oparational_status', 'hospital_details.operational_status_id', '=', 'lst_oparational_status.id')
-            ->join('lst_registration_status', 'hospital_details.registration_status_id', '=', 'lst_registration_status.id')
-            ->join('lst_license_status', 'hospital_details.license_status_id', '=', 'lst_license_status.id')
+            ->leftJoin('ou_states', 'hospital_details.state_id', '=', 'ou_states.id')
+            ->leftJoin('ou_lgas', 'hospital_details.lga_id', '=', 'ou_lgas.id')
+            ->leftJoin('ou_wards', 'hospital_details.ward_id', '=', 'ou_wards.id')
+            ->leftJoin('lst_facility_types', 'hospital_details.facility_type_id', '=', 'lst_facility_types.id')
+            ->leftJoin('lst_level_of_care', 'hospital_details.facility_level_id', '=', 'lst_level_of_care.id')
+            ->leftJoin('lst_ownerships', 'hospital_details.ownership_id', '=', 'lst_ownerships.id')
+            ->leftJoin('lst_ownership_types', 'hospital_details.ownership_type_id', '=', 'lst_ownership_types.id')
+            ->leftJoin('lst_level_of_care_options', 'hospital_details.facility_level_option_id', '=', 'lst_level_of_care_options.id')
+            ->leftJoin('lst_oparational_status', 'hospital_details.operational_status_id', '=', 'lst_oparational_status.id')
+            ->leftJoin('lst_registration_status', 'hospital_details.registration_status_id', '=', 'lst_registration_status.id')
+            ->leftJoin('lst_license_status', 'hospital_details.license_status_id', '=', 'lst_license_status.id')
             ->select(
                 'ou_states.name as state',
                 'ou_lgas.name as lga',

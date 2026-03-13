@@ -14,7 +14,7 @@ This document defines the field-level mapping between Nigeria's Health Facility 
 
 | FHIR Resource | Purpose | HFR Source Tables |
 |---|---|---|
-| **Organization** | Facility identity, ownership, contacts, staffing | `hs_hospitals_history`, `lb_laboratories`, `pharmacies`, `im_imagings` |
+| **Organization** | Facility identity, ownership, contacts, staffing | `hs_hospitals`, `lb_laboratories`, `pharmacies`, `im_imagings` |
 | **Location** | Physical location, coordinates, hours, status | Same tables (geographic/operational data) |
 | **HealthcareService** | Services offered by a facility | `hs_hospital_services`, `lst_hosp_services`, `lst_hosp_service_category` |
 

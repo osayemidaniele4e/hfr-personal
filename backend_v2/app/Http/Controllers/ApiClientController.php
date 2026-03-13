@@ -18,6 +18,7 @@ class ApiClientController extends Controller
      */
     public function index()
     {
+        abort_unless(auth()->user()->hasPermissionTo(77), 403, 'Unauthorized: You do not have permission to view API keys.');
         $clients = ApiClient::where('status', 'approved')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -41,6 +42,7 @@ class ApiClientController extends Controller
      */
     public function pending()
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
         $pendingClients = ApiClient::pending()
             ->orderBy('created_at', 'asc')
             ->get();
@@ -58,6 +60,8 @@ class ApiClientController extends Controller
      */
     public function approve(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
+
         $request->validate([
             'id'         => 'required|exists:api_clients,id',
             'rate_limit' => 'nullable|integer|min:10|max:1000',
@@ -102,6 +106,8 @@ class ApiClientController extends Controller
      */
     public function reject(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
+
         $request->validate([
             'id'               => 'required|exists:api_clients,id',
             'rejection_reason' => 'nullable|string|max:1000',
@@ -137,6 +143,8 @@ class ApiClientController extends Controller
      */
     public function create()
     {
+        abort_unless(auth()->user()->hasPermissionTo(78), 403, 'Unauthorized: You do not have permission to create API keys.');
+
         return view('api-clients.create');
     }
 
@@ -145,6 +153,8 @@ class ApiClientController extends Controller
      */
     public function store(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(78), 403, 'Unauthorized: You do not have permission to create API keys.');
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:api_clients,email',
@@ -180,6 +190,8 @@ class ApiClientController extends Controller
      */
     public function toggleStatus(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
+
         $request->validate(['id' => 'required|exists:api_clients,id']);
 
         $client = ApiClient::findOrFail($request->id);
@@ -196,6 +208,8 @@ class ApiClientController extends Controller
      */
     public function update(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
+
         $request->validate([
             'id' => 'required|exists:api_clients,id',
             'rate_limit' => 'required|integer|min:10|max:1000',
@@ -219,6 +233,8 @@ class ApiClientController extends Controller
      */
     public function regenerate(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(79), 403, 'Unauthorized: You do not have permission to manage API keys.');
+
         $request->validate(['id' => 'required|exists:api_clients,id']);
 
         $client = ApiClient::findOrFail($request->id);
@@ -240,6 +256,8 @@ class ApiClientController extends Controller
      */
     public function destroy(Request $request)
     {
+        abort_unless(auth()->user()->hasPermissionTo(80), 403, 'Unauthorized: You do not have permission to delete API keys.');
+
         $request->validate(['id' => 'required|exists:api_clients,id']);
 
         $client = ApiClient::findOrFail($request->id);
@@ -255,6 +273,7 @@ class ApiClientController extends Controller
      */
     public function logs(Request $request, $id)
     {
+        abort_unless(auth()->user()->hasPermissionTo(77), 403, 'Unauthorized: You do not have permission to view API keys.');
         $client = ApiClient::findOrFail($id);
 
         $logs = ApiRequestLog::where('api_client_id', $id)

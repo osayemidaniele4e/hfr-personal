@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Laboratory;
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 use Illuminate\Support\Facades\Log;
 
 
@@ -200,7 +200,7 @@ class LabController extends Controller
 
         $start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $lab = new Laboratory;
         $lab->fill($request->all());
         $lab->unique_id = $hosp->generateFacilityCode($request->lga_id, '3', $request->facility_level_id, $request->ownership_id);
@@ -347,7 +347,7 @@ class LabController extends Controller
 
         $start_date = date('Y-m-d', strtotime(str_replace('-', '/', $request->start_date)));
 
-        $hosp = new HospitalHistory;
+        $hosp = new Hospital;
         $lab = Laboratory::findOrFail($id);
         $lab->fill($request->all());
         $lab->start_date = $start_date;

@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
-use App\Models\HospitalHistory;
+use App\Models\Hospital;
 
 
 /**
@@ -77,7 +77,7 @@ class RoleController extends Controller
         // \Log::info($request->all());
 
         // dd(544554);
-        $funct = new HospitalHistory();
+        $funct = new Hospital();
         $roles_below = $funct->arrayValuesTostring($request->roles_below);
 
         $role = Role::create([
@@ -172,7 +172,7 @@ class RoleController extends Controller
             'permissions' => 'required',
         ]);
 
-        $funct = new HospitalHistory;
+        $funct = new Hospital;
         $roles_below = $funct->arrayValuesTostring($request->roles_below);
 
         $role = Role::findOrfail($request->id);

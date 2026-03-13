@@ -403,6 +403,24 @@
                         </div>
                     </div>
 
+                    <hr>
+                    <div class="form-group row">
+                        <label class="col-sm-2"></label>
+                        <div class="col-sm-2">
+                            <input type='checkbox'name='permissions[]' value='77'> View API Keys
+                        </div>
+                        <div class="col-sm-2">
+                            <input type='checkbox'name='permissions[]' value='78'> Create API Keys
+                        </div>
+                        <div class="col-sm-2">
+                            <input type='checkbox'name='permissions[]' value='79'> Manage API Keys
+                        </div>
+                        <div class="col-sm-2">
+                            <input type='checkbox'name='permissions[]' value='80'> Delete API Keys
+                        </div>
+                        <div class="col-sm-2"></div>
+                    </div>
+
 
                 </div>
             </div>

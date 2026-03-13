@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use App\Models\Hospital;
-use App\Models\HospitalHistory;
 use App\Models\HospitalServiceHistory;
 use App\Models\StatusTracking;
 use Carbon\Carbon;
@@ -129,7 +128,7 @@ class MyRequestController extends Controller
     public function editRequest($id)
     {
         if ($this->isNotVerified($id)) {
-            $hosp = HospitalHistory::find($id);
+            $hosp = Hospital::find($id);
 
             $services = DB::table('hs_hospital_services_history')
                 ->select('service_id')
@@ -219,11 +218,11 @@ class MyRequestController extends Controller
         if (in_array($request->status_id, [3, 1])) {
             DB::beginTransaction();
             try {
-                HospitalHistory::disableAuditing();
+                Hospital::disableAuditing();
 
                 //update records in history with new changes
-                $hosp = new HospitalHistory;
-                $hosp = HospitalHistory::find($request->id);
+                $hosp = new Hospital;
+                $hosp = Hospital::find($request->id);
                 $hosp->fill($request->all());
                 $hosp->status_id = 1;
                 $hosp->requested_by = Auth::user()->id;
@@ -241,7 +240,7 @@ class MyRequestController extends Controller
                 $hosp->operational_days = $hosp->arrayValuesTostring($request->operational_days);
                 $hosp->save();
 
-                HospitalHistory::enableAuditing();
+                Hospital::enableAuditing();
 
                 //insert in status tracking
                 $status = new StatusTracking;
@@ -278,17 +277,17 @@ class MyRequestController extends Controller
             //to history
             DB::beginTransaction();
             try {
-                HospitalHistory::disableAuditing();
+                Hospital::disableAuditing();
 
                 //delete hosp and services in history
-                HospitalHistory::destroy($request->id);
+                Hospital::destroy($request->id);
                 HospitalServiceHistory::where('hospital_id', $request->id)->delete();
 
                 $hosp_main = new Hospital;
                 $hosp_main = Hospital::find($request->id);
 
                 //copy data from main to history
-                $hosp_history = new HospitalHistory;
+                $hosp_history = new Hospital;
                 $hosp_history->fill($hosp_main->toArray());
                 $hosp_history->unique_id = $hosp_main->unique_id;
                 $hosp_history->start_date = $hosp_main->start_date;
@@ -298,11 +297,11 @@ class MyRequestController extends Controller
                 $hosp_history->save();
                 //copy ends
 
-                HospitalHistory::enableAuditing();
+                Hospital::enableAuditing();
 
                 //update records in history with new changes
-                $hosp = new HospitalHistory;
-                $hosp = HospitalHistory::find($request->id);
+                $hosp = new Hospital;
+                $hosp = Hospital::find($request->id);
                 $hosp->fill($request->all());
                 $hosp->status_id = 8;
                 $hosp->requested_at = Carbon::now()->format('Y-m-d H:i:s');
@@ -396,7 +395,7 @@ class MyRequestController extends Controller
                 //delete hosp and services in history
                 DB::beginTransaction();
                 try {
-                    HospitalHistory::destroy($request->hosp_id);
+                    Hospital::destroy($request->hosp_id);
                     HospitalServiceHistory::where('hospital_id', $request->hosp_id)->delete();
                     DB::commit();
                 } catch (\Exception $ex) {
@@ -410,17 +409,17 @@ class MyRequestController extends Controller
             if (in_array($request->status_id, [8, 10])) {
                 DB::beginTransaction();
                 try {
-                    HospitalHistory::disableAuditing();
+                    Hospital::disableAuditing();
 
                     //delete hosp and services in history
-                    HospitalHistory::destroy($request->hosp_id);
+                    Hospital::destroy($request->hosp_id);
                     HospitalServiceHistory::where('hospital_id', $request->hosp_id)->delete();
 
                     $hosp_main = new Hospital;
                     $hosp_main = Hospital::find($request->hosp_id);
 
                     //restore data from main tables to history
-                    $hosp_history = new HospitalHistory;
+                    $hosp_history = new Hospital;
                     $hosp_history->fill($hosp_main->toArray());
                     $hosp_history->unique_id = $hosp_main->unique_id;
                     $hosp_history->start_date = $hosp_main->start_date;
@@ -443,7 +442,7 @@ class MyRequestController extends Controller
                     }
 
 
-                    HospitalHistory::enableAuditing();
+                    Hospital::enableAuditing();
                     DB::commit();
                 } catch (\Exception $ex) {
                     DB::rollback();
@@ -456,12 +455,12 @@ class MyRequestController extends Controller
 
                 DB::beginTransaction();
                 try {
-                    HospitalHistory::disableAuditing();
+                    Hospital::disableAuditing();
                     $hosp_main = new Hospital;
                     $hosp_main = Hospital::find($request->hosp_id);
 
-                    $hosp = new HospitalHistory;
-                    $hosp = HospitalHistory::find($request->hosp_id);
+                    $hosp = new Hospital;
+                    $hosp = Hospital::find($request->hosp_id);
                     $hosp->status_id = $hosp_main->status_id;
                     $hosp->verified_by =  $hosp_main->verified_by;
                     $hosp->verified_at = $hosp_main->verified_at;
@@ -474,7 +473,7 @@ class MyRequestController extends Controller
                     $hosp->publish_note = $hosp_main->published_note;
                     $hosp->save();
 
-                    HospitalHistory::enableAuditing();
+                    Hospital::enableAuditing();
 
                     DB::commit();
                 } catch (\Exception $ex) {
@@ -511,8 +510,8 @@ class MyRequestController extends Controller
         $hs_tracking->note = $request->reason;
         $hs_tracking->created_at = Carbon::now()->format('Y-m-d H:i:s');
 
-        $hosp = new HospitalHistory;
-        $hosp = HospitalHistory::findOrFail($request->facility_id);
+        $hosp = new Hospital;
+        $hosp = Hospital::findOrFail($request->facility_id);
         $hosp->status_id = '15';
         $hosp->requested_at = Carbon::now()->format('Y-m-d H:i:s');
         $hosp->requested_by = Auth::user()->id;
@@ -529,10 +528,10 @@ class MyRequestController extends Controller
 
         DB::beginTransaction();
         try {
-            HospitalHistory::disableAuditing();
+            Hospital::disableAuditing();
             $hs_tracking->save();
             $hosp->save();
-            HospitalHistory::enableAuditing();
+            Hospital::enableAuditing();
 
             DB::commit();
         } catch (\Exception $ex) {
@@ -557,7 +556,7 @@ class MyRequestController extends Controller
     //the requester must not be able to delete or update the request
     private function isNotVerified($id)
     {
-        $hosp = HospitalHistory::find($id);
+        $hosp = Hospital::find($id);
 
         if (in_array($hosp->status_id, [1, 3, 8, 10, 15, 17])) {
             return true;

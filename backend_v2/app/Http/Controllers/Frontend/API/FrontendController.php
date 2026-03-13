@@ -716,7 +716,7 @@ class FrontendController extends Controller
     public function getFacilitesByLGA(Request $request)
     {
         $total_facilities_lga = DB::select("SELECT l.map_code LGA_UID,count(h.id) value
-                    FROM hs_hospitals h
+                    FROM hs_hospitals_history h
                     JOIN ou_lgas l ON l.id = h.lga_id
                     JOIN ou_states s ON s.id=l.state_id
                     WHERE s.short_code ='" . $request->state_code .
@@ -1926,6 +1926,11 @@ class FrontendController extends Controller
         // Log the request parameters
         // \Log::info('Search Hospitals Request Parameters:', $request->all());
         // \Log::info($request->facility_name);
+
+        // Only include facilities that exist in hospital_details (current/active records)
+        // This keeps results consistent with the facilities list page (searchHospitals)
+        $activeHospitalIds = DB::table('hospital_details')->pluck('id')->toArray();
+
         $query = DB::table('hs_hospitals_history')
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
@@ -1949,6 +1954,7 @@ class FrontendController extends Controller
                 'lst_registration_status.status as registration_status_name',
                 'lst_license_status.status as license_status_name'
             )
+            ->whereIn('hs_hospitals_history.id', $activeHospitalIds)
             ->when($request->facility_level_id, function ($q, $facilityLevel) {
                 return $q->where('hs_hospitals_history.facility_level_id', $facilityLevel);
             })
@@ -1957,7 +1963,7 @@ class FrontendController extends Controller
             })
 
             ->when($request->facility_name, function ($q, $facilityName) {
-                $facilityName = trim($facilityName); // 👈 Trim the input
+                $facilityName = trim($facilityName);
                 return $q->where(function ($subQuery) use ($facilityName) {
                     $subQuery->where('ou_states.name', 'like', '%' . $facilityName . '%')
                         ->orWhere('ou_lgas.name', 'like', '%' . $facilityName . '%')

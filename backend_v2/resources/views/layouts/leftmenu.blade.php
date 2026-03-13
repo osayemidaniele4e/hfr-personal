@@ -253,6 +253,7 @@
 
              <hr>
 
+             @if (auth()->user()->hasPermissionTo(77))
              <li class="treeview {{ request()->is('admin/api-clients*') ? 'active' : '' }}">
                  <a href="#">
                      <i class="fa fa-key"></i>
@@ -268,6 +269,7 @@
                  </a>
                  <ul class="treeview-menu">
                      <li><a href="{{ route('api-clients.index') }}"><i class="fa fa-circle-o"></i> Active Keys</a></li>
+                     @if (auth()->user()->hasPermissionTo(79))
                      <li>
                          <a href="{{ route('api-clients.pending') }}">
                              <i class="fa fa-clock-o"></i> Pending Requests
@@ -276,9 +278,13 @@
                              @endif
                          </a>
                      </li>
+                     @endif
+                     @if (auth()->user()->hasPermissionTo(78))
                      <li><a href="{{ route('api-clients.create') }}"><i class="fa fa-plus"></i> Create Key</a></li>
+                     @endif
                  </ul>
              </li>
+             @endif
 
              <li class="treeview">
                  <a href="#">

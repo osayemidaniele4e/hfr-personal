@@ -58,13 +58,17 @@
             <h3 class="box-title">External API Clients</h3>
             <div class="box-tools">
                 @if (isset($pendingCount) && $pendingCount > 0)
+                    @if (auth()->user()->hasPermissionTo(79))
                     <a href="{{ route('api-clients.pending') }}" class="btn btn-warning btn-sm" style="margin-right: 5px;">
                         <i class="fa fa-clock-o"></i> {{ $pendingCount }} Pending Request{{ $pendingCount > 1 ? 's' : '' }}
                     </a>
+                    @endif
                 @endif
+                @if (auth()->user()->hasPermissionTo(78))
                 <a href="{{ route('api-clients.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Create New API Key
                 </a>
+                @endif
             </div>
         </div>
         <div class="box-body">

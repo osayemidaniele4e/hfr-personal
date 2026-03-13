@@ -27,6 +27,9 @@
 
                     <h1 class="heading">Nigeria Health Facility Registry (HFR)</h1>
                     <p class="subtitle">Login to Access your Dashboard</p>
+                    <p class="subtitle" style="margin-top: -6px;">
+                        <a href="{{ env('FRONTEND_URL') }}" style="text-decoration: none; color:grey">Go to Home Page</a>
+                    </p>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">

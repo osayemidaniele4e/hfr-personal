@@ -31,6 +31,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AuditTrail;
 use App\Http\Controllers\ValidateDownloadController;
 use App\Http\Controllers\ApiClientController;
+use App\Http\Controllers\HospitalImportController;
 
 // use Illuminate\Support\Facades\Auth;
 
@@ -98,6 +99,17 @@ Route::middleware(["auth"])->group(function () {
         Route::get('admin/hospitals/search', [HospitalsController::class, 'search'])->name('searchHospitalsAdmin');
         Route::post('admin/hospitals/delete', [HospitalsController::class, 'InitiateDelete'])->name('hospitals.InitiateDelete');
         Route::post('admin/hospitals/export', [HospitalsController::class, 'export'])->name('hospitals.export');
+
+        //hospital import (must be before resource route)
+        Route::get('admin/hospitals/import', [HospitalImportController::class, 'index'])->name('hospitals.import.index');
+        Route::get('admin/hospitals/import/template', [HospitalImportController::class, 'downloadTemplate'])->name('hospitals.import.template');
+        Route::post('admin/hospitals/import/upload', [HospitalImportController::class, 'upload'])->name('hospitals.import.upload');
+        Route::get('admin/hospitals/import/{batchId}/preview', [HospitalImportController::class, 'preview'])->name('hospitals.import.preview');
+        Route::get('admin/hospitals/import/{batchId}/{id}/edit', [HospitalImportController::class, 'edit'])->name('hospitals.import.edit');
+        Route::put('admin/hospitals/import/{batchId}/{id}', [HospitalImportController::class, 'update'])->name('hospitals.import.update');
+        Route::delete('admin/hospitals/import/{batchId}/{id}', [HospitalImportController::class, 'destroy'])->name('hospitals.import.destroy');
+        Route::delete('admin/hospitals/import/{batchId}', [HospitalImportController::class, 'destroyBatch'])->name('hospitals.import.destroyBatch');
+        Route::post('admin/hospitals/import/{batchId}/submit', [HospitalImportController::class, 'submit'])->name('hospitals.import.submit');
 
         Route::resource('admin/hospitals', HospitalsController::class)->except(['show', 'destroy']);
 
