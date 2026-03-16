@@ -318,7 +318,7 @@ public function search(Request $request)
 
             $user = Auth::user();
 
-     
+
             if ($request->action == "approve") {
                 if ($request->requested_action == "CREATE FACILITY") {
                     $status_id = 4;

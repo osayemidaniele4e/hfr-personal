@@ -19,9 +19,9 @@ use App\Models\ApprovalNotifications;
  * HospitalsController
  *
  * @group Administration - Hospitals
- * 
+ *
  * APIs for managing hospitals (create, read, update, delete, search, export)
- * 
+ *
  * @authenticated
  */
 class HospitalsController extends Controller
@@ -49,6 +49,11 @@ class HospitalsController extends Controller
                     'lst_ownerships.name as ownership',
                 )
                 ->where('hospital_details.state_id', 'like', '%' .  Auth::user()->state_id . '%')
+                ->where(function ($q) {
+                    $q->whereIn('hospital_details.status_id', [6, 13])
+                      ->orWhereNull('hospital_details.status_id')
+                      ->orWhere('hospital_details.status_id', 0);
+                })
                 ->orderBy('hospital_details.state_id')
                 ->orderBy('hospital_details.lga_id')
                 ->orderBy('hospital_details.ward_id')
@@ -73,6 +78,11 @@ class HospitalsController extends Controller
                 )
                 ->where('hospital_details.state_id', 'like', '%' .  Auth::user()->state_id . '%')
                 ->whereIn('hospital_details.lga_id', auth()->user()->getDirectPermissions()->pluck('id')->toArray())
+                ->where(function ($q) {
+                    $q->whereIn('hospital_details.status_id', [6, 13])
+                      ->orWhereNull('hospital_details.status_id')
+                      ->orWhere('hospital_details.status_id', 0);
+                })
                 ->orderBy('hospital_details.state_id')
                 ->orderBy('hospital_details.lga_id')
                 ->orderBy('hospital_details.ward_id')
@@ -537,7 +547,12 @@ class HospitalsController extends Controller
      */
     private function buildFilteredHospitalQuery(Request $request)
     {
-        $query = DB::table('hospital_details');
+        $query = DB::table('hospital_details')
+            ->where(function ($q) {
+                $q->whereIn('hospital_details.status_id', [6, 13])
+                  ->orWhereNull('hospital_details.status_id')
+                  ->orWhere('hospital_details.status_id', 0);
+            });
 
         if (!empty($request->state_id)) {
             $query->where('hospital_details.state_id', $request->state_id);
@@ -708,7 +723,12 @@ class HospitalsController extends Controller
                 'hospital_details.created_at',
                 'hospital_details.updated_at'
             )
-            ->where('hospital_details.state_id', $stateId);
+            ->where('hospital_details.state_id', $stateId)
+            ->where(function ($q) {
+                $q->whereIn('hospital_details.status_id', [6, 13])
+                  ->orWhereNull('hospital_details.status_id')
+                  ->orWhere('hospital_details.status_id', 0);
+            });
 
         // Apply additional filters when select_all_filtered is on
         if ($selectAllFiltered || $selectAll) {
@@ -949,7 +969,12 @@ class HospitalsController extends Controller
                 'lst_ownerships.name as ownership',
                 'lst_facility_types.name as facility_type_name',
                 'lst_level_of_care.name as facility_level'
-            );
+            )
+            ->where(function ($q) {
+                $q->whereIn('hospital_details.status_id', [6, 13])
+                  ->orWhereNull('hospital_details.status_id')
+                  ->orWhere('hospital_details.status_id', 0);
+            });
 
         // Apply filters dynamically
         if (!empty($request->state_id)) {
@@ -1195,7 +1220,12 @@ class HospitalsController extends Controller
                 'lst_license_status.status as license_status',
                 'hospital_details.created_at',
                 'hospital_details.updated_at'
-            );
+            )
+            ->where(function ($q) {
+                $q->whereIn('hospital_details.status_id', [6, 13])
+                  ->orWhereNull('hospital_details.status_id')
+                  ->orWhere('hospital_details.status_id', 0);
+            });
 
         // Dynamically add filters if present
         if (!empty($request->state_id)) {
