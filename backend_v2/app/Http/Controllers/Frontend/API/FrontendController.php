@@ -652,6 +652,13 @@ class FrontendController extends Controller
             // ->when(!empty($request->state_id), fn($q) => $q->where('hs_hospitals_history.state_id', $request->state_id))
             ->whereIn('hs_hospitals_history.id', $hospital_with_services)
 
+            // Only show approved/published facilities (6 = Created, 13 = Updated) + legacy data (0/NULL)
+            ->where(function ($q) {
+                $q->whereIn('hs_hospitals_history.status_id', [6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id')
+                  ->orWhere('hs_hospitals_history.status_id', 0);
+            })
+
             ->orderBy('hs_hospitals_history.state_id')
             ->orderBy('hs_hospitals_history.lga_id')
             ->orderBy('hs_hospitals_history.ward_id')
@@ -1726,6 +1733,13 @@ class FrontendController extends Controller
             ->where(DB::raw("IFNULL(hs_hospitals_history.latitude, '')"), $cond, $value)
             ->whereIn('hs_hospitals_history.id', $hospitalIds)
 
+            // Only show approved/published facilities (6 = Created, 13 = Updated) + legacy data (0/NULL)
+            ->where(function ($q) {
+                $q->whereIn('hs_hospitals_history.status_id', [6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id')
+                  ->orWhere('hs_hospitals_history.status_id', 0);
+            })
+
             ->orderBy('hs_hospitals_history.state_id')
             ->orderBy('hs_hospitals_history.lga_id')
             ->orderBy('hs_hospitals_history.ward_id')
@@ -1955,6 +1969,12 @@ class FrontendController extends Controller
                 'lst_license_status.status as license_status_name'
             )
             ->whereIn('hs_hospitals_history.id', $activeHospitalIds)
+            // Only show approved/published facilities (6 = Created, 13 = Updated) + legacy data (0/NULL)
+            ->where(function ($q) {
+                $q->whereIn('hs_hospitals_history.status_id', [6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id')
+                  ->orWhere('hs_hospitals_history.status_id', 0);
+            })
             ->when($request->facility_level_id, function ($q, $facilityLevel) {
                 return $q->where('hs_hospitals_history.facility_level_id', $facilityLevel);
             })
