@@ -280,8 +280,8 @@ class FrontendController extends Controller
         // Get hospital IDs that offer those services
         if (!empty($serviceIds)) {
             $hospital = DB::select("
-            SELECT DISTINCT hospital_id 
-            FROM hs_hospital_services 
+            SELECT DISTINCT hospital_id
+            FROM hs_hospital_services
             WHERE service_id IN (" . implode(",", $serviceIds) . ")
         ");
 
@@ -361,6 +361,12 @@ class FrontendController extends Controller
             // ->when(!empty($request->state_id), fn($q) => $q->where('hs_hospitals_history.state_id', $request->state_id))
             ->whereIn('hs_hospitals_history.id', $hospital_with_services)
 
+            // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
+            ->where(function ($q) {
+                $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id');
+            })
+
             ->orderBy('hs_hospitals_history.state_id')
             ->orderBy('hs_hospitals_history.lga_id')
             ->orderBy('hs_hospitals_history.ward_id')
@@ -408,9 +414,9 @@ class FrontendController extends Controller
 
     public function getFacilitesByLGA(Request $request)
     {
-        $total_facilities_lga = DB::select("SELECT l.map_code LGA_UID,count(h.id) value 
-                    FROM hs_hospitals h 
-                    JOIN ou_lgas l ON l.id = h.lga_id 
+        $total_facilities_lga = DB::select("SELECT l.map_code LGA_UID,count(h.id) value
+                    FROM hs_hospitals h
+                    JOIN ou_lgas l ON l.id = h.lga_id
                     JOIN ou_states s ON s.id=l.state_id
                     WHERE s.short_code ='" . $request->state_code .
             "'GROUP BY l.map_code");
@@ -424,15 +430,15 @@ class FrontendController extends Controller
         $state_id = $state[0]->id;
 
         //get by level of care
-        $by_level = DB::select("SELECT facility_level as name,COUNT(id) AS y FROM hospital_details 
+        $by_level = DB::select("SELECT facility_level as name,COUNT(id) AS y FROM hospital_details
                 WHERE state_id=" . $state_id . " GROUP BY facility_level order by facility_level");
 
         //by ownership
-        $by_ownership =  DB::select("SELECT ownership as name,COUNT(id) AS y FROM hospital_details 
+        $by_ownership =  DB::select("SELECT ownership as name,COUNT(id) AS y FROM hospital_details
                 WHERE state_id=" . $state_id . "  GROUP BY ownership order by ownership");
 
         //fac with Geo codes
-        $geo_codes =  DB::select("SELECT lga as name, cast(SUM(case when latitude <> '' then 1 else 0 end)/count(id)*100 as unsigned) as y 
+        $geo_codes =  DB::select("SELECT lga as name, cast(SUM(case when latitude <> '' then 1 else 0 end)/count(id)*100 as unsigned) as y
         FROM hospital_details WHERE state_id=" . $state_id . "  GROUP BY lga order by y desc");
 
 
@@ -467,7 +473,7 @@ class FrontendController extends Controller
         };
 
 
-        $facilities = DB::select("SELECT * FROM hospital_details where latitude != '' and 
+        $facilities = DB::select("SELECT * FROM hospital_details where latitude != '' and
                         lga_id='" . $lga_details[0] . "'");
 
         $lga_name =  $lga_details[1];
@@ -933,7 +939,7 @@ class FrontendController extends Controller
             $data['report'] = $data['facilities']->count() . " Facilities were created in the last 3 Month";
         }
 
-        //Facilities Updated This Month 
+        //Facilities Updated This Month
         if ($request->report == 4) {
             $data['facilities']  = DB::table('hospital_details')
                 ->where('updated_at', '>=', Carbon::now()->startOfMonth())

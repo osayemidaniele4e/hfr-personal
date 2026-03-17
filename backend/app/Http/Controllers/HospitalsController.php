@@ -28,6 +28,10 @@ class HospitalsController extends Controller
         if (auth()->user()->hasPermissionTo('All LGAs')) {
             $facilities = DB::table('hs_hospitals_history')
                 ->where('state_id', 'like', '%' .  Auth::user()->state_id . '%')
+                ->where(function ($q) {
+                    $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+                      ->orWhereNull('hs_hospitals_history.status_id');
+                })
                 ->orderBy('state_id')
                 ->orderBy('lga_id')
                 ->orderBy('ward_id')
@@ -37,6 +41,10 @@ class HospitalsController extends Controller
             $facilities = DB::table('hs_hospitals_history')
                 ->where('state_id', 'like', '%' .  Auth::user()->state_id . '%')
                 ->whereIn('lga_id', auth()->user()->getDirectPermissions()->pluck('id')->toArray())
+                ->where(function ($q) {
+                    $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+                      ->orWhereNull('hs_hospitals_history.status_id');
+                })
                 ->orderBy('state_id')
                 ->orderBy('lga_id')
                 ->orderBy('ward_id')
