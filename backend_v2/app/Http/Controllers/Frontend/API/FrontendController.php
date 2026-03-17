@@ -638,11 +638,10 @@ class FrontendController extends Controller
             // ->when(!empty($request->state_id), fn($q) => $q->where('hs_hospitals_history.state_id', $request->state_id))
             ->whereIn('hs_hospitals_history.id', $hospital_with_services)
 
-            // Only show approved/published facilities (6 = Created, 13 = Updated) + legacy data (0/NULL)
+            // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
             ->where(function ($q) {
-                $q->whereIn('hs_hospitals_history.status_id', [6, 13])
-                  ->orWhereNull('hs_hospitals_history.status_id')
-                  ->orWhere('hs_hospitals_history.status_id', 0);
+                $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id');
             })
 
             ->orderBy('hs_hospitals_history.state_id')
@@ -1954,11 +1953,10 @@ class FrontendController extends Controller
                 'lst_license_status.status as license_status_name'
             )
             ->whereIn('hs_hospitals_history.id', $activeHospitalIds)
-            // Only show approved/published facilities (6 = Created, 13 = Updated) + legacy data (0/NULL)
+            // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
             ->where(function ($q) {
-                $q->whereIn('hs_hospitals_history.status_id', [6, 13])
-                  ->orWhereNull('hs_hospitals_history.status_id')
-                  ->orWhere('hs_hospitals_history.status_id', 0);
+                $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+                  ->orWhereNull('hs_hospitals_history.status_id');
             })
             ->when($request->facility_level_id, function ($q, $facilityLevel) {
                 return $q->where('hs_hospitals_history.facility_level_id', $facilityLevel);
