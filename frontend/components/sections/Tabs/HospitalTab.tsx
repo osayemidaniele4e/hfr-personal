@@ -92,6 +92,10 @@ interface Facility {
   created_at?: string;
   updated_at?: string;
   created_by?: string | null;
+  requested_by_name?: string | null;
+  verified_by_name?: string | null;
+  validated_by_name?: string | null;
+  published_by_name?: string | null;
 }
 
 const HospitalTab = () => {

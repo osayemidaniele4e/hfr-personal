@@ -229,13 +229,121 @@ const HospitalTable: React.FC<{
         return;
       }
 
+    const columnMap: { key: string; label: string }[] = [
+  { key: "id", label: "Id" },
+      // Location
+  { key: "state_name", label: "State" },
+  { key: "lga_name", label: "LGA" },
+  { key: "ward_name", label: "Ward" },
+
+  // Facility Identity
+  { key: "unique_id", label: "Unique ID" },
+  { key: "state_unique_id", label: "State Unique ID" },
+  { key: "registration_no", label: "Registration No" },
+  { key: "facility_name", label: "Facility Name" },
+  { key: "alt_facility_name", label: "Alternative Facility Name" },
+
+  // Classification
+  { key: "facility_level_name", label: "Facility Level" },
+  { key: "ownership_name", label: "Ownership" },
+  { key: "ownership_type", label: "Ownership Type" },
+
+  // Status
+  { key: "operational_status_name", label: "Operational Status" },
+  { key: "registration_status_name", label: "Registration Status" },
+  { key: "license_status_name", label: "License Status" },
+
+  // Contact
+  { key: "phone_number", label: "Phone Number" },
+  { key: "alternate_number", label: "Alternate Phone Number" },
+  { key: "email_address", label: "Email Address" },
+  { key: "website", label: "Website" },
+  { key: "physical_location", label: "Physical Location" },
+  { key: "postal_address", label: "Postal Address" },
+
+  // Coordinates
+  { key: "latitude", label: "Latitude" },
+  { key: "longitude", label: "Longitude" },
+
+  // Capacity
+  { key: "beds", label: "Beds" },
+
+  // Human Resources
+  { key: "doctors", label: "Doctors" },
+  { key: "nurses", label: "Nurses" },
+  { key: "midwifes", label: "Midwives" },
+  { key: "nurse_midwife", label: "Nurse Midwives" },
+  { key: "lab_scientists", label: "Lab Scientists" },
+  { key: "lab_technicians", label: "Lab Technicians" },
+  { key: "pharmacists", label: "Pharmacists" },
+  { key: "pharmacy_technicians", label: "Pharmacy Technicians" },
+  { key: "him_officers", label: "HIM Officers" },
+  { key: "env_health_officers", label: "Environmental Health Officers" },
+  { key: "dental_technicians", label: "Dental Technicians" },
+  { key: "dentist", label: "Dentists" },
+  { key: "attendants", label: "Attendants" },
+  { key: "community_health_officer", label: "Community Health Officers" },
+  { key: "community_extension_workers", label: "Community Extension Workers" },
+  { key: "jun_community_extension_worker", label: "Junior Community Extension Workers" },
+
+  // Services
+  { key: "inpatient", label: "Inpatient" },
+  { key: "outpatient", label: "Outpatient" },
+  { key: "ambulance_services", label: "Ambulance Services" },
+  { key: "onsite_laboratory", label: "Onsite Laboratory" },
+  { key: "onsite_imaging", label: "Onsite Imaging" },
+  { key: "onsite_pharmarcy", label: "Onsite Pharmacy" },
+  { key: "mortuary_services", label: "Mortuary Services" },
+
+  // Operations
+/*   { key: "operational_days", label: "Operational Days" },
+  { key: "operational_hours", label: "Operational Hours" },
+
+  // Dates
+  { key: "start_date", label: "Start Date" },
+  { key: "close_date", label: "Close Date" },
+  { key: "created_at", label: "Date Created" },
+  { key: "updated_at", label: "Last Updated" },
+
+  // Request Workflow
+  { key: "requested_by_name", label: "Requested By" },  
+  { key: "requested_at", label: "Requested At" },
+  { key: "request_note", label: "Request Note" },
+
+  // Verification Workflow
+{ key: "verified_by_name", label: "Verified By" },
+  { key: "verified_at", label: "Verified At" },
+  { key: "verify_note", label: "Verify Note" },
+  { key: "verified_id", label: "Verified ID" },
+  { key: "verified_email", label: "Verifier Email" },
+  { key: "verified_mobile", label: "Verifier Mobile" },
+
+  // Validation Workflow
+ { key: "validated_by_name", label: "Validated By" }, 
+  { key: "validated_at", label: "Validated At" },
+  { key: "validate_note", label: "Validate Note" },
+  { key: "validated_email", label: "Validator Email" },
+  { key: "validated_mobile", label: "Validator Mobile" },
+
+  // Publication Workflow
+  { key: "published_by_name", label: "Published By" },  // was published_by
+  { key: "published_at", label: "Published At" },
+  { key: "publish_note", label: "Publish Note" },
+  { key: "published_email", label: "Publisher Email" },
+  { key: "published_mobile", label: "Publisher Mobile" }, */
+];
+
       const csvRows = [];
-      const headers = Object.keys(allData[0]);
-      csvRows.push(headers.join(","));
+    //  const headers = Object.keys(allData[0]);
+
+    // Add header row
+    csvRows.push(columnMap.map((col) => col.label).join(","));
+
+   //   csvRows.push(headers.join(","));
 
       for (const row of allData) {
-        const values = headers.map((header) => 
-          JSON.stringify(row[header] ?? "")
+        const values = columnMap.map((col) => 
+          JSON.stringify(row[col.key] ?? "")
         );
         csvRows.push(values.join(","));
       }
