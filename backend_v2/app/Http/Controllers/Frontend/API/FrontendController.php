@@ -512,196 +512,411 @@ class FrontendController extends Controller
  *   "data": { ...paginated hospital results... }
  * }
  */
+//----------------------------------------------------------
+    // public function searchHospitals(Request $request)
+    // {
+    //     \Log::info($request);
+
+    //     // Extracting request parameters
+    //     $ward_id = $request->ward_id == 0 ? '' : $request->ward_id;
+    //     $facility_level_id = $request->facility_level_id == 0 ? '' : $request->facility_level_id;
+    //     $ownership_id = $request->ownership_id == 0 ? '' : $request->ownership_id;
+    //     $ownership_type_id = $request->ownership_type_id == 0 ? '' : $request->ownership_type_id;
+    //     $operational_status_id = $request->operational_status_id == 0 ? '' : $request->operational_status_id;
+    //     $registration_status_id = $request->registration_status_id == 0 ? '' : $request->registration_status_id;
+    //     $license_status_id = $request->license_status_id == 0 ? '' : $request->license_status_id;
+    //     // \Log::info($request);
+    //     // Handling geo_codes conditions (compatible with PHP 7)
+    //     if ($request->geo_codes == 0) {
+    //         $cond = "<>";
+    //         $value = 'XXX';
+    //     } elseif ($request->geo_codes == 1) {
+    //         $cond = "<>";
+    //         $value = '';
+    //     } elseif ($request->geo_codes == 2) {
+    //         $cond = "=";
+    //         $value = '';
+    //     } else {
+    //         $cond = "<>";
+    //         $value = '';
+    //     }
+
+    //     // Handling service type conditions
+    //     $outpatient = $request->service_type == 1 ? 'Yes' : '';
+    //     $inpatient = $request->service_type == 2 ? 'Yes' : '';
+
+    //     // Safely handle `services` input (single or multiple)
+    //     $serviceIds = [];
+
+    //     if (!empty($request->services)) {
+    //         $serviceIds = is_array($request->services)
+    //             ? $request->services
+    //             : explode(',', $request->services);
+    //     }
+
+
+    //     // Get hospital IDs that offer those services
+    //     if (!empty($serviceIds)) {
+    //         $hospital = DB::select("
+    //         SELECT DISTINCT hospital_id
+    //         FROM hs_hospital_services
+    //         WHERE service_id IN (" . implode(",", $serviceIds) . ")
+    //     ");
+
+    //         $hospital_with_services = array_column($hospital, 'hospital_id');
+    //     } else {
+    //         $hospital = DB::select("SELECT id FROM hospital_details");
+    //         $hospital_with_services = array_column($hospital, 'id');
+    //     }
+
+    //     // Get 'per_page' from the request, defaulting to 50 if not provided
+    //     $perPage = $request->input('per_page', 25); // Laravel 5 way to set default value for pagination
+
+    //     $data['facilities'] = DB::table('hs_hospitals_history')
+    //         ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
+    //         ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
+    //         ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
+    //         ->leftJoin('lst_level_of_care', 'hs_hospitals_history.facility_level_id', '=', 'lst_level_of_care.id')
+    //         ->leftJoin('lst_ownerships', 'hs_hospitals_history.ownership_id', '=', 'lst_ownerships.id')
+    //         ->leftJoin('lst_ownership_types', 'hs_hospitals_history.ownership_type_id', '=', 'lst_ownership_types.id')
+    //         ->leftJoin('lst_oparational_status', 'hs_hospitals_history.operational_status_id', '=', 'lst_oparational_status.id')
+    //         ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
+    //         ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
+
+    //         ->select(
+    //             'hs_hospitals_history.*',
+    //             'ou_states.name as state_name',
+    //             'ou_lgas.name as lga_name',
+    //             'ou_wards.name as ward_name',
+    //             'lst_level_of_care.name as facility_level_name',
+    //             'lst_ownerships.name as ownership_name',
+    //             'lst_ownership_types.type as ownership_type',
+    //             'lst_oparational_status.status as operational_status_name',
+    //             'lst_registration_status.status as registration_status_name',
+    //             'lst_license_status.status as license_status_name',
+
+    //         )
+
+    //         // ->where('hs_hospitals_history.state_id', '=', $request->state_id)
+    //         // ->where('hs_hospitals_history.lga_id', '=', $request->lga_id)
+    //         // ->where(DB::raw("IFNULL(hs_hospitals_history.ward_id, '')"), '=', $ward_id)
+
+    //         ->where('hs_hospitals_history.state_id', 'like', '%' . $request->state_id . '%')
+    //         ->where('hs_hospitals_history.lga_id', 'like', '%' . $request->lga_id . '%')
+    //         ->where(DB::raw("IFNULL(hs_hospitals_history.ward_id, '')"), 'like', '%' . $request->ward_id . '%')
+
+    //         ->when($ownership_type_id, function ($query) use ($ownership_type_id) {
+    //             $query->where('hs_hospitals_history.ownership_type_id', 'like', '%' . $ownership_type_id . '%');
+    //         })
+
+    //         // ->when($request->search, function ($q, $search) {
+    //         //     $search = strtolower(trim($search));
+    //         //     return $q->where(function ($subQuery) use ($search) {
+    //         //         $subQuery->whereRaw('LOWER(ou_states.name) LIKE ?', ["%$search%"])
+    //         //             ->orWhereRaw('LOWER(ou_lgas.name) LIKE ?', ["%$search%"])
+    //         //             ->orWhereRaw('LOWER(ou_wards.name) LIKE ?', ["%$search%"]);
+    //         //     });
+    //         // })
+
+    //         ->when($request->search, function ($q, $search) {
+    //             $search = strtolower(trim($search));
+    //             return $q->whereRaw('LOWER(hs_hospitals_history.facility_name) LIKE ?', ["%$search%"]);
+    //         })
+
+    //         ->where('hs_hospitals_history.facility_level_id', 'like', '%' . $facility_level_id . '%')
+    //         ->where('hs_hospitals_history.ownership_id', 'like', '%' . $ownership_id . '%')
+    //         // ->where('hs_hospitals_history.ownership_type_id', 'like', '%' . $ownership_type_id . '%')
+    //         ->where('hs_hospitals_history.operational_status_id', 'like', '%' . $operational_status_id . '%')
+    //         ->where('hs_hospitals_history.registration_status_id', 'like', '%' . $registration_status_id . '%')
+    //         ->where('hs_hospitals_history.license_status_id', 'like', '%' . $license_status_id . '%')
+    //         // ->where(DB::raw("IFNULL(hs_hospitals_history.outpatient, '')"), 'like', '%' . $outpatient . '%')
+    //         // ->where(DB::raw("IFNULL(hs_hospitals_history.inpatient, '')"), 'like', '%' . $inpatient . '%')
+    //         // ->where('hs_hospitals_history.facility_name', 'like', '%' . $request->facility_name . '%')
+
+    //         ->where(DB::raw("IFNULL(hs_hospitals_history.latitude, '')"), $cond, $value)
+
+    //         // ->whereIn('hs_hospitals_history.id', $hospital_with_services)
+    //         // ->when(!empty($request->state_id), fn($q) => $q->where('hs_hospitals_history.state_id', $request->state_id))
+    //         ->whereIn('hs_hospitals_history.id', $hospital_with_services)
+
+    //         // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
+    //         ->where(function ($q) {
+    //             $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+    //               ->orWhereNull('hs_hospitals_history.status_id');
+    //         })
+
+    //         ->orderBy('hs_hospitals_history.state_id')
+    //         ->orderBy('hs_hospitals_history.lga_id')
+    //         ->orderBy('hs_hospitals_history.ward_id')
+    //         ->orderBy('hs_hospitals_history.facility_name')
+    //         // ->orderBy('hs_hospitals_history.created_at', 'desc')
+    //         ->when($request->facility_name, function ($q, $facilityName) {
+    //             return $q->where(function ($subQuery) use ($facilityName) {
+    //                 $subQuery->where('ou_states.name', 'like', '%' . $facilityName . '%')
+    //                     ->orWhere('ou_lgas.name', 'like', '%' . $facilityName . '%')
+    //                     ->orWhere('ou_wards.name', 'like', '%' . $facilityName . '%');
+    //                 // ->orWhere('hs_hospitals_history.facility_name', 'like', '%' . $facilityName . '%');
+    //             });
+    //         })
+
+
+    //         ->paginate($perPage)
+    //         ->appends($request->all());
+
+    //     // \Log::info($data['facilities']);
+    //     // Returning request values
+    //     $data += [
+    //         'state_id' => $request->state_id,
+    //         'lga_id' => $request->lga_id,
+    //         'ward_id' => $request->ward_id,
+    //         'facility_name' => $request->facility_name,
+    //         'geo_codes' => $request->geo_codes,
+    //         'facility_level_id' => $request->facility_level_id,
+    //         'ownership_id' => $request->ownership_id,
+    //         'ownership_type_id' => $request->ownership_type_id,
+    //         'operational_status_id' => $request->operational_status_id,
+    //         'registration_status_id' => $request->registration_status_id,
+    //         'license_status_id' => $request->license_status_id,
+    //         'service_type' => $request->service_type,
+    //         'service_category_id' => $request->service_category_id,
+    //         'searched' => 1
+    //     ];
+
+    //     // Returning JSON response
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $data
+    //     ], 200);
+    // }
+//----------------------------------------------------------
+
     public function searchHospitals(Request $request)
-    {
-        \Log::info($request);
 
-        // Extracting request parameters
-        $ward_id = $request->ward_id == 0 ? '' : $request->ward_id;
-        $facility_level_id = $request->facility_level_id == 0 ? '' : $request->facility_level_id;
-        $ownership_id = $request->ownership_id == 0 ? '' : $request->ownership_id;
-        $ownership_type_id = $request->ownership_type_id == 0 ? '' : $request->ownership_type_id;
-        $operational_status_id = $request->operational_status_id == 0 ? '' : $request->operational_status_id;
-        $registration_status_id = $request->registration_status_id == 0 ? '' : $request->registration_status_id;
-        $license_status_id = $request->license_status_id == 0 ? '' : $request->license_status_id;
-        // \Log::info($request);
-        // Handling geo_codes conditions (compatible with PHP 7)
-        if ($request->geo_codes == 0) {
-            $cond = "<>";
-            $value = 'XXX';
-        } elseif ($request->geo_codes == 1) {
-            $cond = "<>";
-            $value = '';
-        } elseif ($request->geo_codes == 2) {
-            $cond = "=";
-            $value = '';
-        } else {
-            $cond = "<>";
-            $value = '';
+{
+
+    // 1. Service Filtering Logic - ONLY fetch IDs if services are selected
+
+    $hospitalIdsFromServices = null;
+
+    if ($request->filled('services')) {
+
+        $serviceIds = is_array($request->services) ? $request->services : explode(',', $request->services);
+
+
+
+        $hospitalIdsFromServices = DB::table('hs_hospital_services')
+
+            ->whereIn('service_id', $serviceIds)
+
+            ->distinct()
+
+            ->pluck('hospital_id')
+
+            ->toArray();
+
+
+
+        // If user searched for services but none were found, return empty results immediately
+
+        if (empty($hospitalIdsFromServices)) {
+
+            return response()->json(['success' => true, 'data' => ['facilities' => []]], 200);
+
         }
 
-        // Handling service type conditions
-        $outpatient = $request->service_type == 1 ? 'Yes' : '';
-        $inpatient = $request->service_type == 2 ? 'Yes' : '';
-
-        // Safely handle `services` input (single or multiple)
-        $serviceIds = [];
-
-        if (!empty($request->services)) {
-            $serviceIds = is_array($request->services)
-                ? $request->services
-                : explode(',', $request->services);
-        }
-
-
-        // Get hospital IDs that offer those services
-        if (!empty($serviceIds)) {
-            $hospital = DB::select("
-            SELECT DISTINCT hospital_id
-            FROM hs_hospital_services
-            WHERE service_id IN (" . implode(",", $serviceIds) . ")
-        ");
-
-            $hospital_with_services = array_column($hospital, 'hospital_id');
-        } else {
-            $hospital = DB::select("SELECT id FROM hospital_details");
-            $hospital_with_services = array_column($hospital, 'id');
-        }
-
-        // Get 'per_page' from the request, defaulting to 50 if not provided
-        $perPage = $request->input('per_page', 25); // Laravel 5 way to set default value for pagination
-
-        $data['facilities'] = DB::table('hs_hospitals_history')
-            ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
-            ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
-            ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
-            ->leftJoin('lst_level_of_care', 'hs_hospitals_history.facility_level_id', '=', 'lst_level_of_care.id')
-            ->leftJoin('lst_ownerships', 'hs_hospitals_history.ownership_id', '=', 'lst_ownerships.id')
-            ->leftJoin('lst_ownership_types', 'hs_hospitals_history.ownership_type_id', '=', 'lst_ownership_types.id')
-            ->leftJoin('lst_oparational_status', 'hs_hospitals_history.operational_status_id', '=', 'lst_oparational_status.id')
-            ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
-            ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
-
-              // User joins for workflow fields
-        ->leftJoin('users as requested_by_user', 'hs_hospitals_history.requested_by', '=', 'requested_by_user.id')
-        ->leftJoin('users as verified_by_user', 'hs_hospitals_history.verified_by', '=', 'verified_by_user.id')
-        ->leftJoin('users as validated_by_user', 'hs_hospitals_history.validated_by', '=', 'validated_by_user.id')
-        ->leftJoin('users as published_by_user', 'hs_hospitals_history.published_by', '=', 'published_by_user.id')
-
-
-            ->select(
-                'hs_hospitals_history.*',
-                'ou_states.name as state_name',
-                'ou_lgas.name as lga_name',
-                'ou_wards.name as ward_name',
-                'lst_level_of_care.name as facility_level_name',
-                'lst_ownerships.name as ownership_name',
-                'lst_ownership_types.type as ownership_type',
-                'lst_oparational_status.status as operational_status_name',
-                'lst_registration_status.status as registration_status_name',
-                'lst_license_status.status as license_status_name',
-
-
-            // Workflow user names
-            DB::raw("CONCAT(requested_by_user.firstname, ' ', requested_by_user.lastname) as requested_by_name"),
-            DB::raw("CONCAT(verified_by_user.firstname, ' ', verified_by_user.lastname) as verified_by_name"),
-            DB::raw("CONCAT(validated_by_user.firstname, ' ', validated_by_user.lastname) as validated_by_name"),
-            DB::raw("CONCAT(published_by_user.firstname, ' ', published_by_user.lastname) as published_by_name"),
-
-            )
-
-            // ->where('hs_hospitals_history.state_id', '=', $request->state_id)
-            // ->where('hs_hospitals_history.lga_id', '=', $request->lga_id)
-            // ->where(DB::raw("IFNULL(hs_hospitals_history.ward_id, '')"), '=', $ward_id)
-
-            ->where('hs_hospitals_history.state_id', 'like', '%' . $request->state_id . '%')
-            ->where('hs_hospitals_history.lga_id', 'like', '%' . $request->lga_id . '%')
-            ->where(DB::raw("IFNULL(hs_hospitals_history.ward_id, '')"), 'like', '%' . $request->ward_id . '%')
-
-            ->when($ownership_type_id, function ($query) use ($ownership_type_id) {
-                $query->where('hs_hospitals_history.ownership_type_id', 'like', '%' . $ownership_type_id . '%');
-            })
-
-            // ->when($request->search, function ($q, $search) {
-            //     $search = strtolower(trim($search));
-            //     return $q->where(function ($subQuery) use ($search) {
-            //         $subQuery->whereRaw('LOWER(ou_states.name) LIKE ?', ["%$search%"])
-            //             ->orWhereRaw('LOWER(ou_lgas.name) LIKE ?', ["%$search%"])
-            //             ->orWhereRaw('LOWER(ou_wards.name) LIKE ?', ["%$search%"]);
-            //     });
-            // })
-
-            ->when($request->search, function ($q, $search) {
-                $search = strtolower(trim($search));
-                return $q->whereRaw('LOWER(hs_hospitals_history.facility_name) LIKE ?', ["%$search%"]);
-            })
-
-            ->where('hs_hospitals_history.facility_level_id', 'like', '%' . $facility_level_id . '%')
-            ->where('hs_hospitals_history.ownership_id', 'like', '%' . $ownership_id . '%')
-            // ->where('hs_hospitals_history.ownership_type_id', 'like', '%' . $ownership_type_id . '%')
-            ->where('hs_hospitals_history.operational_status_id', 'like', '%' . $operational_status_id . '%')
-            ->where('hs_hospitals_history.registration_status_id', 'like', '%' . $registration_status_id . '%')
-            ->where('hs_hospitals_history.license_status_id', 'like', '%' . $license_status_id . '%')
-            // ->where(DB::raw("IFNULL(hs_hospitals_history.outpatient, '')"), 'like', '%' . $outpatient . '%')
-            // ->where(DB::raw("IFNULL(hs_hospitals_history.inpatient, '')"), 'like', '%' . $inpatient . '%')
-            // ->where('hs_hospitals_history.facility_name', 'like', '%' . $request->facility_name . '%')
-
-            ->where(DB::raw("IFNULL(hs_hospitals_history.latitude, '')"), $cond, $value)
-
-            // ->whereIn('hs_hospitals_history.id', $hospital_with_services)
-            // ->when(!empty($request->state_id), fn($q) => $q->where('hs_hospitals_history.state_id', $request->state_id))
-            ->whereIn('hs_hospitals_history.id', $hospital_with_services)
-
-            // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
-            ->where(function ($q) {
-                $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
-                  ->orWhereNull('hs_hospitals_history.status_id');
-            })
-
-            ->orderBy('hs_hospitals_history.state_id')
-            ->orderBy('hs_hospitals_history.lga_id')
-            ->orderBy('hs_hospitals_history.ward_id')
-            ->orderBy('hs_hospitals_history.facility_name')
-            // ->orderBy('hs_hospitals_history.created_at', 'desc')
-            ->when($request->facility_name, function ($q, $facilityName) {
-                return $q->where(function ($subQuery) use ($facilityName) {
-                    $subQuery->where('ou_states.name', 'like', '%' . $facilityName . '%')
-                        ->orWhere('ou_lgas.name', 'like', '%' . $facilityName . '%')
-                        ->orWhere('ou_wards.name', 'like', '%' . $facilityName . '%');
-                    // ->orWhere('hs_hospitals_history.facility_name', 'like', '%' . $facilityName . '%');
-                });
-            })
-
-
-            ->paginate($perPage)
-            ->appends($request->all());
-
-        // \Log::info($data['facilities']);
-        // Returning request values
-        $data += [
-            'state_id' => $request->state_id,
-            'lga_id' => $request->lga_id,
-            'ward_id' => $request->ward_id,
-            'facility_name' => $request->facility_name,
-            'geo_codes' => $request->geo_codes,
-            'facility_level_id' => $request->facility_level_id,
-            'ownership_id' => $request->ownership_id,
-            'ownership_type_id' => $request->ownership_type_id,
-            'operational_status_id' => $request->operational_status_id,
-            'registration_status_id' => $request->registration_status_id,
-            'license_status_id' => $request->license_status_id,
-            'service_type' => $request->service_type,
-            'service_category_id' => $request->service_category_id,
-            'searched' => 1
-        ];
-
-        // Returning JSON response
-        return response()->json([
-            'success' => true,
-            'data' => $data
-        ], 200);
     }
 
+
+
+    // 2. Build Query
+
+    $query = DB::table('hs_hospitals_history')
+
+        ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
+
+        ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
+
+        ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
+
+        ->leftJoin('lst_level_of_care', 'hs_hospitals_history.facility_level_id', '=', 'lst_level_of_care.id')
+
+        ->leftJoin('lst_ownerships', 'hs_hospitals_history.ownership_id', '=', 'lst_ownerships.id')
+
+        ->leftJoin('lst_ownership_types', 'hs_hospitals_history.ownership_type_id', '=', 'lst_ownership_types.id')
+
+        ->leftJoin('lst_oparational_status', 'hs_hospitals_history.operational_status_id', '=', 'lst_oparational_status.id')
+
+        ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
+
+        ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
+
+        ->select(
+
+            'hs_hospitals_history.*',
+
+            'ou_states.name as state_name',
+
+            'ou_lgas.name as lga_name',
+
+            'ou_wards.name as ward_name',
+
+            'lst_level_of_care.name as facility_level_name',
+
+            'lst_ownerships.name as ownership_name',
+
+            'lst_ownership_types.type as ownership_type',
+
+            'lst_oparational_status.status as operational_status_name',
+
+            'lst_registration_status.status as registration_status_name',
+
+            'lst_license_status.status as license_status_name'
+
+        );
+
+
+
+    // 3. Apply Filters using when() - This prevents NULL values from being excluded
+
+    $query->when($request->state_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.state_id', $request->state_id);
+
+    });
+
+
+
+    $query->when($request->lga_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.lga_id', $request->lga_id);
+
+    });
+
+
+
+    $query->when($request->ward_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.ward_id', $request->ward_id);
+
+    });
+
+
+
+    $query->when($request->facility_level_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.facility_level_id', $request->facility_level_id);
+
+    });
+
+
+
+    $query->when($request->ownership_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.ownership_id', $request->ownership_id);
+
+    });
+
+
+
+    $query->when($request->operational_status_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.operational_status_id', $request->operational_status_id);
+
+    });
+
+
+
+    $query->when($request->registration_status_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.registration_status_id', $request->registration_status_id);
+
+    });
+
+
+
+    $query->when($request->license_status_id, function ($q) use ($request) {
+
+        return $q->where('hs_hospitals_history.license_status_id', $request->license_status_id);
+
+    });
+
+
+
+    // 4. Text Search
+
+    $query->when($request->search, function ($q, $search) {
+
+        return $q->where('hs_hospitals_history.facility_name', 'LIKE', '%' . trim($search) . '%');
+
+    });
+
+
+
+    // 5. Geo Codes Logic - ONLY apply if specifically selected
+
+    if ($request->filled('geo_codes')) {
+
+        if ($request->geo_codes == 1) { // Has coordinates
+
+            $query->whereNotNull('hs_hospitals_history.latitude')->where('hs_hospitals_history.latitude', '<>', '');
+
+        } elseif ($request->geo_codes == 2) { // Missing coordinates
+
+            $query->where(function($sub) {
+
+                $sub->whereNull('hs_hospitals_history.latitude')->orWhere('hs_hospitals_history.latitude', '');
+
+            });
+
+        }
+
+    }
+
+
+
+    // 6. Service Filter - Only apply if $hospitalIdsFromServices is NOT null
+
+    if ($hospitalIdsFromServices !== null) {
+
+        $query->whereIn('hs_hospitals_history.id', $hospitalIdsFromServices);
+
+    }
+
+
+
+    // 7. Status Filter (Ensure we include everything in the CSV)
+
+    $query->where(function ($q) {
+
+        $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
+
+          ->orWhereNull('hs_hospitals_history.status_id');
+
+    });
+
+
+
+    // 8. Finalize
+
+    $perPage = $request->input('per_page', 25);
+
+    $facilities = $query->orderBy('hs_hospitals_history.facility_name')
+
+                        ->paginate($perPage)
+
+                        ->appends($request->all());
+
+
+
+    return response()->json([
+
+        'success' => true,
+
+        'data' => array_merge($request->all(), ['facilities' => $facilities, 'searched' => 1])
+
+    ], 200);
+
+}
 
 /**
  * Get facilities by LGA with summary data
