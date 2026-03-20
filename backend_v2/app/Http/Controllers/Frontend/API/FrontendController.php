@@ -900,10 +900,9 @@ class FrontendController extends Controller
 
     $perPage = $request->input('per_page', 25);
 
-    $facilities = $query->orderBy('hs_hospitals_history.facility_name')
-
+    $facilities = $query->orderBy('ou_lgas.name', 'ASC') // First sort by LGA
+                        ->orderBy('hs_hospitals_history.facility_name', 'ASC') // Then by Facility Name
                         ->paginate($perPage)
-
                         ->appends($request->all());
 
 
