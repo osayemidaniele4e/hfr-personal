@@ -4,9 +4,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text } from "../ui/Typography";
 import { MdLocationPin } from "react-icons/md";
 import { FaRegShareSquare, FaDownload } from "react-icons/fa";
-import { HiDownload } from "react-icons/hi";
-import { HiShare } from "react-icons/hi";
-import { useRouter, useSearchParams } from "next/navigation";
+import { HiChevronDown, HiDownload, HiShare } from "react-icons/hi";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
 import html2canvas from "html2canvas";
@@ -97,8 +96,21 @@ interface Facility {
   created_by?: string | null;
 }
 
+function missingFieldLabel(
+  column: string,
+  labels: Record<string, string> | undefined
+): string {
+  const fromApi = labels?.[column];
+  if (fromApi) return fromApi;
+  return column
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 const FacilityDetails = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const searchParams = useSearchParams();
   const id = searchParams?.get("id"); // Get the hospital ID from URL
@@ -108,6 +120,83 @@ const FacilityDetails = () => {
 
   const [fetchError, setFetchError] = useState<string>(""); // State for error messages
 
+  const [completeness, setCompleteness] = useState<{
+    percentage: number;
+    missing_fields: string[];
+    missing_field_labels?: Record<string, string>;
+    total_columns?: number;
+    filled_columns?: number;
+    missing_count?: number;
+  } | null>(null);
+  const [completenessLoading, setCompletenessLoading] = useState(false);
+  const [completenessError, setCompletenessError] = useState(false);
+  const [missingFieldsOpen, setMissingFieldsOpen] = useState(false);
+
+  useEffect(() => {
+    if (completenessLoading) {
+      setMissingFieldsOpen(false);
+    }
+  }, [completenessLoading]);
+
+  const fetchCompleteness = useCallback(async (facilityId: string) => {
+    if (!facilityId || !/^\d+$/.test(facilityId)) {
+      setCompleteness(null);
+      setCompletenessError(false);
+      setCompletenessLoading(false);
+      return;
+    }
+    setCompletenessLoading(true);
+    setCompletenessError(false);
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/facility/${facilityId}/completeness`
+      );
+      const payload = res?.data?.data;
+      const rawLabels = payload?.missing_field_labels;
+      const missingFieldLabels =
+        rawLabels &&
+        typeof rawLabels === "object" &&
+        !Array.isArray(rawLabels)
+          ? (rawLabels as Record<string, string>)
+          : undefined;
+      if (
+        res?.data?.success &&
+        payload &&
+        typeof payload.percentage === "number" &&
+        Array.isArray(payload.missing_fields)
+      ) {
+        const totalColumns =
+          typeof payload.total_columns === "number"
+            ? payload.total_columns
+            : undefined;
+        const filledColumns =
+          typeof payload.filled_columns === "number"
+            ? payload.filled_columns
+            : undefined;
+        const missingCount =
+          typeof payload.missing_count === "number"
+            ? payload.missing_count
+            : undefined;
+        setCompleteness({
+          percentage: payload.percentage,
+          missing_fields: payload.missing_fields,
+          missing_field_labels: missingFieldLabels,
+          total_columns: totalColumns,
+          filled_columns: filledColumns,
+          missing_count: missingCount,
+        });
+      } else {
+        setCompleteness(null);
+        setCompletenessError(true);
+      }
+    } catch {
+      setCompleteness(null);
+      setCompletenessError(true);
+    } finally {
+      setCompletenessLoading(false);
+    }
+  }, []);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -115,29 +204,36 @@ const FacilityDetails = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mainSrc, setMainSrc] = useState("");
 
-  const getAFacility = useCallback(async (facilityId: string) => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/facilities-hospital/${facilityId}`
-      );
+  const getAFacility = useCallback(
+    async (facilityId: string) => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API}/facilities-hospital/${facilityId}`
+        );
 
-      const data = response?.data?.data?.hospital;
-      console.log("Fetched facility:", data);
-      setHospital(data);
-    } catch (error) {
-      console.error("Error fetching facility:", error);
-      setFetchError("Failed to fetch facility details.");
-    }
-  }, []);
+        const data = response?.data?.data?.hospital;
+        console.log("Fetched facility:", data);
+        setHospital(data);
+        await fetchCompleteness(facilityId);
+      } catch (error) {
+        console.error("Error fetching facility:", error);
+        setFetchError("Failed to fetch facility details.");
+        setHospital(null);
+        setCompleteness(null);
+        setCompletenessLoading(false);
+        setCompletenessError(false);
+      }
+    },
+    [fetchCompleteness]
+  );
 
   useEffect(() => {
     const pathArray = window.location.pathname.split("/"); // Split URL by "/"
-    const id = pathArray[pathArray.length - 1]; // Get the last part of the URL
-    // console.log("Extracted ID:", id);
-    if (id) {
-      getAFacility(id);
+    const pathId = pathArray[pathArray.length - 1]; // Get the last part of the URL
+    if (pathId) {
+      getAFacility(pathId);
     }
-  }, [id, getAFacility]); // Add getAFacility as a dependency
+  }, [id, getAFacility, pathname]); // Add getAFacility as a dependency
 
   // const parsedImages = JSON.parse(hospital?.image_url || "[]"); // Default to an empty array
   const parsedImages = JSON.parse((hospital as any)?.image_url || "[]");
@@ -376,6 +472,107 @@ const FacilityDetails = () => {
           </div>
         </div>
         <div className="border rounded-xl shadow-sm p-6 bg-white">
+          <section
+            className="mb-4 pb-4 border-b border-gray-100"
+            aria-label="Profile completeness"
+            aria-live="polite"
+          >
+            <h3 className="text-green-600 font-semibold mb-2">
+              Profile completeness
+            </h3>
+            {completenessLoading ? (
+              <p className="text-sm text-gray-600" role="status">
+                Calculating profile completeness…
+              </p>
+            ) : completenessError ? (
+              <p className="text-sm text-red-700" role="alert">
+                Unable to calculate completeness
+              </p>
+            ) : completeness ? (
+              <div className="text-sm text-gray-800 space-y-2">
+                <p>
+                  <span className="font-semibold text-gray-900">
+                    Profile Completeness:
+                  </span>{" "}
+                  {completeness.percentage}%
+                  {completeness.percentage === 100 ? (
+                    <span className="ml-2 text-green-700">(Complete)</span>
+                  ) : null}
+                  {completeness.percentage === 0 && completeness.missing_fields.length > 0 ? (
+                    <span className="ml-2 text-amber-800">
+                      (No data in scannable columns)
+                    </span>
+                  ) : null}
+                </p>
+                {typeof completeness.total_columns === "number" &&
+                completeness.total_columns > 0 ? (
+                  <p className="text-xs text-gray-600">
+                    {typeof completeness.filled_columns === "number"
+                      ? completeness.filled_columns
+                      : completeness.total_columns -
+                        completeness.missing_fields.length}{" "}
+                    of {completeness.total_columns} scannable columns have a
+                    value.
+                  </p>
+                ) : null}
+                {completeness.missing_fields.length > 0 ? (
+                  <div>
+                    <button
+                      type="button"
+                      id="missing-fields-toggle"
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-left text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                      onClick={() =>
+                        setMissingFieldsOpen((open) => !open)
+                      }
+                      aria-expanded={missingFieldsOpen}
+                      aria-controls="missing-fields-list"
+                      aria-label={
+                        missingFieldsOpen
+                          ? `Hide list of ${completeness.missing_fields.length} missing fields`
+                          : `Show list of ${completeness.missing_fields.length} missing fields`
+                      }
+                    >
+                      <span>
+                        Missing fields (
+                        {typeof completeness.missing_count === "number"
+                          ? completeness.missing_count
+                          : completeness.missing_fields.length}
+                        )
+                      </span>
+                      <HiChevronDown
+                        className={`h-5 w-5 shrink-0 text-gray-500 transition-transform ${
+                          missingFieldsOpen ? "rotate-180" : ""
+                        }`}
+                        aria-hidden
+                      />
+                    </button>
+                    {missingFieldsOpen ? (
+                      <ul
+                        id="missing-fields-list"
+                        className="mt-2 max-h-48 overflow-y-auto text-gray-800 list-disc pl-5 space-y-0.5 border border-gray-100 rounded-md p-2 bg-gray-50/80"
+                        aria-labelledby="missing-fields-toggle"
+                      >
+                        {completeness.missing_fields.map((col) => (
+                          <li key={col} className="text-sm">
+                            <span className="font-mono text-xs text-gray-600">
+                              {col}
+                            </span>
+                            <span className="text-gray-400"> — </span>
+                            {missingFieldLabel(
+                              col,
+                              completeness.missing_field_labels
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-600">—</p>
+            )}
+          </section>
           {/* General Information */}
           <div className="mb-4">
             <h3 className="text-green-600 font-semibold mb-2">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Resources\V1\FacilityResource;
+use App\Services\FacilityCompletenessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -187,6 +188,22 @@ class FacilityController extends BaseApiController
         return $this->success([
             'facility' => new FacilityResource((object) $facility),
         ]);
+    }
+
+    /**
+     * Facility profile completeness (required fields filled).
+     *
+     * @urlParam id integer required The facility ID. Example: 123
+     */
+    public function completeness(Request $request, $id)
+    {
+        $result = app(FacilityCompletenessService::class)->computeForFacilityId($id);
+
+        if ($result === null) {
+            return $this->error('Facility not found.', 'NOT_FOUND', 404);
+        }
+
+        return $this->success($result);
     }
 
     /**

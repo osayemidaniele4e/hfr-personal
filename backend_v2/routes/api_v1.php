@@ -52,6 +52,7 @@ Route::middleware(['verify.api.key', 'log.api.request'])->group(function () {
     Route::get('facilities', [FacilityController::class, 'index']);
     Route::get('facilities/statistics', [FacilityController::class, 'statistics']);
     Route::get('facilities/{id}', [FacilityController::class, 'show'])->where('id', '[0-9]+');
+    Route::get('facilities/{id}/completeness', [FacilityController::class, 'completeness'])->where('id', '[0-9]+');
     Route::get('facilities/{id}/services', [FacilityController::class, 'services'])->where('id', '[0-9]+');
 
     // ── Pharmacies ────────────────────────────────────────────────────

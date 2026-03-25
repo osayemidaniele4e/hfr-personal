@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactUsController;
+use App\Http\Controllers\FacilityCompletenessController;
 use App\Http\Controllers\Frontend\API\FrontendController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,7 @@ Route::post('services-by-category', [FrontendController::class, 'getServicesByCa
 
 Route::post('facilities-hospitals-search/{page?}', [FrontendController::class, 'searchHospitals']);
 Route::get('facilities-hospital/{facilityId}', [FrontendController::class, 'HospitalDetail']);
+Route::get('facility/{facilityId}/completeness', [FacilityCompletenessController::class, 'show']);
 Route::post('facilities-hospitals-search2/{page?}', [FrontendController::class, 'searchHospitals2']);
 Route::get('facilities-hospitals-search3', [FrontendController::class, 'searchHospitals3']);
 // Route::get('facilities-hospitals-search3/{page?}', [FrontendController::class, 'searchHospitals3']);
