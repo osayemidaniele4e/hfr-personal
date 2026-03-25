@@ -1,0 +1,30 @@
+/* mySwiperStyles.css */
+.my-custom-swiper {
+    background-color: #f5f5f5; /* Custom background color */
+    border-radius: 10px;       /* Custom border radius */
+  }
+  
+  .my-custom-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* Custom slide background */
+    border: 1px solid #ddd; /* Custom border */
+  }
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #000;             /* Custom navigation button color */
+    background-color: rgba(255, 255, 255, 0.8); /* Custom background */
+    border-radius: 50%;      /* Make buttons circular */
+    padding: 10px;
+  }
+  
+  .swiper-pagination-bullet {
+    background: #6B6D70;        /* Custom bullet color */
+    opacity: 1;              /* Make bullets fully opaque */
+  }
+  
+  .swiper-pagination-bullet-active {
+    background: #0B1C4C;     /* Custom active bullet color */
+  }

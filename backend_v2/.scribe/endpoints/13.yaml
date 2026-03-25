@@ -1,0 +1,468 @@
+name: 'Statistics - Charts & Visualizations'
+description: |-
+
+  APIs for accessing chart-ready data and visualizations of healthcare facility statistics.
+  Provides data formatted for chart libraries (pie charts, bar charts, etc.) including 
+  facility distributions by ownership, level, and geographic location. Also includes 
+  population-to-facility ratio analysis. Data is cached for performance. No authentication required.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: statistics/charts
+    metadata:
+      custom: []
+      groupName: 'Statistics - Charts & Visualizations'
+      groupDescription: |-
+
+        APIs for accessing chart-ready data and visualizations of healthcare facility statistics.
+        Provides data formatted for chart libraries (pie charts, bar charts, etc.) including 
+        facility distributions by ownership, level, and geographic location. Also includes 
+        population-to-facility ratio analysis. Data is cached for performance. No authentication required.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display National Charts Dashboard'
+      description: |-
+        Returns chart-ready data for visualizing national hospital statistics including:
+        - Distribution by facility level (pie/bar chart data)
+        - Distribution by ownership type (pie/bar chart data)
+        - Breakdown by state (table/bar chart data)
+
+        Data is formatted with 'name' and 'y' fields for direct use in charting libraries like Highcharts.
+        Results are cached for 30-60 minutes for optimal performance.
+        This endpoint is publicly accessible without authentication.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts",
+            "facilities_level_state": [
+              {"name": 1, "y": 150},
+              {"name": 2, "y": 200},
+              {"name": 3, "y": 100}
+            ],
+            "facilities_ownership_state": [
+              {"name": 1, "y": 250},
+              {"name": 2, "y": 180},
+              {"name": 3, "y": 20}
+            ],
+            "levels_by_state": [
+              {
+                "state": "FCT",
+                "primary": 25,
+                "secondary": 35,
+                "tertiary": 15,
+                "total": 75
+              },
+              {
+                "state": "Lagos",
+                "primary": 45,
+                "secondary": 55,
+                "tertiary": 25,
+                "total": 125
+              }
+            ],
+            "lst_states": [
+              {"id": 1, "name": "Abia"},
+              {"id": 2, "name": "Adamawa"}
+            ],
+            "lst_facility_types": [
+              {"id": 1, "name": "Hospital"},
+              {"id": 2, "name": "Pharmacy"},
+              {"id": 3, "name": "Laboratory"},
+              {"id": 4, "name": "Imaging Center"}
+            ],
+            "facility_type_id": 1,
+            "state_id": 0,
+            "filtered": false
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: statistics/charts/filter
+    metadata:
+      custom: []
+      groupName: 'Statistics - Charts & Visualizations'
+      groupDescription: |-
+
+        APIs for accessing chart-ready data and visualizations of healthcare facility statistics.
+        Provides data formatted for chart libraries (pie charts, bar charts, etc.) including 
+        facility distributions by ownership, level, and geographic location. Also includes 
+        population-to-facility ratio analysis. Data is cached for performance. No authentication required.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Filtered Chart Data'
+      description: |-
+        Returns chart-ready data filtered by facility type and state.
+        Response structure varies by facility type:
+        - Hospitals & Laboratories: Include level and ownership charts (view: statistic_charts)
+        - Pharmacies & Imaging Centers: Include ownership chart only (view: statistic_charts2)
+
+        When state_id = 0, shows national aggregation.
+        When specific state selected, shows state-specific data with LGA breakdown.
+        This endpoint is publicly accessible without authentication.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID. Use 0 for national/all states.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_type_id:
+        custom: []
+        name: facility_type_id
+        description: 'Facility type: 1 (Hospital), 2 (Pharmacy), 3 (Laboratory), 4 (Imaging Center).'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+      facility_type_id: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts",
+            "facilities_level_state": [
+              {"name": 1, "y": 150},
+              {"name": 2, "y": 200},
+              {"name": 3, "y": 100}
+            ],
+            "facilities_ownership_state": [
+              {"name": 1, "y": 250},
+              {"name": 2, "y": 180},
+              {"name": 3, "y": 20}
+            ],
+            "levels_by_state": [
+              {
+                "state": "FCT",
+                "primary": 25,
+                "secondary": 35,
+                "tertiary": 15,
+                "total": 75
+              }
+            ],
+            "facility_type_id": 1,
+            "state_id": 0,
+            "filtered": true
+          }
+        headers: []
+        description: 'Hospitals - National View'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts",
+            "facilities_level_state": [
+              {"name": 1, "y": 25},
+              {"name": 2, "y": 35},
+              {"name": 3, "y": 15}
+            ],
+            "facilities_ownership_state": [
+              {"name": 1, "y": 50},
+              {"name": 2, "y": 20},
+              {"name": 3, "y": 5}
+            ],
+            "levels_by_state": [
+              {
+                "lga": "Abuja Municipal",
+                "primary": 10,
+                "secondary": 15,
+                "tertiary": 8,
+                "total": 33
+              },
+              {
+                "lga": "Gwagwalada",
+                "primary": 15,
+                "secondary": 20,
+                "tertiary": 7,
+                "total": 42
+              }
+            ],
+            "facility_type_id": 1,
+            "state_id": 1,
+            "filtered": true
+          }
+        headers: []
+        description: 'Hospitals - Single State (LGA Breakdown)'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts2",
+            "facilities_ownership_state": [
+              {"name": 1, "y": 80},
+              {"name": 2, "y": 200}
+            ],
+            "facility_type_id": 2,
+            "state_id": 0,
+            "filtered": true
+          }
+        headers: []
+        description: 'Pharmacies - National View'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts",
+            "facilities_level_state": [
+              {"name": 1, "y": 100},
+              {"name": 2, "y": 60},
+              {"name": 3, "y": 20}
+            ],
+            "facilities_ownership_state": [
+              {"name": 1, "y": 70},
+              {"name": 2, "y": 110}
+            ],
+            "levels_by_state": [
+              {
+                "state": "FCT",
+                "basic": 15,
+                "intermediate": 8,
+                "advanced": 2,
+                "total": 25
+              }
+            ],
+            "facility_type_id": 3,
+            "state_id": 0,
+            "filtered": true
+          }
+        headers: []
+        description: 'Laboratories - National View'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_charts2",
+            "facilities_ownership_state": [
+              {"name": 1, "y": 5},
+              {"name": 2, "y": 10}
+            ],
+            "facility_type_id": 4,
+            "state_id": 1,
+            "filtered": true
+          }
+        headers: []
+        description: 'Imaging Centers - Single State'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: statistics/populationindex
+    metadata:
+      custom: []
+      groupName: 'Statistics - Charts & Visualizations'
+      groupDescription: |-
+
+        APIs for accessing chart-ready data and visualizations of healthcare facility statistics.
+        Provides data formatted for chart libraries (pie charts, bar charts, etc.) including 
+        facility distributions by ownership, level, and geographic location. Also includes 
+        population-to-facility ratio analysis. Data is cached for performance. No authentication required.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Population Index Dashboard'
+      description: |-
+        Shows the population-to-facility ratio (people per facility) at national level,
+        aggregated by state. Lower numbers indicate better facility coverage.
+        Calculation: State Population ÷ Number of Hospitals in State = People per Facility
+
+        Data is formatted as separate arrays for states and their corresponding ratios,
+        ready for bar chart visualization. Cached for 60 minutes.
+        This endpoint is publicly accessible without authentication.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_population_index",
+            "pop_index_states": [
+              "Abia",
+              "Adamawa",
+              "FCT",
+              "Lagos"
+            ],
+            "pop_index_ppf": [
+              12500,
+              15300,
+              8200,
+              11000
+            ],
+            "lst_states": [
+              {"id": 1, "name": "Abia"},
+              {"id": 2, "name": "Adamawa"}
+            ],
+            "state_id": 0
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: statistics/populationindex/filter
+    metadata:
+      custom: []
+      groupName: 'Statistics - Charts & Visualizations'
+      groupDescription: |-
+
+        APIs for accessing chart-ready data and visualizations of healthcare facility statistics.
+        Provides data formatted for chart libraries (pie charts, bar charts, etc.) including 
+        facility distributions by ownership, level, and geographic location. Also includes 
+        population-to-facility ratio analysis. Data is cached for performance. No authentication required.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Filtered Population Index'
+      description: |-
+        Returns population-to-facility ratio filtered by state.
+        - When state_id = 0: Shows ratio by state (national view)
+        - When specific state selected: Shows ratio by LGA within that state
+
+        The ratio indicates healthcare facility coverage - lower numbers mean
+        better facility coverage per capita. For example, 10,000 means one facility
+        serves 10,000 people on average.
+        This endpoint is publicly accessible without authentication.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID. Use 0 for national state-level aggregation.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_population_index",
+            "pop_index_states": [
+              "Abia",
+              "Adamawa",
+              "FCT",
+              "Lagos"
+            ],
+            "pop_index_ppf": [
+              12500,
+              15300,
+              8200,
+              11000
+            ],
+            "state_id": 0
+          }
+        headers: []
+        description: 'National View (By State)'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "public.statistic_population_index",
+            "pop_index_states": [
+              "Abuja Municipal",
+              "Gwagwalada",
+              "Kuje",
+              "Bwari"
+            ],
+            "pop_index_ppf": [
+              9500,
+              12000,
+              18000,
+              14500
+            ],
+            "state_id": 1
+          }
+        headers: []
+        description: 'Single State (By LGA)'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

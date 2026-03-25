@@ -1,0 +1,1111 @@
+name: 'Administration - Facility Reports'
+description: |-
+
+  APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-list/updates-select
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Facility Updates Report Form'
+      description: 'Shows the initial form for generating facility updates reports with date range and report type filters.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "reports.facility_list_updates",
+            "facilities": "none",
+            "data": {
+              "from": "",
+              "to": "",
+              "report": ""
+            }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-list/updates
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Generate Facility Updates Report'
+      description: |-
+        Generates a comprehensive report of facilities based on the selected report type:
+        - Type 1: Newly created facilities
+        - Type 2: Updated facilities
+        - Type 3: Deleted facilities
+
+        Results are filtered by the authenticated user's state and cached for download.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      from_date:
+        custom: []
+        name: from_date
+        description: 'Start date in format DD-MM-YYYY or YYYY-MM-DD.'
+        required: true
+        example: 01-01-2025
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      to_date:
+        custom: []
+        name: to_date
+        description: 'End date in format DD-MM-YYYY or YYYY-MM-DD.'
+        required: true
+        example: 31-01-2025
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      report:
+        custom: []
+        name: report
+        description: 'Report type: 1 (New), 2 (Updated), 3 (Deleted).'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      from_date: 01-01-2025
+      to_date: 31-01-2025
+      report: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "15 New facilities were created between 01 Jan 2025 and 31 Jan 2025",
+            "facilities": [
+              {
+                "unique_id": "FCT-001",
+                "facility_name": "General Hospital Abuja",
+                "state": "FCT",
+                "lga": "Abuja Municipal",
+                "ward": "Garki",
+                "ownership": "Public",
+                "facility_level": "Secondary",
+                "operational_status": "Operational",
+                "registration_status": "Registered",
+                "license_status": "Licensed",
+                "created_at": "2025-01-15 10:30:00"
+              }
+            ]
+          }
+        headers: []
+        description: 'New Facilities Report'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "23 Facilities were updated between 01 Jan 2025 and 31 Jan 2025"
+          }
+        headers: []
+        description: 'Updated Facilities Report'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "5 Facilities were deleted between 01 Jan 2025 and 31 Jan 2025"
+          }
+        headers: []
+        description: 'Deleted Facilities Report'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/reports/facility-list/updates-download
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Download Facility Updates Report'
+      description: |-
+        Downloads the previously generated facility updates report as an Excel file.
+        Report data must be generated first using the getUpdatesReport endpoint.
+        The cached report expires after 60 minutes.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "filename": "data.xlsx",
+            "description": "Excel file with columns: unique_id, reg_number, start_date, facility_name, alt_facility_name, state, lga, ward, ownership, facility_level, longitude, latitude, operation_status, registration_status, license_status, date"
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No report data available. Please generate a report first."
+          }
+        headers: []
+        description: 'No Cached Report'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-services/index
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List Facility Services'
+      description: |-
+        Displays a paginated list (15 per page) of all facility services including beds,
+        outpatient/inpatient services, laboratory, imaging, pharmacy, mortuary, and ambulance services.
+        Results are cached for potential export and sorted by state, lga, ward, and facility name.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facilities": {
+              "current_page": 1,
+              "data": [
+                {
+                  "unique_id": "FCT-001",
+                  "facility_name": "General Hospital Abuja",
+                  "state": "FCT",
+                  "lga": "Abuja Municipal",
+                  "ward": "Garki",
+                  "ownership": "Public",
+                  "facility_level": "Secondary",
+                  "beds": 150,
+                  "outpatient": "Yes",
+                  "inpatient": "Yes",
+                  "onsite_laboratory": "Yes",
+                  "onsite_imaging": "Yes",
+                  "onsite_pharmarcy": "Yes",
+                  "mortuary_services": "No",
+                  "ambulance_services": "Yes",
+                  "services": "Emergency, Surgery, Pediatrics"
+                }
+              ],
+              "per_page": 15,
+              "total": 150
+            }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-services/report
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Filter Facility Services Report'
+      description: |-
+        Filters facility services by location (state, lga, ward) and facility attributes
+        (facility level, ownership). Uses LIKE matching to support flexible filtering.
+        Pass 0 or empty string to skip filtering on a particular field.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID. Use 0 to skip state filter.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'LGA ID. Use 0 to skip LGA filter.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: 'Ward ID. Use 0 to skip ward filter.'
+        required: false
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_level_id:
+        custom: []
+        name: facility_level_id
+        description: 'Level of care ID. Use 0 to skip level filter.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: 'Ownership ID. Use 0 to skip ownership filter.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+      lga_id: 10
+      ward_id: 50
+      facility_level_id: 3
+      ownership_id: 2
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facilities": {
+              "current_page": 1,
+              "data": [
+                {
+                  "unique_id": "FCT-001",
+                  "facility_name": "General Hospital Abuja",
+                  "state": "FCT",
+                  "lga": "Abuja Municipal",
+                  "ward": "Garki",
+                  "ownership": "Public",
+                  "facility_level": "Secondary",
+                  "beds": 150,
+                  "outpatient": "Yes",
+                  "inpatient": "Yes",
+                  "onsite_laboratory": "Yes",
+                  "onsite_imaging": "Yes",
+                  "onsite_pharmarcy": "Yes",
+                  "mortuary_services": "No",
+                  "ambulance_services": "Yes",
+                  "services": "Emergency, Surgery, Pediatrics"
+                }
+              ],
+              "per_page": 15,
+              "total": 45
+            }
+          }
+        headers: []
+        description: 'Filtered Results'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/reports/facility-services/download
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Download Facility Services Report'
+      description: |-
+        Downloads the filtered facility services report as an Excel file.
+        Report data must be generated/filtered first using servicesIndex or getServicesReport.
+        The cached report expires after 60 minutes.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "filename": "data.xlsx",
+            "description": "Excel file with columns: Facility_id, facility_name, state, lga, ward, ownership, facility_level, number_of_beds, outpatient_services, inpatient_services, onsite_laboratory, onsite_imaging, onsite_pharmarcy, mortuary_services, ambulance_services, service_rendered"
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No report data available. Please generate a report first."
+          }
+        headers: []
+        description: 'No Cached Report'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-status/index
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Facility Status Summary'
+      description: |-
+        Displays a summary of facility statuses aggregated at the state level.
+        Shows counts for various workflow stages: requested, verified, validated, created, updated,
+        deleted, and rejected facilities.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facility_status": [
+              {
+                "state": "FCT",
+                "New_Facility_Requested": 25,
+                "Update_Requested": 15,
+                "Deletion_Requested": 3,
+                "Request_Verified": 20,
+                "Request_Validated": 18,
+                "Facility_Created": 18,
+                "Facility_Updated": 12,
+                "Facility_Deleted": 2,
+                "Verification_Rejected": 5,
+                "Validation_Rejected": 2,
+                "Publishing_Rejected": 1
+              }
+            ],
+            "data": {
+              "state_id": 1
+            }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-status/report
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Facility Status Report by State'
+      description: |-
+        Retrieves facility status summary for a specific state or all states.
+        - state_id = 1: Returns aggregated data for all states
+        - state_id > 1: Returns LGA-level breakdown for the specified state
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID. Use 1 for all states, or specific state ID for LGA breakdown.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facility_status": [
+              {
+                "state": "FCT",
+                "New_Facility_Requested": 25,
+                "Update_Requested": 15,
+                "Deletion_Requested": 3,
+                "Request_Verified": 20,
+                "Request_Validated": 18,
+                "Facility_Created": 18,
+                "Facility_Updated": 12,
+                "Facility_Deleted": 2,
+                "Verification_Rejected": 5,
+                "Validation_Rejected": 2,
+                "Publishing_Rejected": 1
+              }
+            ]
+          }
+        headers: []
+        description: 'All States Summary'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facility_status": [
+              {
+                "lga": "Abuja Municipal",
+                "New_Facility_Requested": 10,
+                "Update_Requested": 5,
+                "Deletion_Requested": 1,
+                "Request_Verified": 8,
+                "Request_Validated": 7,
+                "Facility_Created": 7,
+                "Facility_Updated": 4,
+                "Facility_Deleted": 1,
+                "Verification_Rejected": 2,
+                "Validation_Rejected": 1,
+                "Publishing_Rejected": 0
+              }
+            ]
+          }
+        headers: []
+        description: 'Single State LGA Breakdown'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/reports/facility-status/download
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Download Facility Status Report'
+      description: |-
+        Downloads the facility status summary as an Excel file.
+        Export format depends on the state_id parameter:
+        - state_id = 1: State-level summary
+        - state_id > 1: LGA-level breakdown for the specified state
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      state:
+        custom: []
+        name: state
+        description: 'State ID. Use 1 for all states summary, or specific state ID for LGA breakdown.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      state: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "filename": "data.xlsx",
+            "description": "Excel file with status columns for each workflow stage"
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/approvers-summary
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Approvers Summary Report'
+      description: |-
+        Shows a summary of facility approvals grouped by approver (publisher).
+        Displays the count of facilities published by each user.
+        Defaults to showing published facilities (level 3).
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "summary": [
+              {
+                "published_by": "john.doe@example.com",
+                "total": 45
+              },
+              {
+                "published_by": "jane.smith@example.com",
+                "total": 32
+              }
+            ],
+            "data": {
+              "state_id": 1,
+              "level": 3
+            }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/approvers-summary/report
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Approvers Summary by Level and State'
+      description: |-
+        Retrieves approval summary filtered by approval level and state.
+        - Level 2: Validators (validated_by field)
+        - Level 3: Publishers (published_by field, default)
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID. Use 1 for all states.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      level:
+        custom: []
+        name: level
+        description: 'Approval level: 2 (Validators) or 3 (Publishers).'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+      level: 3
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "summary": [
+              {
+                "published_by": "john.doe@example.com",
+                "total": 45
+              }
+            ],
+            "data": {
+              "state_id": 1,
+              "level": 3
+            }
+          }
+        headers: []
+        description: 'Publishers Summary'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "summary": [
+              {
+                "validated_by": "validator@example.com",
+                "total": 38
+              }
+            ],
+            "data": {
+              "state_id": 1,
+              "level": 2
+            }
+          }
+        headers: []
+        description: 'Validators Summary'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-status-details/index
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Facility Status Details Report'
+      description: |-
+        Shows a paginated list of facilities that have never been updated (status_id = 0).
+        Filtered by the authenticated user's state.
+        Returns 15 facilities per page with complete facility and location details.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facilities": {
+              "current_page": 1,
+              "data": [
+                {
+                  "id": 123,
+                  "unique_id": "FCT-001",
+                  "facility_name": "General Hospital Abuja",
+                  "state": "FCT",
+                  "lga": "Abuja Municipal",
+                  "ward": "Garki",
+                  "ownership": "Public",
+                  "facility_level": "Secondary",
+                  "operational_status": "Operational",
+                  "registration_status": "Registered",
+                  "license_status": "Licensed",
+                  "status": "Never Updated",
+                  "created_at": "2023-01-15 10:30:00"
+                }
+              ],
+              "per_page": 15,
+              "total": 45
+            },
+            "message": "45 facilities has never been updated"
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/reports/facility-status-details/report
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Filter Facility Status Details Report'
+      description: |-
+        Filters facility status details by state, LGA, and status.
+        Status codes are mapped to multiple related status IDs:
+        - Status 2 → [2, 9, 16] (Requested states)
+        - Status 3 → [3, 10, 17] (Verified states)
+        - Status 4 → [4, 11, 18] (Validated states)
+        - Status 5 → [5, 12, 19] (Published/Updated states)
+        - Status 7 → [7, 14, 21] (Rejected states)
+        - Other status codes are used directly
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'LGA ID. Use 0 to skip LGA filter.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      status_id:
+        custom: []
+        name: status_id
+        description: 'Status ID.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state_id: 1
+      lga_id: 10
+      status_id: 2
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "facilities": {
+              "current_page": 1,
+              "data": [
+                {
+                  "id": 123,
+                  "unique_id": "FCT-001",
+                  "facility_name": "General Hospital Abuja",
+                  "state": "FCT",
+                  "lga": "Abuja Municipal",
+                  "ward": "Garki",
+                  "ownership": "Public",
+                  "facility_level": "Secondary",
+                  "operational_status": "Operational",
+                  "registration_status": "Registered",
+                  "license_status": "Licensed",
+                  "status": "New Facility Requested",
+                  "action": "Create",
+                  "created_at": "2025-01-15 10:30:00"
+                }
+              ],
+              "per_page": 15,
+              "total": 23
+            },
+            "message": "23 facilities found"
+          }
+        headers: []
+        description: 'Filtered Results'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/reports/facility-status-details/download
+    metadata:
+      custom: []
+      groupName: 'Administration - Facility Reports'
+      groupDescription: |-
+
+        APIs for generating and exporting facility reports including updates, services, status, and approver summaries.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Download Facility Status Details Report'
+      description: |-
+        Downloads the filtered facility status details as an Excel file.
+        Status mapping is the same as statusDetailsReport endpoint.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      state:
+        custom: []
+        name: state
+        description: 'State ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga:
+        custom: []
+        name: lga
+        description: 'LGA ID. Use 0 to include all LGAs.'
+        required: false
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      status:
+        custom: []
+        name: status
+        description: 'Status ID.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      state: 1
+      lga: 10
+      status: 2
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "filename": "data.xlsx",
+            "description": "Excel file with columns: state, lga, ward, id, code, facility_name, ownership, level, status, action_type"
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

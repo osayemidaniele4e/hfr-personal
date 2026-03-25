@@ -1,9 +1,23 @@
-hfr_db.sql 
-new_hfr.sql 
-*.env
-hfr_db.sql 
-new_hfr.sql 
-.next/
-node_modules/
-vendor/
-*.sql
+
+# Ignore node_modules and build files in frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+
+# Ignore vendor and environment files in backend
+backend/vendor/
+backend/node_modules/
+backend/storage/
+backend/bootstrap/cache/
+backend/.env
+backend/.env.example
+backend/.env.testing
+
+# Ignore system and IDE files
+*.log
+*.DS_Store
+*.vscode/
+*.idea/

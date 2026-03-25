@@ -1,0 +1,37 @@
+stages:
+  - build
+  - deploy
+
+# Build Frontend
+build_frontend:
+  stage: build
+  image: node:22
+  script:
+    - cd frontend
+    - yarn install
+    - yarn build
+ # artifacts:
+ #   paths:
+ #     - frontend/.next
+  cache:
+    paths:
+      - frontend/node_modules/  # Cache node_modules for faster installs
+      - frontend/.next/ 
+  only:
+    - branches  
+  except:
+    - develop 
+
+#
+deploy_application:
+  stage: deploy
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host $SSH_HOST\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  
+  script:
+    - ssh -o StrictHostKeyChecking=no -p $PORT $SSH_USER@$SSH_HOST "source ~/.nvm/nvm.sh && cd $PROJECT_DIR && nvm use 22 && git pull origin develop && cd $PROJECT_DIR/frontend && yarn install && yarn build && sudo systemctl restart hfrdev-frontend.service && cd $PROJECT_DIR/backend_v2 && php artisan config:clear && php artisan cache:clear && sudo systemctl restart php8.2-fpm.service && sudo systemctl restart nginx"
+  only:
+    - develop

@@ -1,0 +1,15 @@
+{
+    "short_name": "App",
+    "name": "My App",
+    "icons": [
+      {
+        "src": "https://juray2023.s3.amazonaws.com/b87a59ce-13b2-4481-8951-9a31ad9a4cc8.png?AWSAccessKeyId=AKIA4Y267QYK25XMO6WE&Expires=1792842030&Signature=w%2BSsT1ZNMhL5r4%2FlRS%2B4HtM8%2BPk%3D",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+  }
+  

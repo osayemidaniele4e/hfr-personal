@@ -1,0 +1,51 @@
+name: 'FHIR - Metadata'
+description: |-
+
+  FHIR CapabilityStatement endpoint (no authentication required).
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/fhir/metadata
+    metadata:
+      custom: []
+      groupName: 'FHIR - Metadata'
+      groupDescription: |-
+
+        FHIR CapabilityStatement endpoint (no authentication required).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get CapabilityStatement'
+      description: |-
+        Returns the server's CapabilityStatement describing supported
+        FHIR resources, interactions, and search parameters.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "resourceType": "CapabilityStatement",
+            "fhirVersion": "4.0.1",
+            "format": ["json"]
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

@@ -1,0 +1,204 @@
+name: 'FHIR - HealthcareService'
+description: |-
+
+  FHIR R4 HealthcareService endpoints. Services offered by hospital-type
+  facilities, sourced from the hs_hospital_services registry.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/fhir/HealthcareService
+    metadata:
+      custom: []
+      groupName: 'FHIR - HealthcareService'
+      groupDescription: |-
+
+        FHIR R4 HealthcareService endpoints. Services offered by hospital-type
+        facilities, sourced from the hs_hospital_services registry.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search HealthcareServices'
+      description: 'Search healthcare services offered by facilities.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      organization:
+        custom: []
+        name: organization
+        description: 'Providing organization reference.'
+        required: false
+        example: Organization/hosp-123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      location:
+        custom: []
+        name: location
+        description: 'Service location reference.'
+        required: false
+        example: Location/loc-hosp-123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      name:
+        custom: []
+        name: name
+        description: 'Service name (partial match).'
+        required: false
+        example: Surgery
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      service-category:
+        custom: []
+        name: service-category
+        description: 'Service category.'
+        required: false
+        example: Clinical
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      service-type:
+        custom: []
+        name: service-type
+        description: 'Service type code or name.'
+        required: false
+        example: Radiology
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      active:
+        custom: []
+        name: active
+        description: 'Active status.'
+        required: false
+        example: 'true'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      _count:
+        custom: []
+        name: _count
+        description: 'Results per page (max 100).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      _offset:
+        custom: []
+        name: _offset
+        description: 'Pagination offset.'
+        required: false
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      organization: Organization/hosp-123
+      location: Location/loc-hosp-123
+      name: Surgery
+      service-category: Clinical
+      service-type: Radiology
+      active: 'true'
+      _count: 20
+      _offset: 0
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/fhir/HealthcareService/{id}'
+    metadata:
+      custom: []
+      groupName: 'FHIR - HealthcareService'
+      groupDescription: |-
+
+        FHIR R4 HealthcareService endpoints. Services offered by hospital-type
+        facilities, sourced from the hs_hospital_services registry.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Read HealthcareService'
+      description: 'Retrieve a single HealthcareService by its FHIR resource ID.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The HealthcareService resource ID.'
+        required: true
+        example: svc-45
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: svc-45
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

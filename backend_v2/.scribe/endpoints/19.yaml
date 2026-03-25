@@ -1,0 +1,1368 @@
+name: 'Administration - DHIS2 Synchronization'
+description: |-
+
+  APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+  Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+  of ownership and level of care groups. All operations are logged for audit purposes.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/hfr-dhis-exchange/store
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create Facility in DHIS2'
+      description: |-
+        Creates a new organization unit (facility) in DHIS2 with all associated metadata including
+        ownership, level of care, and optional level of care options. Automatically handles facility
+        closure date based on operational status. Sends email notification to DHIS2 team upon success.
+        All operations are logged to dhis_log table for audit trail.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        custom: []
+        name: id
+        description: 'HFR facility ID (used as DHIS2 code).'
+        required: true
+        example: 12345
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_name:
+        custom: []
+        name: facility_name
+        description: 'Facility name.'
+        required: true
+        example: 'General Hospital Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      alt_facility_name:
+        custom: []
+        name: alt_facility_name
+        description: 'Alternative/short facility name.'
+        required: false
+        example: 'Gen Hosp Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID for parent organization unit lookup.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: 'Ward ID for parent organization unit assignment.'
+        required: true
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: 'Operational status: 1 (Operational), 2-4 (Temporarily closed - auto-sets close date), 5+ (Permanently closed - uses provided close date).'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: 'Ownership type ID for group assignment.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_level_id:
+        custom: []
+        name: facility_level_id
+        description: 'Facility level/care level ID for group assignment.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_level_option_id:
+        custom: []
+        name: facility_level_option_id
+        description: 'Facility level option ID. Use 0 to skip.'
+        required: false
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_date:
+        custom: []
+        name: start_date
+        description: 'Facility opening date.'
+        required: false
+        example: '2020-01-15'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      close_date:
+        custom: []
+        name: close_date
+        description: 'Facility closure date (required if operational_status_id > 4).'
+        required: false
+        example: '2024-12-31'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      postal_address:
+        custom: []
+        name: postal_address
+        description: 'Postal address.'
+        required: false
+        example: 'P.O. Box 123, Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      longitude:
+        custom: []
+        name: longitude
+        description: 'Longitude coordinate.'
+        required: false
+        example: '7.3986'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      latitude:
+        custom: []
+        name: latitude
+        description: 'Latitude coordinate.'
+        required: false
+        example: '9.0765'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email_address:
+        custom: []
+        name: email_address
+        description: 'Email address.'
+        required: false
+        example: info@hospital.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Website URL.'
+        required: false
+        example: 'https://hospital.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Phone number.'
+        required: false
+        example: +234-123-456-7890
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id: 12345
+      facility_name: 'General Hospital Abuja'
+      alt_facility_name: 'Gen Hosp Abuja'
+      state_id: 1
+      ward_id: 50
+      operational_status_id: 1
+      ownership_id: 1
+      facility_level_id: 3
+      facility_level_option_id: 0
+      start_date: '2020-01-15'
+      close_date: '2024-12-31'
+      postal_address: 'P.O. Box 123, Abuja'
+      longitude: '7.3986'
+      latitude: '9.0765'
+      email_address: info@hospital.com
+      website: 'https://hospital.com'
+      phone_number: +234-123-456-7890
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '"Created"'
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'DHIS2 API Error'
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'No Server Response'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/hfr-dhis-exchange/update
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update Facility in DHIS2'
+      description: |-
+        Updates an existing organization unit (facility) in DHIS2. Supports updating basic facility
+        information and reassigning organization unit groups (ownership, level of care, level options).
+        Only updates groups that are specified in the request data. Sends email notification to DHIS2
+        team upon success. All operations are logged.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        custom: []
+        name: id
+        description: 'HFR facility ID.'
+        required: true
+        example: 12345
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      data:
+        custom: []
+        name: data
+        description: |-
+          Update data containing two keys:
+          - updates: Object with facility fields to update (name, shortName, address, coordinates, etc.)
+          - groups: Object with group assignments to update (ownership_id, facility_level_id, facility_level_option_id) or "empty" to skip
+        required: true
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.updates:
+        custom: []
+        name: data.updates
+        description: 'Facility fields to update in DHIS2.'
+        required: false
+        example: []
+        type: object
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.groups:
+        custom: []
+        name: data.groups
+        description: 'Organization unit groups to reassign. Use "empty" to skip group updates.'
+        required: false
+        example: architecto
+        type: object|string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      data.facility_name:
+        custom: []
+        name: data.facility_name
+        description: 'Facility name for email notification.'
+        required: false
+        example: 'General Hospital Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      data.ward_id:
+        custom: []
+        name: data.ward_id
+        description: 'Ward ID for email notification.'
+        required: false
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id: 12345
+      data:
+        - architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '"Updated"'
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'DHIS2 API Error'
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'Facility Not Found in DHIS2'
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'Failed to Get DHIS2 UID'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/hfr-dhis-exchange/delete
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete/Close Facility in DHIS2'
+      description: |-
+        Attempts to delete a facility from DHIS2. If deletion fails due to associated data (DataValue),
+        automatically closes the facility instead by setting the closure date. Handles three scenarios:
+        1. Successful deletion (no data associated)
+        2. Closure (has associated data, cannot be deleted)
+        3. Failure (other errors)
+
+        Sends appropriate email notifications to DHIS2 team. All operations are logged.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        custom: []
+        name: id
+        description: 'HFR facility ID.'
+        required: true
+        example: 12345
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_name:
+        custom: []
+        name: facility_name
+        description: 'Facility name for email notification.'
+        required: true
+        example: 'General Hospital Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      alt_facility_name:
+        custom: []
+        name: alt_facility_name
+        description: 'Alternative facility name.'
+        required: false
+        example: 'Gen Hosp Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: 'State ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: 'Ward ID for email notification.'
+        required: true
+        example: 50
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      start_date:
+        custom: []
+        name: start_date
+        description: 'Facility opening date.'
+        required: false
+        example: '2020-01-15'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      postal_address:
+        custom: []
+        name: postal_address
+        description: 'Postal address.'
+        required: false
+        example: 'P.O. Box 123, Abuja'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      longitude:
+        custom: []
+        name: longitude
+        description: 'Longitude coordinate.'
+        required: false
+        example: '7.3986'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      latitude:
+        custom: []
+        name: latitude
+        description: 'Latitude coordinate.'
+        required: false
+        example: '9.0765'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email_address:
+        custom: []
+        name: email_address
+        description: 'Email address.'
+        required: false
+        example: info@hospital.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Website URL.'
+        required: false
+        example: 'https://hospital.com'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Phone number.'
+        required: false
+        example: +234-123-456-7890
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id: 12345
+      facility_name: 'General Hospital Abuja'
+      alt_facility_name: 'Gen Hosp Abuja'
+      state_id: 1
+      ward_id: 50
+      start_date: '2020-01-15'
+      postal_address: 'P.O. Box 123, Abuja'
+      longitude: '7.3986'
+      latitude: '9.0765'
+      email_address: info@hospital.com
+      website: 'https://hospital.com'
+      phone_number: +234-123-456-7890
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '"Deleted"'
+        headers: []
+        description: 'Successfully Deleted'
+      -
+        custom: []
+        status: 200
+        content: '"Closed"'
+        headers: []
+        description: 'Closed (Cannot Delete - Has Data)'
+      -
+        custom: []
+        status: 200
+        content: '"Not Deleted"'
+        headers: []
+        description: 'Deletion Failed'
+      -
+        custom: []
+        status: 200
+        content: '"Not Closed"'
+        headers: []
+        description: 'Closure Failed'
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'DHIS2 API Error'
+      -
+        custom: []
+        status: 500
+        content: '"Exception_Error"'
+        headers: []
+        description: 'Facility Not Found in DHIS2'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hfr-dhis-exchange/logs
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'View DHIS2 Operation Logs'
+      description: |-
+        Displays a complete audit trail of all DHIS2 synchronization operations including
+        creates, updates, deletes, and group assignments. Shows status of each operation
+        and any error details for troubleshooting.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "dhis.logs",
+            "logs": [
+              {
+                "id": 1,
+                "hfr_id": 12345,
+                "dhis_uid": "abcd1234efg",
+                "facility_status": "Created",
+                "ownership_status": "Success",
+                "level_status": "Success",
+                "level_option_status": "Success",
+                "error_details": "",
+                "request_type": "Create",
+                "user_id": 10,
+                "created_at": "2025-11-15 10:30:00"
+              },
+              {
+                "id": 2,
+                "hfr_id": 12346,
+                "dhis_uid": null,
+                "facility_status": "Failed",
+                "ownership_status": null,
+                "level_status": null,
+                "level_option_status": null,
+                "error_details": "Connection timeout",
+                "request_type": "Create",
+                "user_id": 10,
+                "created_at": "2025-11-15 11:00:00"
+              }
+            ]
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hfr-dhis-exchange/lookup
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display DHIS2 Lookup Table'
+      description: |-
+        Shows the mapping/lookup table between HFR values and DHIS2 UIDs.
+        Used for translating HFR codes (ownership, levels, etc.) to DHIS2 organization unit groups.
+        Paginated at 15 records per page.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "dhis.lookup",
+            "lookup": {
+              "current_page": 1,
+              "data": [
+                {
+                  "id": 1,
+                  "type": "ownership",
+                  "hfr_id": 1,
+                  "hfr_description": "Public",
+                  "dhis_uid": "xyz123abc45",
+                  "dhis_description": "Public Ownership",
+                  "created_at": "2024-01-01 00:00:00",
+                  "updated_at": "2024-01-01 00:00:00"
+                },
+                {
+                  "id": 2,
+                  "type": "level",
+                  "hfr_id": 1,
+                  "hfr_description": "Primary",
+                  "dhis_uid": "abc456def78",
+                  "dhis_description": "Primary Care",
+                  "created_at": "2024-01-01 00:00:00",
+                  "updated_at": "2024-01-01 00:00:00"
+                }
+              ],
+              "per_page": 15,
+              "total": 25
+            }
+          }
+        headers: []
+        description: Success
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/hfr-dhis-exchange/lookup/store
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create DHIS2 Lookup Entry'
+      description: |-
+        Adds a new mapping between HFR values and DHIS2 UIDs.
+        DHIS2 UID must be unique across all lookup entries.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      dhis_uid:
+        custom: []
+        name: dhis_uid
+        description: 'Unique DHIS2 organization unit or group UID (11 characters).'
+        required: true
+        example: xyz123abc45
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'Lookup type: ownership, level, level_option, parent.'
+        required: true
+        example: ownership
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      hfr_id:
+        custom: []
+        name: hfr_id
+        description: 'HFR reference ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      hfr_description:
+        custom: []
+        name: hfr_description
+        description: 'HFR description/label.'
+        required: true
+        example: Public
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      dhis_description:
+        custom: []
+        name: dhis_description
+        description: 'DHIS2 description/label.'
+        required: false
+        example: 'Public Ownership'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      dhis_uid: xyz123abc45
+      type: ownership
+      hfr_id: 1
+      hfr_description: Public
+      dhis_description: 'Public Ownership'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Value added successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The dhis uid has already been taken.",
+            "errors": {
+              "dhis_uid": ["The dhis uid has already been taken."]
+            }
+          }
+        headers: []
+        description: 'Duplicate DHIS UID'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: admin/hfr-dhis-exchange/lookup/update
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update DHIS2 Lookup Entry'
+      description: |-
+        Updates an existing mapping between HFR values and DHIS2 UIDs.
+        Useful for correcting mappings or updating DHIS2 UIDs after system changes.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Lookup entry ID to update.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'Lookup type: ownership, level, level_option, parent.'
+        required: true
+        example: ownership
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      hfr_id:
+        custom: []
+        name: hfr_id
+        description: 'HFR reference ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      hfr_description:
+        custom: []
+        name: hfr_description
+        description: 'HFR description/label.'
+        required: true
+        example: Public
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      dhis_uid:
+        custom: []
+        name: dhis_uid
+        description: 'DHIS2 organization unit or group UID.'
+        required: true
+        example: xyz123abc45
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      dhis_description:
+        custom: []
+        name: dhis_description
+        description: 'DHIS2 description/label.'
+        required: false
+        example: 'Public Ownership'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id: 5
+      type: ownership
+      hfr_id: 1
+      hfr_description: Public
+      dhis_uid: xyz123abc45
+      dhis_description: 'Public Ownership'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Value updated successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: Success
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Lookup entry not found"
+          }
+        headers: []
+        description: 'Not Found'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hfr-dhis-exchange/lookup/search
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search DHIS2 Lookup Entries'
+      description: |-
+        Filters lookup table by type and HFR description.
+        Useful for finding specific mappings during configuration or troubleshooting.
+        Results are paginated at 15 per page.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      type:
+        custom: []
+        name: type
+        description: 'Lookup type to filter: ownership, level, level_option, parent.'
+        required: true
+        example: ownership
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      hfr_description:
+        custom: []
+        name: hfr_description
+        description: 'HFR description search term. Partial matching supported.'
+        required: false
+        example: Public
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      type: ownership
+      hfr_description: Public
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "view": "dhis.lookup",
+            "lookup": {
+              "current_page": 1,
+              "data": [
+                {
+                  "id": 1,
+                  "type": "ownership",
+                  "hfr_id": 1,
+                  "hfr_description": "Public",
+                  "dhis_uid": "xyz123abc45",
+                  "dhis_description": "Public Ownership"
+                }
+              ],
+              "per_page": 15,
+              "total": 1
+            }
+          }
+        headers: []
+        description: 'Found Results'
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "lookup": {
+              "data": [],
+              "total": 0
+            }
+          }
+        headers: []
+        description: 'No Results'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/hfr-dhis-exchange/resend
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Retry Failed DHIS2 Operations'
+      description: |-
+        Attempts to retry previously failed DHIS2 operations (create, update, or group assignments).
+        Retrieves facility data from database and reattempts the failed operation based on the log entry.
+        Useful for handling temporary network issues or DHIS2 server downtime.
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      log_id:
+        custom: []
+        name: log_id
+        description: 'ID of the failed log entry to retry.'
+        required: true
+        example: 456
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_id:
+        custom: []
+        name: facility_id
+        description: 'HFR facility ID.'
+        required: true
+        example: 12345
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_status:
+        custom: []
+        name: facility_status
+        description: 'Status of facility operation: "Failed" to retry facility creation/update.'
+        required: false
+        example: Failed
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_status:
+        custom: []
+        name: ownership_status
+        description: 'Status of ownership assignment: "Failed" to retry ownership group assignment.'
+        required: false
+        example: Success
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      level_status:
+        custom: []
+        name: level_status
+        description: 'Status of level assignment: "Failed" to retry level of care group assignment.'
+        required: false
+        example: Success
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      level_option_status:
+        custom: []
+        name: level_option_status
+        description: 'Status of level option assignment: "Failed" to retry level option group assignment.'
+        required: false
+        example: Failed
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      request_type:
+        custom: []
+        name: request_type
+        description: 'Original request type: "Create" or "Update".'
+        required: false
+        example: Create
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      dhis_uid:
+        custom: []
+        name: dhis_uid
+        description: 'DHIS2 facility UID (required for group assignment retries).'
+        required: false
+        example: abcd1234efg
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      log_id: 456
+      facility_id: 12345
+      facility_status: Failed
+      ownership_status: Success
+      level_status: Success
+      level_option_status: Failed
+      request_type: Create
+      dhis_uid: abcd1234efg
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Facility created successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Facility Created Successfully'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Facility updated successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Facility Updated Successfully'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Facility ownership group assigned successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Ownership Group Assigned'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Facility level of care group assigned successfully!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Level of Care Group Assigned'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Failed to assign facility ownership group",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Ownership Assignment Failed'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Error creating facility in DHIS2!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'DHIS2 API Error'
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "message": "Failed to get matching facility in DHIS2!",
+            "redirect": "back"
+          }
+        headers: []
+        description: 'Facility Not Found in DHIS2'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hfr-dhis-exchange/test
+    metadata:
+      custom: []
+      groupName: 'Administration - DHIS2 Synchronization'
+      groupDescription: |-
+
+        APIs for synchronizing healthcare facility data with DHIS2 (District Health Information System).
+        Handles creation, updates, and deletion of organization units in DHIS2, including assignment 
+        of ownership and level of care groups. All operations are logged for audit purposes.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImhCaFNwVWpjNGZWZnJvOXBTNVF4SGc9PSIsInZhbHVlIjoiV05YODV3Y3lHN2xRVE9hRGFUa1FKZ25QSkhjK24weW0zTnBFQWlML29UZEk1SXVvcXkzcktNM1BGTzJvWlgzVTBtTFRkOGg0U09rRU53RGxMcTExTlBFbW43UXI4ZCtXNnZYSGVtb20yU1BaUnExenN6dWU3V1VwaDlMaWJGaFMiLCJtYWMiOiJmMGM1NmQ5N2YwMDQzYmQyZjU5M2FhOWM3MWE5N2IzODAxMjAzNDQ2YzEyNTEwNTcwYTg0NjgyYWI0ZjkyNDI0IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IkpEZjhsMlRhaHQvQW15YXdGWUhKWmc9PSIsInZhbHVlIjoia2VDRk85Q0JVVFBHM0hGUFV5TWw5TDNpbWtoQVFrNHRYdS83Ylo3c243ZGIwdUJrVE83ZXdpNVMyajRidkk3VFF2SkFPWDVHcHI3OG8xdFoxOERMbmhrYjFXMTM5N0todFZJc1FDQUF5akdFSVVMbUZlc3NsbFo3Y0k3cUhRWnYiLCJtYWMiOiIyMDJhNmRlNTc4YzY1ZjkwZTgzNDgzODkzOGE2YmRlYmI4NWE4YjRlMTA4MDBkZDkyMzRmMWJmMWM4ODJhYjU0IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

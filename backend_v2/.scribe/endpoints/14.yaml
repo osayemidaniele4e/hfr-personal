@@ -1,0 +1,591 @@
+name: 'Administration - Downloads'
+description: |-
+
+  APIs for handling facility downloads and user registration for downloading datasets.
+
+  This controller manages public registration, token verification, dataset filtering, exporting, 
+  and admin download requests.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: download/facilities
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display registration form for users to access downloads.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IjNlbEk3MEtFcGJZell3cnpqUWEwaEE9PSIsInZhbHVlIjoidENFQ29wNXFxQTBDOTlSeGZLVFNBTHVaYkx2WGtXMWtwb0x3bEFJR2pjcGl0QnE2RTEyVWY5YWpHaXE1YUMzeEQrVE5YRlRhUnlreUN6bmJJNGdDSEtzSXZrLzFDMHF4L3N1d0hKNTFBWjJuMFJxYlp1YXZYUThpeHFpcjJPQlUiLCJtYWMiOiI0MzI5NjExYjQ4MjhhNTMxNjMyMGRiNWZkN2YyNmRhMDQ4OGNjZDcwNzY2Y2Q2Y2I3NzE4NGVkOWU0MmFlZjc4IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IlRmSm5Ma29uT0plY3FSbis2NjQ4SFE9PSIsInZhbHVlIjoiZDFYS0VQQ1JjYWFGSEVzNXlyQ2syLzdnS2xxaWkvUVlUS3FPajVOOHdpR3RoTHpJOExjOUdqZFFLOW5yTnhkQU03Y3E5cVByMHpqOTlBeittRm1VK1ROVkRjcWVkcTAzUFE1ZjBOT1ViUk9tRWNWYnZjWEYxSHRUWWU4ZXpLYXAiLCJtYWMiOiI4MGIwYmI4OWJiMjY2Nzg0NDJhMGYzMDQ3MGZmNjJmYzA2NGEzOGQ2OTBmNTY4NzEyODVkNWNkMTRkNzIxYTlkIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: download/facilities
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store registration details and send verification token via email.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      firstname:
+        custom: []
+        name: firstname
+        description: 'First name of the user.'
+        required: true
+        example: John
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lastname:
+        custom: []
+        name: lastname
+        description: 'Last name of the user.'
+        required: true
+        example: Doe
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      organisation:
+        custom: []
+        name: organisation
+        description: 'Organization name.'
+        required: false
+        example: 'My Org'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: true
+        deprecated: false
+      country:
+        custom: []
+        name: country
+        description: 'Country name.'
+        required: true
+        example: Nigeria
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      designation:
+        custom: []
+        name: designation
+        description: 'User designation.'
+        required: true
+        example: 'Data Officer'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      purpose:
+        custom: []
+        name: purpose
+        description: 'Purpose for downloading data.'
+        required: true
+        example: Research
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Email address.'
+        required: true
+        example: john@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      g-recaptcha-response:
+        custom: []
+        name: g-recaptcha-response
+        description: 'Google reCAPTCHA token.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      firstname: John
+      lastname: Doe
+      organisation: 'My Org'
+      country: Nigeria
+      designation: 'Data Officer'
+      purpose: Research
+      email: john@example.com
+      g-recaptcha-response: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect to token verification page'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: 'Validation errors'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: download/facility-list
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the filtered facilities list for download (requires verified token).'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          <!DOCTYPE html>
+          <html>
+              <head>
+                  <meta charset="UTF-8" />
+                  <meta http-equiv="refresh" content="0;url='http://localhost/download/facilities'" />
+
+                  <title>Redirecting to http://localhost/download/facilities</title>
+              </head>
+              <body>
+                  Redirecting to <a href="http://localhost/download/facilities">http://localhost/download/facilities</a>.
+              </body>
+          </html>
+        headers:
+          cache-control: 'no-cache, private'
+          location: 'http://localhost/download/facilities'
+          content-type: 'text/html; charset=utf-8'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6ImZXUVhnTDhWei9TRDVGbmZzaFdBTnc9PSIsInZhbHVlIjoicFFZS21IR2VmRmtic3liQXdxbDgwczU2MG00MkRNcTduUW13bXE3eGRMaE55RklmM0JiajJ0c09CWE1jeXZHbDZ1T3E1b1NBcmlMQ3pZd1JPdURaMTdJdkF5Q2IzUzYydmhRZnNQVDlOZHpMVWE4dnJyMjBKN2hhMjNRMHRxUVEiLCJtYWMiOiI5MjhhZWI5ZjkyNGZjNzUzYTVhYTNmMzZiYmM0NmVhYmQzN2JlMWQ2MzYxMWIyYzQ5NjFmYmU4NGI3NTJiNzQ2IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6InZKc25hanhlUURCc1FPZlhDLzkzdVE9PSIsInZhbHVlIjoidFdRZU92b0tZcng5OE5TUW93WU9KZC9BN2FGZHZ4SHEwTDhGZDVxc1NrK0wrTnRITTRtaFlhUDVaekFMeU11bjFwYkY4cXdKRy92QzRKVENJQ1ZYd3MzTTNQdnRXTFIySmx2Vy9NVndZWlNHT1hpOGtZZ1RPR3MzUEZaci9hY1kiLCJtYWMiOiI2NjNhYmY2MjhmZGUyMzVkNjk4YzQwYzcyMTMzODAyYTQ1NzU3NWI3YjIwNDQ0MjQyZDM3MGUwYTRiOTdmYmY2IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: download/export-data
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Export facilities dataset to Excel based on filter criteria.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'Filter by LGA ID.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: 'Filter by ward ID.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_name:
+        custom: []
+        name: facility_name
+        description: 'Filter by facility name.'
+        required: false
+        example: 'My Facility'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      geo_codes:
+        custom: []
+        name: geo_codes
+        description: 'Geo code filter (0,1,2).'
+        required: false
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_type_id:
+        custom: []
+        name: facility_type_id
+        description: 'Facility type filter.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_level_id:
+        custom: []
+        name: facility_level_id
+        description: 'Facility level filter.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: 'Ownership filter.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: 'Operational status filter.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      registration_status_id:
+        custom: []
+        name: registration_status_id
+        description: 'Registration status filter.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      license_status_id:
+        custom: []
+        name: license_status_id
+        description: 'License status filter.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      service_type:
+        custom: []
+        name: service_type
+        description: 'Service type (1=Outpatient, 2=Inpatient).'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      lga_id: 1
+      ward_id: 1
+      facility_name: 'My Facility'
+      geo_codes: 0
+      facility_type_id: 1
+      facility_level_id: 2
+      ownership_id: 3
+      operational_status_id: 1
+      registration_status_id: 1
+      license_status_id: 1
+      service_type: 1
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'File download (Excel)'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 302
+        content: 'Redirect if no records found'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: download/validate
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display token verification form for download access.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: |-
+          {
+              "message": "Server Error"
+          }
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlFUVFNpYktnNkhab1ozaXJhWE16dVE9PSIsInZhbHVlIjoid0poZnd1c1luaW8xS3pOM0VDeWlSdkJPR0pIQkRSWG80R0FLa3RiK05TY1ZocTdoRmtjOWtHMFlmY2pubitvd1RsY0dLMS90N210RHZuOGJqektyT1lTeUhMZ3RXR0NOM1orLzVGSXpmd3dueWFicnJvY2hHZ1ZGelNCTFdNeGEiLCJtYWMiOiIwOGM5MDU3YTgyYzY3OTlkMWYxZmQwNGJkN2RlNDVjNzBlNTQ4MjVmODljOGNmOTM0MjU2NDRkZGU4ZDJiZTg5IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IjJlc2sxUm9sbDZRd0w2Z2JsdFcyS0E9PSIsInZhbHVlIjoiczV4dlNwMnF0QldFUEh3Uk93WC9rL2xkZUhaOFlCN3cyMkVQOUxOUVYrUUR2NmFheGw0YzJiQ1hCQ2hBVkRqMUxoc0ZtREhsSmR1VFA2VEF6MmtGOFNHUVNLTk82L1lnUDA0cnJyRENjMTVTSGE4eWlBd2NzVERpdG45bWNRRE8iLCJtYWMiOiI1MGM4NWMwN2YyNmIyZDQ3MjEwNjZmMDI1NDhiNjYwYmYwMWNjNGU5NDVkMWQ2ZDQ0N2YyYWM5ZWI1NTA2MjVmIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: download/validate
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Validate the token entered by the user to grant download access.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        custom: []
+        name: token
+        description: 'Verification token sent to email.'
+        required: true
+        example: 12345678
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      token: 12345678
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect to facilities list if token is valid'
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 302
+        content: 'Back to token form if invalid'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/download/list
+    metadata:
+      custom: []
+      groupName: 'Administration - Downloads'
+      groupDescription: |-
+
+        APIs for handling facility downloads and user registration for downloading datasets.
+
+        This controller manages public registration, token verification, dataset filtering, exporting, 
+        and admin download requests.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Admin: List all download requests.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IkdTTjJheHJLWGRIMjJKQTZncVJGOEE9PSIsInZhbHVlIjoiNXArcWFCMlFRUmxOczR3WkpmVExaRDdURTZjSk1Xei9kb0QwQ2trY3ZXNkFZdlZpdWl4eVY5b1d4NWlKemgzZTBmakFaTWc3SXdndDBSeWFjdTNKRkdDMk5aeTNlejA2SERsNngzb2hoYzdVVHhiWENjaDFaQVFpa0FyWGFxeXQiLCJtYWMiOiIzNmU0YjFjOGRhMjgyZDlmNTNhNjAxZmMyZjQ4ZjkyMDhhMWUyMTMxNzk3MDhlYmZmMDljYjRkNzg0Y2ZkMDYxIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IldwbG9ibzhFOGV4Ynh2SGtlMkJHQ2c9PSIsInZhbHVlIjoiMXY2LzZCUi9VazZDRTJqR3MwL2NLd1ozY29KQzlyVndyL0YzOHFXSGhNNTVFYnJoeE1rOGpGc1JxdjRia0VSTWtvR0dKTUxSSSs3bjR1cE1tZXcxZHV3OFdkZHNlUldCKzVaRng5QUNEK1dJSXdrTVduYTc2YTVFYzIyT3Njb3MiLCJtYWMiOiJlMWYyMDdlZTQyMjU4MTlmZDFjZjQxOTVkY2ZiZmMzYmNiMDY3MDQ0NDViMjVhNzYyMWM2MmU4MWViYWRiNmI4IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

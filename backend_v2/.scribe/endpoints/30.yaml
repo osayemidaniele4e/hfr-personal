@@ -1,0 +1,1063 @@
+name: 'Administration Imaging'
+description: |-
+
+  Endpoints for listing, creating, updating, deleting,
+  viewing and searching imaging diagnostic facilities.
+
+  Note:
+  - Most endpoints return Blade views.
+  - Some endpoints return HTML fragments.
+  - JSON is returned only for exceptions and missing records.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/imaging/search
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6Imo5YkRXNS9Edi8yeHNZeXVJcVd6OEE9PSIsInZhbHVlIjoiSWlVV3BDY09YMmxoNzVrK0lRV3RhRzBFdXM5WE81YWJQditvTEcwU09GT0NyWVB0cHU0b0h6a0dJcUxJRmZxUW94SFE4NDZoT2ozR3VIMFg5NFZRS2M4ZzNFRzZZaDFDd0xrM0o0NFhoS1R2ZC9XZGFocVJXWUlHenBJeXczYjciLCJtYWMiOiI5NmM0NGYyNDY2OTExYmY0ZjIyOTAwYzNlNGI4ZDNmOTJkNTM4OGM5ZTk2NmMyMTU5MmFmOTBkMTJkZjUzZTNiIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6ImEwSjlaczFRRUUrTTFnK3U2WWlhMVE9PSIsInZhbHVlIjoiMThUT3JFRXVmZlhJVmxpWkZRdys3TjBzR202M2N5ejllUmg3ZTlld0JnUGRUM2RDcG44aUlEanlqSFM3YzZMQ3JiLzFIUVlZV1U2QnNicWphZCt5d3JjWXEzWlRTUUI5bFVubGdERzZRVllYUzQ4MTVQUDNad1lQdUhoZFl0c00iLCJtYWMiOiIyM2YzZjdjYjI0Nzk1YjM2NWU2YWU5YWEzY2YzY2E3ZmMxM2ZhZDFmNjBlNjVhZDEzMmI1OWRkMTUyMTU3NjBiIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/imaging
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6Im10ODE0djlIYndDT281RTJzaUg5TFE9PSIsInZhbHVlIjoiR0hwZXpIUTFEa1FXT082MlNXWDFaa2RsVVp3TjFtR3RMUVJPRzcvaWFrZzVlRjFuYUIra0VlRWFOcC8vOGhEWVBHam5sOGEwODRtaGJDVmliR3ozSWtqZEs1cHQ2a00yRU52Wnc3dkJ4WnplK0ZBMHQ5VFkyYURENWtRNCswcGYiLCJtYWMiOiI0YzUwMzgzNzkwZGM4NDFiMmFiMGVjZmE1NWU5ZDY3NDgzOGQ2OTExYjZhM2UzNTJhODE1OWZmYzhmYjNmMzcxIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IkN3ZEk1ZStoblh6cjhzb3g0ak1GWVE9PSIsInZhbHVlIjoiMEJLRUVGSTB5YTkxbWxteFRtMUVENWlkTTRqNTJjeSsyZG91OElSWHl1OFpLMnZTSXZwTHRVd0V2UkN4YlZSLy9Rc0JKcjY2M1pUN1hsYlRFWWl3eW1ld0l1a1lMbWtNQUFDY1hOTnBpUmpHSnYxSEtHamtLQlVpS2hJV1g3ZkkiLCJtYWMiOiI0NGZkM2ZlYTFkYzRkNzYwYzQyYmQyMzZmYzY5NTc3ZWY4Y2NhYWEwNjFlM2Y0ODg4MjEzMmU3ODU2YjNjODY0IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/imaging/create
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlFkcHZLcm9pRUJuWFZOVU9Wb2xLc0E9PSIsInZhbHVlIjoiOEthM2s5aHlXajJNNlJpSGd3TjV1ZjdLODBpeW9NZEJwUGJMM0xHYnBhVDMyNzhFVnhlMlluZnZUNTFnZFJrTlRkeGJxa0M3WkV3MzhNUmsvRU90MERNVmNYMlNZZG5VM1VlOU10bmw2UTBXMUo1MFhOVDRyVUZtZ2p4RzRIK1QiLCJtYWMiOiI3OTNlMGE5N2RlM2ZjZjU2MGQ4ZWE0MDk2ZTBiZGZjMTc3YmIyNDU4NDA4YTNlODBkN2RkMTIyYWViMzQ4MThhIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6ImRQNWpqVEJ3cWNiaGtIN21SdlFRWkE9PSIsInZhbHVlIjoiK1crNTNIUEk3Wm9RRnIvK3JvdXNVeERZMGgwSVBROEswaHNxbDJjVDNJSUlRVndvMVFGRnNFVmZvNDhCeVFva1J3NG5SNlVGdmluS3BiQU03SnJmSFFUSDAxMVd5NVhGa2JwZGpDV3d6M0FsakNkWEtYd1N1TEVLbjdYOFZWVWMiLCJtYWMiOiIyNzA3NjQ1MmFlZWExYmUxM2U5OGMzYjk3ZWE1YTQyMGM2MGY0ZGQzYjU2ZDJlYWNkMjcwNzE2NzZmMTNjYTA5IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/imaging
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      unique_id:
+        custom: []
+        name: unique_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      registration_no:
+        custom: []
+        name: registration_no
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      start_date:
+        custom: []
+        name: start_date
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-02-26T14:01:50'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      facility_name:
+        custom: []
+        name: facility_name
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      alt_facility_name:
+        custom: []
+        name: alt_facility_name
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email_address:
+        custom: []
+        name: email_address
+        description: 'Must be a valid email address.'
+        required: false
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Must be a valid URL.'
+        required: false
+        example: 'https://www.gulgowski.com/nihil-accusantium-harum-mollitia-modi-deserunt'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_days:
+        custom: []
+        name: operational_days
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_hours:
+        custom: []
+        name: operational_hours
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      medical_laboratory_number:
+        custom: []
+        name: medical_laboratory_number
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      house_no:
+        custom: []
+        name: house_no
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      street_name:
+        custom: []
+        name: street_name
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      registration_status_id:
+        custom: []
+        name: registration_status_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      license_status_id:
+        custom: []
+        name: license_status_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiography_tech:
+        custom: []
+        name: radiography_tech
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiographers:
+        custom: []
+        name: radiographers
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiologists:
+        custom: []
+        name: radiologists
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      quality_assurance:
+        custom: []
+        name: quality_assurance
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      premises_type_id:
+        custom: []
+        name: premises_type_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      postal_address:
+        custom: []
+        name: postal_address
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      longitude:
+        custom: []
+        name: longitude
+        description: 'Must be between 2.483 and 20.'
+        required: false
+        example: 2
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      latitude:
+        custom: []
+        name: latitude
+        description: 'Must be between 3.883 and 13.867.'
+        required: false
+        example: 3
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      start_date: '2026-02-26T14:01:50'
+      facility_name: architecto
+      state_id: architecto
+      lga_id: architecto
+      ward_id: architecto
+      email_address: zbailey@example.net
+      website: 'https://www.gulgowski.com/nihil-accusantium-harum-mollitia-modi-deserunt'
+      ownership_id: architecto
+      medical_laboratory_number: 4326.41688
+      operational_status_id: architecto
+      radiography_tech: 4326.41688
+      radiographers: 4326.41688
+      radiologists: 4326.41688
+      longitude: 2
+      latitude: 3
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'admin/imaging/{imaging}/edit'
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      imaging:
+        custom: []
+        name: imaging
+        description: 'The imaging.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      imaging: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlRZSVZPUDdpek05dEVxL2xvYnNDb1E9PSIsInZhbHVlIjoiNkFwSDg3Q2kyOEhDQ2VkVTBUYmhNMTZjcDljeG1HcnZCMVdvazVKODhjSzNwSm9UV0RDanFIWEw3OHdydUxyRkFsanR4YmRnN2QxMFNQbjJEZFdudUVNb0pIcTJvN1E4cEV5MEZMZE4wKy9acFJaSUh5K2VLQzFZbjVVSWMySkQiLCJtYWMiOiIxMGY0YTEyMzJjYzc4ODAyZDZmN2Q2ZmM2NmFmNTgxMDViZmFhMjM5NTFlOGYzNGE1MWE0YmFmODJkZmZhNzQyIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IjhnanBFZ20xMnVKU3ViYm1jZ3p1UEE9PSIsInZhbHVlIjoiMGVyYlowYUUwQ0JtUlRiWlA0MVE1UzJ2RFFCVjhrZDluZGJyZWJVVUFTLysyM2NxcGcvblA1UmlXMDJpOXkxMEgvZ2YyM2Q2dEpIWXlKOGErTUpUU0NWajlFZHZDZXR2L3VvblQ2U05wdjFMYnFNOWVrUHhjR2hLQ0JXWk1HL0IiLCJtYWMiOiIwMzA1MDNmNzVlZmRiNmJkMWZiNjI0ZjFlYjc1MzY2YzhmMWI0NjBhZWRjYzUwYjliNTVlZWU2NDYzYWU1ZWY3IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'admin/imaging/{id}'
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the imaging.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      unique_id:
+        custom: []
+        name: unique_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      registration_no:
+        custom: []
+        name: registration_no
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      start_date:
+        custom: []
+        name: start_date
+        description: 'Must be a valid date.'
+        required: false
+        example: '2026-02-26T14:01:50'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      facility_name:
+        custom: []
+        name: facility_name
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      alt_facility_name:
+        custom: []
+        name: alt_facility_name
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email_address:
+        custom: []
+        name: email_address
+        description: 'Must be a valid email address.'
+        required: false
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      website:
+        custom: []
+        name: website
+        description: 'Must be a valid URL.'
+        required: false
+        example: 'https://www.gulgowski.com/nihil-accusantium-harum-mollitia-modi-deserunt'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_days:
+        custom: []
+        name: operational_days
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_hours:
+        custom: []
+        name: operational_hours
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      medical_laboratory_number:
+        custom: []
+        name: medical_laboratory_number
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      house_no:
+        custom: []
+        name: house_no
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      street_name:
+        custom: []
+        name: street_name
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      registration_status_id:
+        custom: []
+        name: registration_status_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      license_status_id:
+        custom: []
+        name: license_status_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiography_tech:
+        custom: []
+        name: radiography_tech
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiographers:
+        custom: []
+        name: radiographers
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      radiologists:
+        custom: []
+        name: radiologists
+        description: ''
+        required: false
+        example: 4326.41688
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      quality_assurance:
+        custom: []
+        name: quality_assurance
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      premises_type_id:
+        custom: []
+        name: premises_type_id
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      postal_address:
+        custom: []
+        name: postal_address
+        description: ''
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      longitude:
+        custom: []
+        name: longitude
+        description: 'Must be between 2.483 and 20.'
+        required: false
+        example: 2
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      latitude:
+        custom: []
+        name: latitude
+        description: 'Must be between 3.883 and 13.867.'
+        required: false
+        example: 3
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      start_date: '2026-02-26T14:01:50'
+      facility_name: architecto
+      state_id: architecto
+      lga_id: architecto
+      ward_id: architecto
+      email_address: zbailey@example.net
+      website: 'https://www.gulgowski.com/nihil-accusantium-harum-mollitia-modi-deserunt'
+      ownership_id: architecto
+      medical_laboratory_number: 4326.41688
+      operational_status_id: architecto
+      radiography_tech: 4326.41688
+      radiographers: 4326.41688
+      radiologists: 4326.41688
+      longitude: 2
+      latitude: 3
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'admin/imaging/{id}'
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the imaging.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'admin/imaging/show/{id}'
+    metadata:
+      custom: []
+      groupName: 'Administration Imaging'
+      groupDescription: |-
+
+        Endpoints for listing, creating, updating, deleting,
+        viewing and searching imaging diagnostic facilities.
+
+        Note:
+        - Most endpoints return Blade views.
+        - Some endpoints return HTML fragments.
+        - JSON is returned only for exceptions and missing records.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the show.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IkMwRUc0MTZ3aExLcXJKSGQ2ZzRwS0E9PSIsInZhbHVlIjoiWDFuT1pQR0Z0MTRtcjB0aG5sNHlTdXdoTS9vOHI0eWRxZzVuU3hRaktTcVFYS1dkdG5ITFdRc2ErRzRIeGtNN1RORW4va2hPWWpwcitZNXRVQVFmekNQNml0YmNNOTY0M21lb1ZCSnM3ZUo1VU5rTkFrR2VsYkdZWHp1K2pPdDkiLCJtYWMiOiJiMDNhMTI4MzZhOWRhNDE0OGVjNGQ1OWU1ZWE2MzIyMDkwYWI1ZWYyNGVmMGE4M2I2Y2M3ZGNkYzdkMDUxMWJjIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6IlFHRnVWckgrYVBSZkNJbngxUlBtb3c9PSIsInZhbHVlIjoiR2VWMWNadjUxOUlpZW1RNGYzSUgvVFhpdUJsaHM1d0hJMEJHaUVsb1YzTThTOEdjelVmMUEvY3dCbFRaVFl0WnlFWmhhTndEWUlRa2x3eU84eUpjOUNyK0xrNEg3WEZNRUhwVkhJdExiRkt6dnUvek8wM3dDN0FlN2N0ZUZlYkUiLCJtYWMiOiI1ZmY0NWJjYzNiZDRhMDlhYzhkNjgwODljYzhlOWM1NzgxY2VmOWZhOTBjM2EzZGU5NTgwMzM1YjhiMzJlN2VlIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

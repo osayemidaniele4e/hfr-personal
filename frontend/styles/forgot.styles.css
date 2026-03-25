@@ -1,0 +1,106 @@
+/* Container */
+.forgot-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-image: url('/bg-two.svg'), url('/bg-one.svg');
+    background-position: left, right bottom;
+    background-size: 300px;
+    background-repeat: no-repeat, no-repeat;
+  }
+  
+  /* Wrapper */
+  .forgot-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Box */
+  .forgot-box {
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title */
+  .forgot-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Subtitle */
+  .forgot-subtitle {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+  
+  /* Input Group */
+  .input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  
+  .input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    outline: none;
+    transition: all 0.3s;
+    background-color: #f3f4f6;
+  }
+  
+  .input-field:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+  }
+  
+  /* Button */
+  .forgot-button {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .forgot-button:hover {
+    background-color: #059669;
+  }
+  
+  /* Back to Login */
+  .back-to-login {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .back-to-login a {
+    font-size: 0.875rem;
+    color: #10b981;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .back-to-login a:hover {
+    color: #059669;
+  }
+  

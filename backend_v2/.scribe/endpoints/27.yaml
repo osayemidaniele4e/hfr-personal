@@ -1,0 +1,88 @@
+name: 'Facility Approval Tracking - Record Updates'
+description: |-
+
+  Endpoints that provide detailed audit comparison between the current and updated
+  records of a health facility. This helps reviewers and approvers understand what
+  changed in each facility record during the verification, validation, or publication stages.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'admin/hospitals/approvals/updated/{id}/{stage}'
+    metadata:
+      custom: []
+      groupName: 'Facility Approval Tracking - Record Updates'
+      groupDescription: |-
+
+        Endpoints that provide detailed audit comparison between the current and updated
+        records of a health facility. This helps reviewers and approvers understand what
+        changed in each facility record during the verification, validation, or publication stages.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'View differences between old and updated facility records.'
+      description: |-
+        This endpoint retrieves the detailed audit trail and compares
+        old versus new values for a given facility update request.
+
+        It shows changes to metadata such as ownership, location, level of care,
+        and service availability. The view also displays the corresponding audit
+        data and allows reviewers to approve or reject updates at different workflow stages.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the facility history record being reviewed.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      stage:
+        custom: []
+        name: stage
+        description: |-
+          The stage of review:
+           - 1 → Verification stage
+           - 2 → Validation stage
+           - 3 → Publication stage
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 16
+      stage: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'View showing old and new facility data side by side.'
+        headers: []
+        description: success
+      -
+        custom: []
+        status: 404
+        content: 'Facility record or audit not found.'
+        headers: []
+        description: not_found
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

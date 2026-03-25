@@ -1,0 +1,181 @@
+name: 'Facility Approval Tracking'
+description: |-
+
+  This controller manages the tracking and filtering of facility approval requests.
+  It provides endpoints for viewing pending, validated, and published facility changes.
+
+  These endpoints are primarily used by administrators and state-level officers
+  to monitor the approval workflow of health facility data.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hospitals/approvals/approval-tracking
+    metadata:
+      custom: []
+      groupName: 'Facility Approval Tracking'
+      groupDescription: |-
+
+        This controller manages the tracking and filtering of facility approval requests.
+        It provides endpoints for viewing pending, validated, and published facility changes.
+
+        These endpoints are primarily used by administrators and state-level officers
+        to monitor the approval workflow of health facility data.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display all pending facility approval requests.'
+      description: |-
+        Retrieves a list of facilities currently awaiting verification or approval.
+        The results include facility details such as name, type, ownership, state, and status.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      none:
+        custom: []
+        name: none
+        description: 'No parameters required.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      none: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "15 pending verifications",
+            "data": [
+               {
+                  "facility_name": "General Hospital Kano",
+                  "state": "Kano",
+                  "lga": "Kumbotso",
+                  "ownership": "Public",
+                  "facility_level": "Secondary",
+                  "requested_by_firstname": "John",
+                  "requested_by_lastname": "Doe",
+                  "updated_at": "2025-11-12T10:00:00Z"
+               }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/hospitals/approvals/approval-tracking/show
+    metadata:
+      custom: []
+      groupName: 'Facility Approval Tracking'
+      groupDescription: |-
+
+        This controller manages the tracking and filtering of facility approval requests.
+        It provides endpoints for viewing pending, validated, and published facility changes.
+
+        These endpoints are primarily used by administrators and state-level officers
+        to monitor the approval workflow of health facility data.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search for facility approval requests by status, state, and action.'
+      description: |-
+        Filters facility approvals based on the `approval` type (verification, validation, or publication),
+        and optionally by state or approval action.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      approval:
+        custom: []
+        name: approval
+        description: |-
+          Indicates the approval stage:
+           - `1` = pending verifications
+           - `2` = pending validations
+           - any other value = pending publications
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: 'optional The ID of the state to filter results by.'
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      action:
+        custom: []
+        name: action
+        description: "optional The type of action to filter by (e.g. 'create', 'update')."
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      approval: 16
+      state_id: 16
+      action: architecto
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "8 pending validations",
+            "data": [
+               {
+                  "facility_name": "Maitama District Hospital",
+                  "state": "FCT",
+                  "lga": "Abuja Municipal",
+                  "ownership": "Private",
+                  "facility_level": "Tertiary",
+                  "requested_by_firstname": "Mary",
+                  "requested_by_lastname": "Smith",
+                  "updated_at": "2025-11-12T09:00:00Z"
+               }
+            ]
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

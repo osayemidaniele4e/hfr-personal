@@ -1,0 +1,115 @@
+name: Administration
+description: |-
+
+  Handles the dashboard views and related data for federal (national) and state-level users.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: administrator/completeness
+    metadata:
+      custom: []
+      groupName: Administration
+      groupDescription: |-
+
+        Handles the dashboard views and related data for federal (national) and state-level users.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'LGA Completeness Scores'
+      description: 'Returns completeness scores for all LGAs in a given state.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state:
+        custom: []
+        name: state
+        description: 'Name of the state.'
+        required: true
+        example: Lagos
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state: Lagos
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          [
+            {"name": "Ikeja", "y": 85},
+            {"name": "Surulere", "y": 78}
+          ]
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: administrator/facilitystatus
+    metadata:
+      custom: []
+      groupName: Administration
+      groupDescription: |-
+
+        Handles the dashboard views and related data for federal (national) and state-level users.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'LGA Facility Status'
+      description: 'Returns facility status for all LGAs in a given state.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      state:
+        custom: []
+        name: state
+        description: 'Name of the state.'
+        required: true
+        example: Lagos
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      state: Lagos
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          [
+            {"lga": "Ikeja", "status": "Active"},
+            {"lga": "Surulere", "status": "Inactive"}
+          ]
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

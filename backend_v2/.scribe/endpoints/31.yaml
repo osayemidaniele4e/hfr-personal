@@ -1,0 +1,67 @@
+name: 'Administration - Contact'
+description: |-
+
+  APIs for handling contact messages and feedback submissions.
+
+  This controller allows users to submit messages via a public contact form
+  and allows admins to view submitted messages. Emails are sent to admins
+  with the feedback details.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/messages
+    metadata:
+      custom: []
+      groupName: 'Administration - Contact'
+      groupDescription: |-
+
+        APIs for handling contact messages and feedback submissions.
+
+        This controller allows users to submit messages via a public contact form
+        and allows admins to view submitted messages. Emails are sent to admins
+        with the feedback details.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all contact messages (admin view).'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      page:
+        custom: []
+        name: page
+        description: 'The page number for pagination.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlZxN2Z3VmVFRHA2akgzZStjYVljcHc9PSIsInZhbHVlIjoiekZEaG0vRE0wYWYxdUltNTY3VTdjS2xuQ2JadVE4S2hpWVFyaEk2ZUJyVllOVHdNTmNGVTJBUm9lMEVHblNLN2dSN1l0bnZsUVJvK0pHYUJWMUZYU1pSYkIxZ3VnU216Q1hnbzJQcmdTektVeU5Bc1JkMFhGSzN6TVlDQ0NCTUgiLCJtYWMiOiI2ZmZjZjNhYTVhZGZiMWI5ZDY5YTY4OTg2NDg4ZTY2M2MwOGVlYTg4YjkwOWM5ZWVlOGNkODQ3NWYyYTIzYzcxIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6ImhQMmJlNXVZTVA4MzFxMWt2MHpTUEE9PSIsInZhbHVlIjoicEFyall0N1UxeE1sbnVzODNtcGkvcitaQ2dPeU9rczhHQTNXT2JaK1h5UzA4S1NObjBQeFJad3ZKcUhYV1AvVjI0d3c4NExvV3RUWmZWblByNC9wc3lUVmNWV1IrZlZCWk9EaTRueG9NQWJlOGZwUDRGNFRjdFNvTGFCWjlMMTciLCJtYWMiOiI1MDA3MGMzODdmMmYzOGE4ODViNWJhMmE1YmI3ZmE0MjY0YjEyZTVmMjU1Yzg3ZjBmYmYyNGFjYTg0NTQxOTY5IiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

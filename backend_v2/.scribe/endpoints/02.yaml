@@ -1,0 +1,643 @@
+name: Facilities
+description: |-
+
+  Endpoints for searching and retrieving health facilities (hospitals & clinics).
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/facilities
+    metadata:
+      custom: []
+      groupName: Facilities
+      groupDescription: |-
+
+        Endpoints for searching and retrieving health facilities (hospitals & clinics).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List / Search Facilities'
+      description: 'Search and filter health facilities with pagination.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      search:
+        custom: []
+        name: search
+        description: 'Search by facility name.'
+        required: false
+        example: 'General Hospital'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: 'Filter by state ID.'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'Filter by LGA ID.'
+        required: false
+        example: 512
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: 'Filter by ward ID.'
+        required: false
+        example: 1024
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_type_id:
+        custom: []
+        name: facility_type_id
+        description: 'Filter by facility type.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      facility_level_id:
+        custom: []
+        name: facility_level_id
+        description: 'Filter by level of care.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: 'Filter by ownership category.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      ownership_type_id:
+        custom: []
+        name: ownership_type_id
+        description: 'Filter by ownership type.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: 'Filter by operational status.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      registration_status_id:
+        custom: []
+        name: registration_status_id
+        description: 'Filter by registration status.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      license_status_id:
+        custom: []
+        name: license_status_id
+        description: 'Filter by license status.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      has_coordinates:
+        custom: []
+        name: has_coordinates
+        description: 'Filter facilities with/without GPS coordinates.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      service_ids:
+        custom: []
+        name: service_ids
+        description: 'Comma-separated service IDs to filter by.'
+        required: false
+        example: '1,5,12'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Results per page (max 100, default 25).'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: 'Sort field: facility_name, state, lga, updated_at.'
+        required: false
+        example: facility_name
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      sort_order:
+        custom: []
+        name: sort_order
+        description: 'Sort direction: asc or desc.'
+        required: false
+        example: asc
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      search: 'General Hospital'
+      state_id: 25
+      lga_id: 512
+      ward_id: 1024
+      facility_type_id: 1
+      facility_level_id: 2
+      ownership_id: 1
+      ownership_type_id: 3
+      operational_status_id: 1
+      registration_status_id: 1
+      license_status_id: 1
+      has_coordinates: true
+      service_ids: '1,5,12'
+      per_page: 25
+      page: 1
+      sort_by: facility_name
+      sort_order: asc
+    bodyParameters:
+      search:
+        custom: []
+        name: search
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      state_id:
+        custom: []
+        name: state_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ward_id:
+        custom: []
+        name: ward_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      facility_type_id:
+        custom: []
+        name: facility_type_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      facility_level_id:
+        custom: []
+        name: facility_level_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ownership_id:
+        custom: []
+        name: ownership_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      ownership_type_id:
+        custom: []
+        name: ownership_type_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      operational_status_id:
+        custom: []
+        name: operational_status_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      registration_status_id:
+        custom: []
+        name: registration_status_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      license_status_id:
+        custom: []
+        name: license_status_id
+        description: ''
+        required: false
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      has_coordinates:
+        custom: []
+        name: has_coordinates
+        description: ''
+        required: false
+        example: false
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      service_ids:
+        custom: []
+        name: service_ids
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      per_page:
+        custom: []
+        name: per_page
+        description: 'Must be at least 1. Must not be greater than 100.'
+        required: false
+        example: 22
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Must be at least 1.'
+        required: false
+        example: 67
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_by:
+        custom: []
+        name: sort_by
+        description: ''
+        required: false
+        example: state
+        type: string
+        enumValues:
+          - facility_name
+          - state
+          - lga
+          - updated_at
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      sort_order:
+        custom: []
+        name: sort_order
+        description: ''
+        required: false
+        example: asc
+        type: string
+        enumValues:
+          - asc
+          - desc
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      search: b
+      state_id: 16
+      lga_id: 16
+      ward_id: 16
+      facility_type_id: 16
+      facility_level_id: 16
+      ownership_id: 16
+      ownership_type_id: 16
+      operational_status_id: 16
+      registration_status_id: 16
+      license_status_id: 16
+      has_coordinates: false
+      service_ids: architecto
+      per_page: 22
+      page: 67
+      sort_by: state
+      sort_order: asc
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/facilities/statistics
+    metadata:
+      custom: []
+      groupName: Facilities
+      groupDescription: |-
+
+        Endpoints for searching and retrieving health facilities (hospitals & clinics).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Facility Statistics'
+      description: 'Get summary statistics of facilities across the registry.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      state_id:
+        custom: []
+        name: state_id
+        description: 'Filter statistics by state.'
+        required: false
+        example: 25
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      lga_id:
+        custom: []
+        name: lga_id
+        description: 'Filter statistics by LGA.'
+        required: false
+        example: 512
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      state_id: 25
+      lga_id: 512
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/facilities/{id}'
+    metadata:
+      custom: []
+      groupName: Facilities
+      groupDescription: |-
+
+        Endpoints for searching and retrieving health facilities (hospitals & clinics).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Facility Detail'
+      description: 'Retrieve detailed information about a single facility by ID.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The facility ID.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/facilities/{id}/services'
+    metadata:
+      custom: []
+      groupName: Facilities
+      groupDescription: |-
+
+        Endpoints for searching and retrieving health facilities (hospitals & clinics).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get Facility Services'
+      description: 'Retrieve services offered by a specific facility.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The facility ID.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

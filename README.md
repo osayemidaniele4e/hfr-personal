@@ -1,93 +1,415 @@
-# HFR
+# Laravel 5 Backend
 
+This is the backend of the **HFR** project, built with Laravel 5. This guide will help you set up and configure the application.
 
+---
 
-## Getting started
+## 📌 1. Installation and Setup
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Step 1: Clone the Repository
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/e4e-webdev/hfr.git
-git branch -M main
-git push -uf origin main
+```bash
+git clone https://gitlab.com/e4e-webdev2/hfr.git
+cd hfr/backend
 ```
 
-## Integrate with your tools
+### Step 2: Install Dependencies
 
-- [ ] [Set up project integrations](https://gitlab.com/e4e-webdev/hfr/-/settings/integrations)
+Ensure you have **PHP (>=7.4), Composer, and MySQL** installed. Then, run:
 
-## Collaborate with your team
+```bash
+composer install
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Step 3: Setup Environment Variables
 
-## Test and Deploy
+Copy the example environment file and update the required variables.
 
-Use the built-in continuous integration in GitLab.
+```bash
+cp .env.example .env
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Edit `.env` and set the following variables:
 
-***
+```ini
+APP_NAME="HFR Backend"
+APP_ENV=local
+APP_KEY=base64:GENERATE_KEY_HERE
+APP_DEBUG=true
+APP_URL=http://your-backend-url.test
 
-# Editing this README
+FRONTEND_URL=http://your-frontend-url.test
+CONTACT_US_MAIL=your-email@example.com
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=hfr_database
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
 
-## Suggestions for a good README
+### Step 4: Generate Application Key
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```bash
+php artisan key:generate
+```
 
-## Name
-Choose a self-explaining name for your project.
+### Step 5: Set Up Storage Symlink
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+To make files in `storage/app/public` accessible via `public/storage`, run:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+php artisan storage:link
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 📌 2. Database Setup
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Since we are **not using models or migrations**, manually create the necessary tables.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Step 1: Access MySQL
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+mysql -u root -p
+```
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Step 2: Create Database
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```sql
+CREATE DATABASE hfr_database;
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Step 3: Use Database
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```sql
+USE hfr_database;
+```
 
-## License
-For open source projects, say how it is licensed.
+### Step 4: Create Tables Manually
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Create your tables based on the project requirements. Example:
+
+```sql
+CREATE TABLE sliders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    sub_title VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    status TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE origins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE processes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE process_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    status TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+
+ALTER TABLE hs_hospitals_history 
+ADD COLUMN image_url JSON NULL AFTER facility_name;
+
+
+```
+
+---
+
+## 📌 3. SMTP Setup (Email Configuration)
+
+To enable email sending, configure SMTP in `.env`:
+
+```ini
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_smtp_username
+MAIL_PASSWORD=your_smtp_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=no-reply@example.com
+MAIL_FROM_NAME="HFR Backend"
+```
+
+---
+
+## 📌 4. Running the Application
+
+### Start the Laravel Development Server
+
+```bash
+php artisan serve
+```
+
+By default, it runs on `http://127.0.0.1:8000/`.
+
+---
+
+## 📌 5. Common Issues & Solutions
+
+### 1️⃣ **Error: `.env` Not Loaded**
+
+Run:
+
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+### 2️⃣ **Storage Link Not Working**
+
+```bash
+php artisan storage:link
+```
+
+### 3️⃣ **Permission Issues (Linux)**
+
+```bash
+chmod -R 777 storage bootstrap/cache
+```
+
+---
+
+## 📌 6. API Documentation
+
+Refer to the `routes/api.php` file for API endpoints.
+
+---
+
+## 📌 7. Contribution Guidelines
+
+1. **Create a new branch** before making changes.
+2. **Commit messages should be clear and descriptive.**
+3. **Test before pushing changes.**
+
+---
+
+## 📌 8. Contact
+
+For issues or questions, contact the team at **your-email@example.com**.
+
+---
+
+# Frontend Readme Start
+
+---
+
+# Next.js Frontend
+
+This is the frontend of the **HFR** project, built with **Next.js**, **React**, **Tailwind CSS**, and **TypeScript**.
+
+---
+
+## 📌 1. Installation and Setup
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://gitlab.com/e4e-webdev2/hfr.git
+cd hfr/frontend
+```
+
+### Step 2: Install Dependencies
+
+Ensure you have **Node.js (>=16)** and **npm/yarn** installed. Then, run:
+
+```bash
+npm install
+# OR
+yarn install
+```
+
+### Step 3: Setup Environment Variables
+
+Copy the example environment file and update the required variables.
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and set the following variables:
+
+```ini
+NEXT_PUBLIC_API_URL=http://your-backend-url.test/api
+NEXT_PUBLIC_APP_URL=http://your-frontend-url.test
+```
+
+### Step 4: Start the Development Server
+
+```bash
+npm run dev
+# OR
+yarn dev
+```
+
+By default, the app runs on `http://localhost:3000/`.
+
+---
+
+## 📌 2. Tailwind CSS Setup
+
+This project already includes Tailwind CSS. If needed, reinitialize it:
+
+```bash
+npx tailwindcss init -p
+```
+
+Check `tailwind.config.js`:
+
+```js
+module.exports = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+---
+
+## 📌 3. TypeScript Setup
+
+TypeScript is already installed. If you need to initialize it, run:
+
+```bash
+touch tsconfig.json
+npx tsc --init
+```
+
+Make sure the `tsconfig.json` includes:
+
+```json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "preserve",
+    "strict": true
+  }
+}
+```
+
+---
+
+## 📌 4. Building for Production
+
+### Step 1: Build the App
+
+```bash
+npm run build
+# OR
+yarn build
+```
+
+### Step 2: Start the Production Server
+
+```bash
+npm start
+# OR
+yarn start
+```
+
+---
+
+## 📌 5. Deployment
+
+### ✅ **Vercel (Recommended)**
+
+1. Install Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+2. Deploy:
+   ```bash
+   vercel
+   ```
+
+### ✅ **Manual Deployment (Linux Server)**
+
+1. Build the app:
+   ```bash
+   npm run build
+   ```
+2. Serve it:
+   ```bash
+   npm start
+   ```
+3. Use **PM2** to keep it running:
+   ```bash
+   npm install -g pm2
+   pm2 start npm --name "hfr-frontend" -- start
+   pm2 save
+   pm2 startup
+   ```
+
+---
+
+## 📌 6. Common Issues & Fixes
+
+### 1️⃣ **Next.js Not Loading Environment Variables**
+
+```bash
+rm -rf .next
+npm run dev
+```
+
+### 2️⃣ **Tailwind Not Applying Styles**
+
+Ensure `postcss.config.js` is set correctly:
+
+```js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+### 3️⃣ **TypeScript Errors**
+
+Run:
+
+```bash
+npm run lint
+npm run type-check
+```
+
+---
+
+## 📌 7. Contribution Guidelines
+
+1. **Create a new branch** before making changes.
+2. **Use clear commit messages.**
+3. **Test before pushing changes.**
+
+---
+
+## 📌 8. Contact
+
+For issues or questions, contact the team at **your-email@example.com**.

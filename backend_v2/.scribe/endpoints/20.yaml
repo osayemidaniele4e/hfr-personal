@@ -1,0 +1,373 @@
+name: 'Administration - Roles'
+description: |-
+
+  Handles CRUD operations for roles and permission assignments.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/roles
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List Roles'
+      description: 'Displays a list of all roles with their permissions.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'view HTML'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: admin/roles/create
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show Create Role Form'
+      description: 'Displays a form for creating a new role.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'view HTML'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/roles
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Store Role'
+      description: 'Stores a new role in the system along with assigned permissions.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Role name.'
+        required: true
+        example: Admin
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Role description.'
+        required: true
+        example: 'Administrator role'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      permissions:
+        custom: []
+        name: permissions
+        description: 'Array of permission IDs to assign.'
+        required: true
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      roles_below:
+        custom: []
+        name: roles_below
+        description: 'optional IDs of roles below this role.'
+        required: false
+        example:
+          - 2
+          - 4
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: Admin
+      description: 'Administrator role'
+      permissions:
+        - 1
+        - 2
+        - 3
+      roles_below:
+        - 2
+        - 4
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect to roles.index with success message'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'admin/roles/{id}/edit'
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show Edit Role Form'
+      description: 'Displays a form for editing an existing role.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'Role ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: 'view HTML'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: admin/roles/update
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update Role'
+      description: "Updates an existing role's information and permissions."
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Role name.'
+        required: true
+        example: Manager
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'Role description.'
+        required: true
+        example: 'Manager role'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      permissions:
+        custom: []
+        name: permissions
+        description: 'Array of permission IDs.'
+        required: true
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      id:
+        custom: []
+        name: id
+        description: 'Role ID.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      roles_below:
+        custom: []
+        name: roles_below
+        description: 'optional IDs of roles below this role.'
+        required: false
+        example:
+          - 2
+          - 4
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: Manager
+      description: 'Manager role'
+      permissions:
+        - 1
+        - 2
+        - 3
+      id: 1
+      roles_below:
+        - 2
+        - 4
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: 'Redirect to roles.index with success message'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: admin/roles/delete
+    metadata:
+      custom: []
+      groupName: 'Administration - Roles'
+      groupDescription: |-
+
+        Handles CRUD operations for roles and permission assignments.
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: true
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

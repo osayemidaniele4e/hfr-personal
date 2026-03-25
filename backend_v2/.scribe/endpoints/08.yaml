@@ -1,0 +1,232 @@
+name: 'FHIR - Organization'
+description: |-
+
+  FHIR R4 Organization endpoints. Each health facility (hospital, laboratory,
+  pharmacy, imaging center) is represented as an Organization resource.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/fhir/Organization
+    metadata:
+      custom: []
+      groupName: 'FHIR - Organization'
+      groupDescription: |-
+
+        FHIR R4 Organization endpoints. Each health facility (hospital, laboratory,
+        pharmacy, imaging center) is represented as an Organization resource.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Search Organizations'
+      description: |-
+        Search across all facility registries. Use the `type` parameter with
+        registry-type codes (hospital, laboratory, pharmacy, imaging) to filter.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Facility name (partial match).'
+        required: false
+        example: 'General Hospital'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'name:exact':
+        custom: []
+        name: 'name:exact'
+        description: 'Facility name (exact match).'
+        required: false
+        example: 'General Hospital Lagos'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      'name:contains':
+        custom: []
+        name: 'name:contains'
+        description: 'Facility name (contains).'
+        required: false
+        example: General
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      identifier:
+        custom: []
+        name: identifier
+        description: 'Facility code or registration number.'
+        required: false
+        example: RC/00001
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'Organization type code (registry-type: hospital|laboratory|pharmacy|imaging).'
+        required: false
+        example: hospital
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      address-state:
+        custom: []
+        name: address-state
+        description: 'State name.'
+        required: false
+        example: Lagos
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      active:
+        custom: []
+        name: active
+        description: 'Active status.'
+        required: false
+        example: 'true'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      _count:
+        custom: []
+        name: _count
+        description: 'Results per page (max 100).'
+        required: false
+        example: 20
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      _offset:
+        custom: []
+        name: _offset
+        description: 'Pagination offset.'
+        required: false
+        example: 0
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      _sort:
+        custom: []
+        name: _sort
+        description: 'Sort: name, -name, _lastUpdated, -_lastUpdated.'
+        required: false
+        example: name
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      name: 'General Hospital'
+      'name:exact': 'General Hospital Lagos'
+      'name:contains': General
+      identifier: RC/00001
+      type: hospital
+      address-state: Lagos
+      active: 'true'
+      _count: 20
+      _offset: 0
+      _sort: name
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/fhir/Organization/{id}'
+    metadata:
+      custom: []
+      groupName: 'FHIR - Organization'
+      groupDescription: |-
+
+        FHIR R4 Organization endpoints. Each health facility (hospital, laboratory,
+        pharmacy, imaging center) is represented as an Organization resource.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Read Organization'
+      description: |-
+        Retrieve a single Organization by its FHIR resource ID.
+        IDs are prefixed by registry type: hosp-{id}, lab-{id}, pharm-{id}, img-{id}.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The Organization resource ID.'
+        required: true
+        example: hosp-123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: hosp-123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"status":"error","message":"API key is required. Include your key in the X-API-Key header.","code":"MISSING_API_KEY"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-api-version: v1
+          x-ratelimit-limit: '60'
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

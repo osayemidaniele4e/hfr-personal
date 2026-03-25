@@ -1,0 +1,138 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease-in-out;
+  /* outline: 1px solid red;  */
+}
+body {
+  color: #0b1c4c;
+  background: #fff;
+  height: 100vh;
+}
+
+.input-placeholder::placeholder {
+  color: #b0b0b0;
+  font-style: normal;
+  padding-left: 0.5rem;
+  font-weight: 300;
+}
+
+@media (max-width: 450px) {
+  .input-placeholder::placeholder {
+    color: transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.my-select {
+  background-color: white;
+  color: black;
+  height: 100%;
+}
+.my-select__value-container {
+  height: 100%;
+}
+
+.my-select__control {
+  height: 3rem;
+  border-radius: 20px;
+}
+.swiper-pagination-bullet {
+  background: #000; /* Custom bullet color */
+  opacity: 1; /* Make bullets fully opaque */
+}
+.swiper-pagination-bullet-active {
+  background: #0b1c4c;
+}
+
+.custom-style {
+  width: 500px;
+}
+
+/* mySwiperStyles.css */
+/* PhoneInputOverride.css */
+.react-tel-input2 .form-control {
+  position: relative;
+  font-size: 14px;
+  letter-spacing: 0.01rem;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 48px;
+  margin-left: 0;
+  background: #fff;
+  border: 1px solid #cacaca !important; /* Use !important to ensure it overrides */
+  border-radius: 5px;
+  line-height: 25px;
+  height: 50px;
+  width: 600px;
+  outline: none;
+}
+
+/* Example of error styling */
+.react-tel-input .form-control.error {
+  border-color: red !important;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .chakra-tabs__tab-panels {
+    overflow-x: auto !important;
+  }
+  .chakra-tabs__tab-panel {
+    overflow-x: auto !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .ipad-pro-fix {
+    overflow-x: auto !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 900px !important;
+  }
+}
+
+/* Align the search filter to the right */
+.data-table-extensions > div:first-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Style the search input field */
+.data-table-extensions .filter-text {
+  height: 45px !important;
+  width: 300px !important;
+  border: 2px solid #ccc !important;
+  border-radius: 5px !important;
+  padding: 10px !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: #333 !important;
+  background-color: #fff !important;
+  outline: none !important;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
+}
+
+/* Add focus effect */
+.data-table-extensions .filter-text:focus {
+  border-color: #5bba62 !important;
+  box-shadow: 0 0 5px rgb(91, 186, 98, 0.5) !important;
+}
+
+.aspect-\[4\/3\] {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-\[16\/9\] {
+  aspect-ratio: 16 / 9;
+}

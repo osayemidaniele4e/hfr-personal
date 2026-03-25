@@ -1,0 +1,158 @@
+name: Authentication
+description: |-
+
+  Token-based Login Flow
+
+  These endpoints handle the second step of a two-factor login flow.
+  After submitting username/password, the system sends a token to the user
+  and stores temporary login details in the session. The user must validate
+  the token here before being logged in.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: login/token
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        Token-based Login Flow
+
+        These endpoints handle the second step of a two-factor login flow.
+        After submitting username/password, the system sends a token to the user
+        and stores temporary login details in the session. The user must validate
+        the token here before being logged in.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display the token verification page.'
+      description: |-
+        This endpoint shows the token entry screen to the user, but only if a
+        token has been generated and stored in the session during the login flow.
+
+        If no token exists in the current session, the user is redirected to `/`.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          <!DOCTYPE html>
+          <html>
+              <head>
+                  <meta charset="UTF-8" />
+                  <meta http-equiv="refresh" content="0;url='http://localhost'" />
+
+                  <title>Redirecting to http://localhost</title>
+              </head>
+              <body>
+                  Redirecting to <a href="http://localhost">http://localhost</a>.
+              </body>
+          </html>
+        headers:
+          cache-control: 'no-cache, private'
+          location: 'http://localhost'
+          content-type: 'text/html; charset=utf-8'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6InJRV2F1Wm1lY3BiMzN0VFg3bG83SVE9PSIsInZhbHVlIjoiRURtaWkwM2p2ejZYUHR2dU9ZdmdwOGZoNjljR1dGMGNFcXk4RHZsTnBhUXhUdXlsWU1JSWNoWSsxOFFhYnB6OFZuVmFBQlI2Qkt5cG1nbzdnUkxZQkpYZEtqaG1UZHpWNFZHd3NsUTVlc1ozSkNBZUlJZElMbFJUNWV4eS9PbTAiLCJtYWMiOiIzNTQxODMxNmQ4ZTg4MTM0ZDM0YmFkYmY1NWU2MDkyYTY3NjQyZmE4ODQ2YjZhZGM1OTg5N2FhZmUzMDAxZDBjIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; samesite=lax; hfr_session=eyJpdiI6Ik9kTkplR2s3Y1NQQWpBR25tR0RZdGc9PSIsInZhbHVlIjoiUEJ2VUE1QzI1dTY0blIzNlhaa1NPTFhlRnNnMmY0VmpkTlpEMlhSRkl5dGU5OXM5RnAvOUhMa0J6NUZYTmNTb0p3MlFKOFdOdVdGMjRFZ2RxRWR5Vmllem9VYUVRaDFLR1U2akE1bUp2cEMwcVRYOGVFZ0NHT2h4NW1UU2ZvbUYiLCJtYWMiOiI5Y2RiMGEyZWFjOGU4ODliYWZlMzcyN2E0NGRjN2FlMWZmMDBlMmZmZGQxYTIzNTFkYWNlZGYyZTIzODQzNTFhIiwidGFnIjoiIn0%3D; expires=Thu, 26 Feb 2026 15:01:50 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+    responseFields:
+      view:
+        custom: []
+        name: view
+        description: 'The HTML of the token verification page.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: login/token
+    metadata:
+      custom: []
+      groupName: Authentication
+      groupDescription: |-
+
+        Token-based Login Flow
+
+        These endpoints handle the second step of a two-factor login flow.
+        After submitting username/password, the system sends a token to the user
+        and stores temporary login details in the session. The user must validate
+        the token here before being logged in.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Verify the submitted token and complete login.'
+      description: |-
+        Validates the token submitted by the user against the token stored in the session.
+        If the token has expired, or does not match, the user is redirected back with an error.
+
+        Upon successful validation, the system logs the user in using the stored user ID
+        and clears the token session data, then redirects to `/administrator`.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      token:
+        custom: []
+        name: token
+        description: 'The token sent to the user.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      token: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "redirect": "/administrator"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 302
+        content: |-
+          {
+            "error": "Invalid token or token expired"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
