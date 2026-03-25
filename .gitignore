@@ -1,0 +1,9 @@
+hfr_db.sql 
+new_hfr.sql 
+*.env
+hfr_db.sql 
+new_hfr.sql 
+.next/
+node_modules/
+vendor/
+*.sql
