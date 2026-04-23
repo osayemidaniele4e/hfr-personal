@@ -1,0 +1,51 @@
+services:
+  # Next.js Frontend
+  - type: web
+    name: hfr-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_BACKEND_API
+        value: https://hfr-backend.onrender.com/api
+      - key: NEXT_PUBLIC_BACKEND_URL
+        value: https://hfr-backend.onrender.com/
+      # Add your Google Maps API key manually in the Render dashboard
+      - key: NEXT_PUBLIC_GOOGLE_MAP_API
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://hfr-frontend.onrender.com
+
+  # Laravel Backend
+  - type: web
+    name: hfr-backend
+    env: docker
+    rootDir: backend_v2
+    envVars:
+      - key: APP_NAME
+        value: Laravel
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://hfr-backend.onrender.com
+      - key: FRONTEND_URL
+        value: https://hfr-frontend.onrender.com
+      # Generate a new app key using `php artisan key:generate --show` and add it below or in the Render dashboard
+      - key: APP_KEY
+        sync: false
+      # You will need to provide database credentials for an external MySQL database
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
