@@ -1,51 +1,63 @@
+# Blueprint: https://render.com/docs/yaml-spec
+# Set APP_KEY, DB_*, and NEXT_PUBLIC_GOOGLE_MAP_API in the dashboard or via sync: false below.
+
 services:
-  # Next.js Frontend
   - type: web
+    runtime: node
     name: hfr-frontend
-    env: node
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
+    healthCheckPath: /
     envVars:
+      - key: NODE_VERSION
+        value: "20"
       - key: NEXT_PUBLIC_BACKEND_API
         value: https://hfr-backend.onrender.com/api
       - key: NEXT_PUBLIC_BACKEND_URL
         value: https://hfr-backend.onrender.com/
-      # Add your Google Maps API key manually in the Render dashboard
       - key: NEXT_PUBLIC_GOOGLE_MAP_API
         sync: false
       - key: NEXT_PUBLIC_SITE_URL
         value: https://hfr-frontend.onrender.com
 
-  # Laravel Backend
   - type: web
+    runtime: docker
     name: hfr-backend
-    env: docker
     rootDir: backend_v2
+    preDeployCommand: php artisan migrate --force
+    healthCheckPath: /api/health
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: APP_NAME
         value: Laravel
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
-        value: false
+        value: "false"
       - key: APP_URL
         value: https://hfr-backend.onrender.com
       - key: FRONTEND_URL
         value: https://hfr-frontend.onrender.com
-      # Generate a new app key using `php artisan key:generate --show` and add it below or in the Render dashboard
       - key: APP_KEY
         sync: false
-      # You will need to provide database credentials for an external MySQL database
+      - key: LOG_LEVEL
+        value: error
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
         sync: false
       - key: DB_PORT
-        value: 3306
+        value: "3306"
       - key: DB_DATABASE
         sync: false
       - key: DB_USERNAME
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_DRIVER
+        value: file

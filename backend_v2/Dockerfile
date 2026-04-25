@@ -42,8 +42,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN sed -i 's/\r$//' /var/www/html/docker-entrypoint.sh && chmod +x /var/www/html/docker-entrypoint.sh
 
-# Ensure the port is correctly mapped
+# Render injects $PORT; entrypoint rewrites Apache to match
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]

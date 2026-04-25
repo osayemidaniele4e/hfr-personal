@@ -1,0 +1,18 @@
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.dockerignore
+node_modules
+.DS_Store
+.idea
+.vscode
+.phpunit.result.cache
+.devcontainer
+tests
+phpunit.xml
+*.log
+
+# Fresh vendor install in the image
+vendor
