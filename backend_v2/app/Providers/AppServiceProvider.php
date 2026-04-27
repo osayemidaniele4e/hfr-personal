@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Database\Connectors\NormalizingMySqlConnector;
 use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('db.connector.mysql', function () {
+            return new NormalizingMySqlConnector;
+        });
     }
 
     /**

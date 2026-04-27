@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27d — ConnectionEstablished Aiven sql_require_primary_key (no PDO INIT_COMMAND)
+# cache-bust: 2026-04-27e — NormalizingMySqlConnector (PDO bool options from DATABASE_URL)
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
