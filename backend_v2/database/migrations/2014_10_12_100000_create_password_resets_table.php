@@ -14,8 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('password_resets', function (Blueprint $table) {
-            // Aiven MySQL (and others) may enforce sql_require_primary_key=ON.
-            $table->string('email')->primary();
+            // Aiven MySQL enforces sql_require_primary_key=ON; use an explicit surrogate PK.
+            $table->id();
+            $table->string('email')->index();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
