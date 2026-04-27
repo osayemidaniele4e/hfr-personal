@@ -2154,11 +2154,12 @@ class FrontendController extends Controller
         // \Log::info('Search Hospitals Request Parameters:', $request->all());
         // \Log::info($request->facility_name);
 
-        // Only include facilities that exist in hospital_details (current/active records)
-        // This keeps results consistent with the facilities list page (searchHospitals)
-        $activeHospitalIds = DB::table('hospital_details')->pluck('id')->toArray();
+        // Only include facilities that exist in hospital_details (current/active records).
+        // Use an inner join — not pluck()->whereIn(), which can build a multi‑MB IN (...)
+        // clause and trigger MySQL max_allowed_packet / timeout (500 in production).
 
         $query = DB::table('hs_hospitals_history')
+            ->join('hospital_details', 'hs_hospitals_history.id', '=', 'hospital_details.id')
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
             ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
@@ -2181,7 +2182,6 @@ class FrontendController extends Controller
                 'lst_registration_status.status as registration_status_name',
                 'lst_license_status.status as license_status_name'
             )
-            ->whereIn('hs_hospitals_history.id', $activeHospitalIds)
             // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
             ->where(function ($q) {
                 $q->whereIn('hs_hospitals_history.status_id', [0, 6, 13])
@@ -2218,7 +2218,9 @@ class FrontendController extends Controller
 
         // Loop through each facility to determine the highest based on facility level (or any other criteria)
         foreach ($facilities as $facility) {
-            if (!$highestFacility || $facility->facility_level_id > $highestFacility->facility_level_id) {
+            $level = (int) ($facility->facility_level_id ?? 0);
+            $bestLevel = (int) ($highestFacility->facility_level_id ?? 0);
+            if (!$highestFacility || $level > $bestLevel) {
                 $highestFacility = $facility;  // Update the highest facility if current one has a higher facility level
             }
         }
