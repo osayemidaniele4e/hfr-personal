@@ -14,6 +14,10 @@ return new class extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('fhir_code_mappings')) {
+            return;
+        }
+
         Schema::create('fhir_code_mappings', function (Blueprint $table) {
             $table->id();
             $table->string('hfr_table', 100)->comment('Source lookup table name (e.g. lst_facility_types)');

@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up()
     {
+        if (Schema::hasTable('api_request_logs')) {
+            return;
+        }
+
         Schema::create('api_request_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('api_client_id')->nullable();

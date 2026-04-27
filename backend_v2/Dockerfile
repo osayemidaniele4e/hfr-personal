@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27h — notifications migration skip if table exists
+# cache-bust: 2026-04-27j — jobs migration tolerate existing table (1050)
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
