@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27 — force Render Docker rebuild when migrations/Dockerfile change
+# cache-bust: 2026-04-27b — notifications migration PK for Aiven
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
