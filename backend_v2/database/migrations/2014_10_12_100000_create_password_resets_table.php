@@ -13,6 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('password_resets')) {
+            return;
+        }
+
         Schema::create('password_resets', function (Blueprint $table) {
             // Aiven MySQL enforces sql_require_primary_key=ON; use an explicit surrogate PK.
             $table->id();

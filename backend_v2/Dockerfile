@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27e — NormalizingMySqlConnector (PDO bool options from DATABASE_URL)
+# cache-bust: 2026-04-27f — migrations skip create when users/password_resets exist
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
