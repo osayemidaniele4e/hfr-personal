@@ -33,7 +33,7 @@ WORKDIR /var/www/html
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy existing application directory contents
+# App + storage/certs/ca.pem (Aiven MySQL TLS); MYSQL_ATTR_SSL_CA=/var/www/html/storage/certs/ca.pem on Render
 COPY . /var/www/html
 
 # Install dependencies

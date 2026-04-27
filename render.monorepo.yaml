@@ -1,13 +1,11 @@
-# Blueprint: https://render.com/docs/yaml-spec
-# Repo root must contain `frontend/` and `backend_v2/` (e.g. hfr-personal).
-# Monorepo (parent folder contains `hfr/`): use render.monorepo.yaml and Blueprint path hfr/render.monorepo.yaml
-# Set APP_KEY, DB_*, and NEXT_PUBLIC_GOOGLE_MAP_API in the dashboard (secrets with sync: false).
+# Same as render.yaml but rootDir values are for a monorepo whose Git root is the parent of `hfr/`.
+# Render: New → Blueprint → Blueprint path: hfr/render.monorepo.yaml
 
 services:
   - type: web
     runtime: node
     name: hfr-frontend
-    rootDir: frontend
+    rootDir: hfr/frontend
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /
@@ -26,7 +24,7 @@ services:
   - type: web
     runtime: docker
     name: hfr-backend
-    rootDir: backend_v2
+    rootDir: hfr/backend_v2
     preDeployCommand: php artisan migrate --force
     healthCheckPath: /api/health
     dockerfilePath: ./Dockerfile
