@@ -17,4 +17,11 @@ fi
 # Symlink public/storage; ignore if it already exists
 php artisan storage:link 2>/dev/null || true
 
+# Render Free tier: pre-deploy command is unavailable in the dashboard. Set
+# RUN_MIGRATIONS_ON_START=true in Environment to run migrations on each deploy/start.
+if [ "${RUN_MIGRATIONS_ON_START:-}" = "true" ]; then
+  echo "[entrypoint] RUN_MIGRATIONS_ON_START: php artisan migrate --force"
+  php artisan migrate --force
+fi
+
 exec apache2-foreground
