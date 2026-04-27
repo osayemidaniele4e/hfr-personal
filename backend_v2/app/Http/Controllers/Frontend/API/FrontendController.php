@@ -2155,11 +2155,13 @@ class FrontendController extends Controller
         // \Log::info($request->facility_name);
 
         // Only include facilities that exist in hospital_details (current/active records).
-        // Use an inner join — not pluck()->whereIn(), which can build a multi‑MB IN (...)
-        // clause and trigger MySQL max_allowed_packet / timeout (500 in production).
+        // - pluck()->whereIn($ids) can exceed max_allowed_packet with large tables.
+        // - Joining hs_hospitals_history to hospital_details can fail when hospital_details
+        //   is a view over the same table (merge / optimizer issues on some MySQL builds).
+        // Subquery keeps the SQL small and avoids loading IDs in PHP.
 
         $query = DB::table('hs_hospitals_history')
-            ->join('hospital_details', 'hs_hospitals_history.id', '=', 'hospital_details.id')
+            ->whereIn('hs_hospitals_history.id', DB::table('hospital_details')->select('id'))
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
             ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
