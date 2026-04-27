@@ -63,3 +63,7 @@ services:
         value: sync
       - key: SESSION_DRIVER
         value: file
+      - key: MYSQL_ATTR_SSL_CA
+        value: /var/www/html/storage/certs/ca.pem
+      - key: RUN_MIGRATIONS_ON_START
+        value: "true"
