@@ -13,6 +13,7 @@ use App\Models\Website\API\Slider;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Facades\Notification;
 
@@ -2154,14 +2155,28 @@ class FrontendController extends Controller
         // \Log::info('Search Hospitals Request Parameters:', $request->all());
         // \Log::info($request->facility_name);
 
-        // Only include facilities that exist in hospital_details (current/active records).
-        // - pluck()->whereIn($ids) can exceed max_allowed_packet with large tables.
-        // - Joining hs_hospitals_history to hospital_details can fail when hospital_details
-        //   is a view over the same table (merge / optimizer issues on some MySQL builds).
-        // Subquery keeps the SQL small and avoids loading IDs in PHP.
+        // Prefer restricting to hospital_details when that relation is usable. On some
+        // hosted MySQL imports, hospital_details is a VIEW with a missing DEFINER — any
+        // reference 500s; probe first and fall back to hs_hospitals_history filters only.
 
-        $query = DB::table('hs_hospitals_history')
-            ->whereIn('hs_hospitals_history.id', DB::table('hospital_details')->select('id'))
+        $query = DB::table('hs_hospitals_history');
+
+        $hospitalDetailsOk = false;
+        if (Schema::hasTable('hospital_details')) {
+            try {
+                $hospitalDetailsOk = DB::table('hospital_details')->limit(1)->exists();
+            } catch (\Throwable $e) {
+                Log::warning('searchHospitals3: hospital_details not usable, skipping filter', [
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        if ($hospitalDetailsOk) {
+            $query->whereIn('hs_hospitals_history.id', DB::table('hospital_details')->select('id'));
+        }
+
+        $query
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
             ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
