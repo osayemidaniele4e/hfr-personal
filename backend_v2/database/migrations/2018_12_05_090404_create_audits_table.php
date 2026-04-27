@@ -13,6 +13,10 @@ class CreateAuditsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('audits')) {
+            return;
+        }
+
         Schema::create('audits', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_type')->nullable();

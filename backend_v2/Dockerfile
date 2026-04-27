@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27f — migrations skip create when users/password_resets exist
+# cache-bust: 2026-04-27g — audits migration skip if table exists
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
