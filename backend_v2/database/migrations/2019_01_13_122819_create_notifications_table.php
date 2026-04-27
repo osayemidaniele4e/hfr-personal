@@ -14,9 +14,7 @@ class CreateNotificationsTable extends Migration
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            // Explicit PK: chained uuid()->primary() can omit PRIMARY KEY in SQL on some stacks (Aiven sql_require_primary_key).
-            $table->uuid('id');
-            $table->primary('id');
+            $table->uuid('id')->primary();
             $table->string('type');
             $table->morphs('notifiable');
             $table->text('data');

@@ -58,9 +58,13 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            'options' => extension_loaded('pdo_mysql') ? array_merge(
+                array_filter([
+                    PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                ]),
+                // Aiven MySQL: allow Laravel's CREATE + ALTER PRIMARY KEY migration pattern.
+                [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET SESSION sql_require_primary_key = 0'],
+            ) : [],
         ],
 
         'pgsql' => [
