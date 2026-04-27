@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# cache-bust: 2026-04-27c — AppServiceProvider Aiven sql_require_primary_key session
+# cache-bust: 2026-04-27d — ConnectionEstablished Aiven sql_require_primary_key (no PDO INIT_COMMAND)
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
