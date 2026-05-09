@@ -15,10 +15,11 @@ import {
   LoadScript,
   LoadScriptNext,
   GoogleMap,
-  Marker,
-  InfoWindow,
+  MarkerF,
+  InfoWindowF,
   DirectionsRenderer,
   DirectionsService,
+  MarkerClusterer,
 } from "@react-google-maps/api";
 
 import {
@@ -1669,19 +1670,26 @@ function Facility() {
                       selectedFacilityLevel) &&
                       !focusedHospital &&
                       hospitalsWithCoordinates.length > 0 &&
-                      hospitalsWithCoordinates.map((hospital) => (
-                        <Marker
-                          key={hospital.id}
-                          position={{
-                            lat: hospital.latitude,
-                            lng: hospital.longitude,
-                          }}
-                          onClick={() => {
-                            setSelectedHospital(hospital);
-                            setFocusedHospital(hospital);
-                          }}
-                        />
-                      ))}
+                      <MarkerClusterer>
+                        {(clusterer) => (
+                          <>
+                            {hospitalsWithCoordinates.map((hospital) => (
+                              <MarkerF
+                                key={hospital.id}
+                                clusterer={clusterer}
+                                position={{
+                                  lat: hospital.latitude,
+                                  lng: hospital.longitude,
+                                }}
+                                onClick={() => {
+                                  setSelectedHospital(hospital);
+                                  setFocusedHospital(hospital);
+                                }}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </MarkerClusterer>}
 
                     {/* Show user location marker */}
                     {googleMapsLoaded &&
@@ -1689,7 +1697,7 @@ function Facility() {
                       !isNaN(userLocation.lat) &&
                       !isNaN(userLocation.lng) && (
                         <>
-                          <Marker
+                          <MarkerF
                             position={userLocation}
                             icon={{
                               url:
@@ -1705,7 +1713,7 @@ function Facility() {
                             onClick={() => setShowUserInfo(true)}
                           />
                           {showUserInfo && userAddress && (
-                            <InfoWindow
+                            <InfoWindowF
                               position={userLocation}
                               onCloseClick={() => setShowUserInfo(false)}
                             >
@@ -1715,7 +1723,7 @@ function Facility() {
                                   {userAddress}
                                 </p>
                               </div>
-                            </InfoWindow>
+                            </InfoWindowF>
                           )}
                         </>
                       )}
@@ -1724,7 +1732,7 @@ function Facility() {
                     {focusedHospital &&
                       focusedHospital.latitude !== null &&
                       focusedHospital.longitude !== null && (
-                        <Marker
+                        <MarkerF
                           position={{
                             lat: focusedHospital.latitude,
                             lng: focusedHospital.longitude,
@@ -1746,7 +1754,7 @@ function Facility() {
 
                     {/* Facility InfoWindow */}
                     {selectedHospital && showHospitalInfoCard && (
-                      <InfoWindow
+                      <InfoWindowF
                         position={{
                           lat: selectedHospital.latitude,
                           lng: selectedHospital.longitude,
@@ -1766,7 +1774,7 @@ function Facility() {
                             </p>
                           )}
                         </div>
-                      </InfoWindow>
+                      </InfoWindowF>
                     )}
                   </GoogleMap>
                 </LoadScriptNext>
