@@ -2178,7 +2178,7 @@ class FrontendController extends Controller
         }
 
         if ($hospitalDetailsOk) {
-            $query->whereIn('hs_hospitals_history.id', DB::table('hospital_details')->select('id'));
+            $query->join('hospital_details', 'hs_hospitals_history.id', '=', 'hospital_details.id');
         }
 
         $query
@@ -2228,7 +2228,14 @@ class FrontendController extends Controller
 
 
 
-        $data['facilities'] = $query->paginate(100);
+        // Optimization: Cache initial load for 10 minutes
+        if (empty($request->all())) {
+            $data = Cache::remember('hfr_facilities_initial', 600, function () use ($query) {
+                return ['facilities' => $query->simplePaginate(100)];
+            });
+        } else {
+            $data['facilities'] = $query->simplePaginate(100);
+        }
 
 
         // Access the facilities data from the paginator

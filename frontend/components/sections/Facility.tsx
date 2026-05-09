@@ -426,7 +426,7 @@ function Facility() {
           `${process.env.NEXT_PUBLIC_BACKEND_API}/facilities-hospitals-search3`,
           { 
             params,
-            timeout: 30000 // 30 second timeout
+            timeout: 60000 // 60 second timeout for defense
           }
         );
 
