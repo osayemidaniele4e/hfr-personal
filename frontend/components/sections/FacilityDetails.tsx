@@ -416,11 +416,6 @@ const FacilityDetails = () => {
 
   return (
     <div ref={pdfRef} className="flex flex-col gap-[1rem] lg:pt-32 mx-8 mb-8">
-      <style jsx global>{`
-        @keyframes shimmer {
-          100% { transform: translateX(100%); }
-        }
-      `}</style>
       <HospitalDetails hospital={hospital} downloadPDF={downloadPDF} />
 
       <div className="flex flex-col lg:flex-row gap-[2rem]">
@@ -533,7 +528,6 @@ const FacilityDetails = () => {
                     }`}
                     style={{ width: `${completeness.percentage}%` }}
                   >
-                     <div className="absolute inset-0 bg-white/20 skew-x-12 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
                   </div>
                 </div>
                 <p className="text-center font-bold text-lg text-gray-800">{completeness.percentage}%</p>
