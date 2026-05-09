@@ -466,19 +466,16 @@ function Facility() {
                 facility.latitude !== null && facility.longitude !== null
             );
 
-          const defaultLat = 0; // or center of the country/map
-          const defaultLng = 0;
-
           const mappedFacilities = fetchedFacilities.map((f) => ({
             ...f,
             latitude:
               f.latitude && !isNaN(Number(f.latitude))
                 ? Number(f.latitude)
-                : userLocation?.lat ?? null,
+                : null,
             longitude:
               f.longitude && !isNaN(Number(f.longitude))
                 ? Number(f.longitude)
-                : userLocation?.lng ?? null,
+                : null,
           }));
 
           // Update state with valid facilities
@@ -683,11 +680,11 @@ function Facility() {
       latitude:
         f.latitude && !isNaN(Number(f.latitude))
           ? Number(f.latitude)
-          : userLocation?.lat ?? null,
+          : null,
       longitude:
         f.longitude && !isNaN(Number(f.longitude))
           ? Number(f.longitude)
-          : userLocation?.lng ?? null,
+          : null,
     }));
 
     // setHospitals(validFacilities);
@@ -801,16 +798,53 @@ function Facility() {
     setHasRestoredState(true);
   }, [fetchFacilities]);
 
-  const filteredHospitals = hospitals.filter((h) => {
-    const matchState = selectedStateId
-      ? String(h.state_id) === selectedStateId
-      : true;
-    const matchLga = selectedLgaId ? String(h.lga_id) === selectedLgaId : true;
-    const matchWard = selectedWardId
-      ? String(h.ward_id) === selectedWardId
-      : true;
-    return matchState && matchLga && matchWard;
-  });
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  };
+
+  const filteredHospitals = useMemo(() => {
+    let result = hospitals.filter((h) => {
+      const matchState = selectedStateId
+        ? String(h.state_id) === selectedStateId
+        : true;
+      const matchLga = selectedLgaId ? String(h.lga_id) === selectedLgaId : true;
+      const matchWard = selectedWardId
+        ? String(h.ward_id) === selectedWardId
+        : true;
+      return matchState && matchLga && matchWard;
+    });
+
+    if (userLocation) {
+      result.sort((a, b) => {
+        const latA = a.latitude;
+        const lngA = a.longitude;
+        const latB = b.latitude;
+        const lngB = b.longitude;
+        
+        const isAValid = latA !== null && lngA !== null && !isNaN(latA) && !isNaN(lngA) && latA !== 0 && lngA !== 0;
+        const isBValid = latB !== null && lngB !== null && !isNaN(latB) && !isNaN(lngB) && latB !== 0 && lngB !== 0;
+
+        if (isAValid && isBValid) {
+          const distA = calculateDistance(userLocation.lat, userLocation.lng, latA, lngA);
+          const distB = calculateDistance(userLocation.lat, userLocation.lng, latB, lngB);
+          return distA - distB;
+        }
+        if (isAValid && !isBValid) return -1;
+        if (!isAValid && isBValid) return 1;
+        return 0;
+      });
+    }
+
+    return result;
+  }, [hospitals, selectedStateId, selectedLgaId, selectedWardId, userLocation]);
 
   useEffect(() => {
     if (!selectedLgaId) {
