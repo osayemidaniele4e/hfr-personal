@@ -2185,24 +2185,11 @@ class FrontendController extends Controller
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
             ->leftJoin('ou_lgas', 'hs_hospitals_history.lga_id', '=', 'ou_lgas.id')
             ->leftJoin('ou_wards', 'hs_hospitals_history.ward_id', '=', 'ou_wards.id')
-            ->leftJoin('lst_facility_types', 'hs_hospitals_history.facility_type_id', '=', 'lst_facility_types.id')
-            ->leftJoin('lst_level_of_care', 'hs_hospitals_history.facility_level_id', '=', 'lst_level_of_care.id')
-            ->leftJoin('lst_ownerships', 'hs_hospitals_history.ownership_id', '=', 'lst_ownerships.id')
-            ->leftJoin('lst_oparational_status', 'hs_hospitals_history.operational_status_id', '=', 'lst_oparational_status.id')
-            ->leftJoin('lst_registration_status', 'hs_hospitals_history.registration_status_id', '=', 'lst_registration_status.id')
-            ->leftJoin('lst_license_status', 'hs_hospitals_history.license_status_id', '=', 'lst_license_status.id')
-            ->whereNotNull('hs_hospitals_history.published_by')
             ->select(
                 'hs_hospitals_history.*',
                 'ou_states.name as state_name',
                 'ou_lgas.name as lga_name',
-                'ou_wards.name as ward_name',
-                'lst_facility_types.name as facility_type_name',
-                'lst_level_of_care.name as facility_level_name',
-                'lst_ownerships.name as ownership_name',
-                'lst_oparational_status.status as operational_status_name',
-                'lst_registration_status.status as registration_status_name',
-                'lst_license_status.status as license_status_name'
+                'ou_wards.name as ward_name'
             )
             // Only show published facilities (0 = legacy, 6 = Created, 13 = Updated) + NULL
             ->where(function ($q) {
@@ -2236,26 +2223,6 @@ class FrontendController extends Controller
         } else {
             $data['facilities'] = $query->simplePaginate(100);
         }
-
-
-        // Access the facilities data from the paginator
-        $facilities = $data['facilities']->items();  // Get the facilities as an array
-
-        // Initialize an empty array to store counts of facilities per state
-        // Initialize variable to hold the highest facility
-        $highestFacility = null;
-
-        // Loop through each facility to determine the highest based on facility level (or any other criteria)
-        foreach ($facilities as $facility) {
-            $level = (int) ($facility->facility_level_id ?? 0);
-            $bestLevel = (int) ($highestFacility->facility_level_id ?? 0);
-            if (!$highestFacility || $level > $bestLevel) {
-                $highestFacility = $facility;  // Update the highest facility if current one has a higher facility level
-            }
-        }
-
-        // Log the highest facility
-        // \Log::info('Highest Facility:', (array)$highestFacility);
 
 
         return response()->json([
