@@ -416,6 +416,11 @@ const FacilityDetails = () => {
 
   return (
     <div ref={pdfRef} className="flex flex-col gap-[1rem] lg:pt-32 mx-8 mb-8">
+      <style jsx global>{`
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
       <HospitalDetails hospital={hospital} downloadPDF={downloadPDF} />
 
       <div className="flex flex-col lg:flex-row gap-[2rem]">
@@ -489,11 +494,19 @@ const FacilityDetails = () => {
                 Unable to calculate completeness
               </p>
             ) : completeness ? (
-              <div className="text-sm text-gray-800 space-y-2">
-                <p>
-                  <span className="font-semibold text-gray-900">
-                    Profile Completeness:
-                  </span>{" "}
+              <div className="text-sm text-gray-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-gray-700">Data Completeness Score</span>
+                  <span className={`px-2 py-0.5 rounded text-xs font-bold text-white ${
+                    completeness.percentage >= 80 ? 'bg-green-600' : 
+                    completeness.percentage >= 50 ? 'bg-green-500' : 
+                    completeness.percentage >= 20 ? 'bg-amber-500' : 'bg-red-600'
+                  }`}>
+                    {completeness.percentage >= 80 ? 'EXCELLENT' : 
+                     completeness.percentage >= 50 ? 'GOOD' : 
+                     completeness.percentage >= 20 ? 'INCOMPLETE' : 'CRITICAL'}
+                  </span>
+                </div>
                   {completeness.percentage}%
                   {completeness.percentage === 100 ? (
                     <span className="ml-2 text-green-700 font-bold">✓ (Complete)</span>
@@ -507,20 +520,23 @@ const FacilityDetails = () => {
                 </p>
 
                 {/* Visual Progress Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-3 my-3 overflow-hidden shadow-inner">
+                <div className="w-full bg-gray-100 rounded-full h-4 my-2 overflow-hidden border border-gray-200">
                   <div
-                    className={`h-full transition-all duration-1000 ease-out ${
+                    className={`h-full transition-all duration-1000 ease-out relative ${
                       completeness.percentage >= 80
                         ? "bg-green-600"
                         : completeness.percentage >= 50
                         ? "bg-green-500"
                         : completeness.percentage >= 20
                         ? "bg-amber-500"
-                        : "bg-red-500"
+                        : "bg-red-600 animate-pulse"
                     }`}
                     style={{ width: `${completeness.percentage}%` }}
-                  />
+                  >
+                     <div className="absolute inset-0 bg-white/20 skew-x-12 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                  </div>
                 </div>
+                <p className="text-center font-bold text-lg text-gray-800">{completeness.percentage}%</p>
                 {typeof completeness.total_columns === "number" &&
                 completeness.total_columns > 0 ? (
                   <p className="text-xs text-gray-600">
