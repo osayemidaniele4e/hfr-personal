@@ -512,7 +512,7 @@ const FacilityDetails = () => {
                       (No data in scannable columns)
                     </span>
                   ) : null}
-                </p>
+
 
                 {/* Visual Progress Bar */}
                 <div className="w-full bg-gray-100 rounded-full h-4 my-2 overflow-hidden border border-gray-200">
