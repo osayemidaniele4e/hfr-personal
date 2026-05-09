@@ -155,9 +155,11 @@ class FrontendController extends Controller
      */
     public function facilityType(): JsonResponse
     {
-        $results = DB::table('lst_facility_types')
-            ->orderBy('name')
-            ->get();
+        $results = Cache::remember('hfr_facility_types', 3600, function () {
+            return DB::table('lst_facility_types')
+                ->orderBy('name')
+                ->get();
+        });
 
         return response()->json([
             'success' => true,
@@ -204,10 +206,12 @@ class FrontendController extends Controller
      */
     public function states(): JsonResponse
     {
-        $results =  DB::table('ou_states')
-            ->select('id', 'name')
-            ->orderByRaw('name ASC')
-            ->get();
+        $results = Cache::remember('hfr_states', 3600, function () {
+            return DB::table('ou_states')
+                ->select('id', 'name')
+                ->orderByRaw('name ASC')
+                ->get();
+        });
 
         return response()->json([
             'success' => true,
@@ -2223,7 +2227,7 @@ class FrontendController extends Controller
 
 
 
-        $data['facilities'] = $query->paginate(500);
+        $data['facilities'] = $query->paginate(100);
 
 
         // Access the facilities data from the paginator
