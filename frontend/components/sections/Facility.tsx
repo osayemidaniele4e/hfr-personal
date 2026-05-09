@@ -424,7 +424,10 @@ function Facility() {
         // Make GET request with query parameters
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API}/facilities-hospitals-search3`,
-          { params }
+          { 
+            params,
+            timeout: 30000 // 30 second timeout
+          }
         );
 
         // Process the response to extract the facilities
@@ -543,11 +546,6 @@ function Facility() {
       router.push(format({ pathname: "/facilityfinder", query }));
 
       await fetchFacilities(query);
-
-      // 🔥 Filter after fetching and storing facilities
-
-      // Optional delay (only if needed)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Reset pagination to first page after search
       setCurrentPage(1);

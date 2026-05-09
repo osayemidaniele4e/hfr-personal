@@ -496,14 +496,31 @@ const FacilityDetails = () => {
                   </span>{" "}
                   {completeness.percentage}%
                   {completeness.percentage === 100 ? (
-                    <span className="ml-2 text-green-700">(Complete)</span>
+                    <span className="ml-2 text-green-700 font-bold">✓ (Complete)</span>
                   ) : null}
-                  {completeness.percentage === 0 && completeness.missing_fields.length > 0 ? (
-                    <span className="ml-2 text-amber-800">
+                  {completeness.percentage === 0 &&
+                  completeness.missing_fields.length > 0 ? (
+                    <span className="ml-2 text-amber-800 font-medium">
                       (No data in scannable columns)
                     </span>
                   ) : null}
                 </p>
+
+                {/* Visual Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-3 my-3 overflow-hidden shadow-inner">
+                  <div
+                    className={`h-full transition-all duration-1000 ease-out ${
+                      completeness.percentage >= 80
+                        ? "bg-green-600"
+                        : completeness.percentage >= 50
+                        ? "bg-green-500"
+                        : completeness.percentage >= 20
+                        ? "bg-amber-500"
+                        : "bg-red-500"
+                    }`}
+                    style={{ width: `${completeness.percentage}%` }}
+                  />
+                </div>
                 {typeof completeness.total_columns === "number" &&
                 completeness.total_columns > 0 ? (
                   <p className="text-xs text-gray-600">
@@ -520,7 +537,7 @@ const FacilityDetails = () => {
                     <button
                       type="button"
                       id="missing-fields-toggle"
-                      className="flex w-full items-center justify-between gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-left text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2"
+                      className="flex w-full items-center justify-between gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-left text-sm font-semibold text-gray-900 shadow-sm transition hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600"
                       onClick={() =>
                         setMissingFieldsOpen((open) => !open)
                       }
