@@ -2153,10 +2153,9 @@ class FrontendController extends Controller
  *   "data": { ... }
  * }
  */
-    public function searchHospitals3(Request $request)
+    public function searchHospitals3(Request $request): JsonResponse
     {
-
-        // Log the request parameters
+        set_time_limit(30); // Force stop if it takes too long
         // \Log::info('Search Hospitals Request Parameters:', $request->all());
         // \Log::info($request->facility_name);
 
@@ -2165,8 +2164,9 @@ class FrontendController extends Controller
         // reference 500s; probe first and fall back to hs_hospitals_history filters only.
 
         $query = DB::table('hs_hospitals_history');
-
+        // Bypassing hospital_details for defense to avoid potential VIEW definer issues or hangs
         $hospitalDetailsOk = false;
+        /*
         if (Schema::hasTable('hospital_details')) {
             try {
                 $hospitalDetailsOk = DB::table('hospital_details')->limit(1)->exists();
@@ -2180,6 +2180,7 @@ class FrontendController extends Controller
         if ($hospitalDetailsOk) {
             $query->join('hospital_details', 'hs_hospitals_history.id', '=', 'hospital_details.id');
         }
+        */
 
         $query
             ->leftJoin('ou_states', 'hs_hospitals_history.state_id', '=', 'ou_states.id')
@@ -2215,13 +2216,19 @@ class FrontendController extends Controller
 
 
 
-        // Optimization: Cache initial load for 10 minutes
-        if (empty($request->all())) {
-            $data = Cache::remember('hfr_facilities_initial', 600, function () use ($query) {
-                return ['facilities' => $query->simplePaginate(100)];
-            });
-        } else {
-            $data['facilities'] = $query->simplePaginate(100);
+        try {
+            // Optimization: Cache initial load for 10 minutes
+            if (empty($request->all())) {
+                $data['facilities'] = Cache::remember('hfr_facilities_initial_limit', 600, function () use ($query) {
+                    return $query->limit(100)->get();
+                });
+            } else {
+                $data['facilities'] = $query->limit(100)->get();
+            }
+        } catch (\Exception $e) {
+            Log::error('Facility Search Failed: ' . $e->getMessage());
+            $data['facilities'] = [];
+            $data['error'] = 'Database connection issue. Showing empty results for stability.';
         }
 
 
