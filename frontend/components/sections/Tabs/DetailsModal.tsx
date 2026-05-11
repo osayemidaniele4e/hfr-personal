@@ -29,23 +29,10 @@ const DetailsModal: React.FC<{ row: any; onClose: () => void }> = ({
         </div>
 
         {/* Body */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
+        <div className="p-5">
           <div className="table-responsive">
             <table className="table mb-0 w-full border-top table-bordered text-nowrap">
               <tbody>
-                <tr>
-                  <th scope="row">
-                    <h3 className="text-2xl font-bold">Facility Details</h3>
-                  </th>
-                  <td>
-                    <button
-                      onClick={onClose}
-                      className="text-gray-500 hover:text-gray-800 text-3xl"
-                    >
-                      ✕
-                    </button>
-                  </td>
-                </tr>
 
                 <tr>
                   <th scope="row">Facility Name</th>
@@ -307,20 +294,19 @@ const DetailsModal: React.FC<{ row: any; onClose: () => void }> = ({
               </tbody>
             </table>
           </div>
+        </div>
 
-          <div className="flex justify-center mt-6 pb-10">
-            <button
-              onClick={() => {
-                onClose();
-                router.push(`/facilityfinder/details/${row.id}`);
-              }}
-              className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-semibold"
-            >
-              View more
-            </button>
-          </div>
-
-          {/* Add more fields if needed */}
+        {/* Footer with View More link */}
+        <div className="sticky bottom-0 bg-white border-t p-6 flex justify-center z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <button
+            onClick={() => {
+              onClose();
+              router.push(`/facilityfinder/details/${row.id}`);
+            }}
+            className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-bold text-lg shadow-md active:scale-95 transform transition-transform"
+          >
+            View more
+          </button>
         </div>
       </div>
     </div>
