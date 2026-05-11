@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 
 // const DetailsModal = ({ row, onClose }) => {
 
@@ -6,6 +7,7 @@ const DetailsModal: React.FC<{ row: any; onClose: () => void }> = ({
   row,
   onClose,
 }) => {
+  const router = useRouter();
   if (!row) return null; // Prevent rendering if no data
 
   return (
@@ -304,6 +306,18 @@ const DetailsModal: React.FC<{ row: any; onClose: () => void }> = ({
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <div className="flex justify-center mt-6 pb-10">
+            <button
+              onClick={() => {
+                onClose();
+                router.push(`/facilityfinder/details/${row.id}`);
+              }}
+              className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-semibold"
+            >
+              View more
+            </button>
           </div>
 
           {/* Add more fields if needed */}

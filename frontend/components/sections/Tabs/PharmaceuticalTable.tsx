@@ -84,7 +84,7 @@ const PharmaceuticalTable: React.FC<{
       name: "Details",
       cell: (row: any) => (
         <span
-          onClick={() => router.push(`/facilityfinder/details/${row.id}`)}
+          onClick={() => openModal(row)}
           className="text-green-600 underline cursor-pointer"
         >
           Details
