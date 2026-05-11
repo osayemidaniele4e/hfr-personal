@@ -7,6 +7,7 @@ import { FaRegShareSquare, FaDownload } from "react-icons/fa";
 import { HiChevronDown, HiDownload, HiShare } from "react-icons/hi";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import { ImSpinner2 } from "react-icons/im";
 
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
@@ -481,9 +482,10 @@ const FacilityDetails = () => {
               Profile completeness
             </h3>
             {completenessLoading ? (
-              <p className="text-sm text-gray-600" role="status">
-                Calculating profile completeness…
-              </p>
+              <div className="flex items-center justify-center py-4" role="status">
+                <ImSpinner2 className="h-6 w-6 animate-spin text-green-600" />
+                <span className="sr-only">Calculating profile completeness…</span>
+              </div>
             ) : completenessError ? (
               <p className="text-sm text-red-700" role="alert">
                 Unable to calculate completeness
@@ -580,11 +582,7 @@ const FacilityDetails = () => {
                         aria-labelledby="missing-fields-toggle"
                       >
                         {completeness.missing_fields.map((col) => (
-                          <li key={col} className="text-sm">
-                            <span className="font-mono text-xs text-gray-600">
-                              {col}
-                            </span>
-                            <span className="text-gray-400"> — </span>
+                          <li key={col} className="text-sm py-1 border-b border-gray-50 last:border-0">
                             {missingFieldLabel(
                               col,
                               completeness.missing_field_labels

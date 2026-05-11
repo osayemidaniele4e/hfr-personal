@@ -5,7 +5,7 @@ import { IoMdArrowDown, IoMdArrowBack, IoMdArrowForward } from "react-icons/io";
 import dynamic from "next/dynamic";
 import DetailsModal from "./DetailsModal";
 import DetailsModal1 from "./DetailsModal1";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 const DataTable = dynamic(() => import("react-data-table-component"), {
   ssr: false,
 });
@@ -34,6 +34,7 @@ const LaboratoryTable: React.FC<{
   totalPages: number;
   fetchFacilities: () => void;
 }> = ({ data, currentPage, setCurrentPage, totalPages, fetchFacilities }) => {
+  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -121,7 +122,7 @@ const LaboratoryTable: React.FC<{
       name: "Details",
       cell: (row: any) => (
         <span
-          onClick={() => openModal(row)}
+          onClick={() => router.push(`/facilityfinder/details/${row.id}`)}
           className="text-green-600 underline cursor-pointer"
         >
           Details

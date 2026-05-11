@@ -138,7 +138,7 @@ const HospitalTable: React.FC<{
       name: "Details",
       cell: (row: any) => (
         <span
-          onClick={() => openModal(row)}
+          onClick={() => router.push(`/facilityfinder/details/${row.id}`)}
           className="text-green-600 underline cursor-pointer"
         >
           Details
